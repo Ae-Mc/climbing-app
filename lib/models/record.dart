@@ -1,70 +1,39 @@
 import 'package:traverse/models/lap.dart';
-import 'package:traverse/utils/database_helper.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'record.g.dart';
 
+@JsonSerializable(createFactory: false)
 class Record {
-  int id;
-  Lap firstLap;
-  Lap secondLap;
-  Lap thirdLap;
-  DateTime dateTime;
+  Lap? firstLap;
+  Lap? secondLap;
+  Lap? thirdLap;
+  DateTime date;
 
   Record({
-    this.dateTime,
+    DateTime? date,
     this.firstLap,
     this.secondLap,
     this.thirdLap,
-  });
+  }) : date = date ?? DateTime.now();
 
   String toString() {
-    return id.toString() +
-        ' ' +
-        dateTime.toString() +
-        ' ' +
-        firstLap.toString();
+    return date.toString() + ' ' + firstLap.toString();
   }
 
-  Record.fromMap(Map<String, dynamic> map) {
-    id = map[Columns.id];
-    dateTime = DateTime.fromMicrosecondsSinceEpoch(map[Columns.date]);
-    firstLap = Lap(
-      duration: Duration(microseconds: map[Columns.firstLap]),
-      finishTime: Duration(microseconds: map[Columns.firstLap]),
-    );
-    secondLap = Lap(
-      duration: Duration(microseconds: map[Columns.secondLap]),
-      finishTime:
-          Duration(microseconds: map[Columns.secondLap]) + firstLap.finishTime,
-    );
-    thirdLap = Lap(
-      duration: Duration(microseconds: map[Columns.thirdLap]),
-      finishTime:
-          Duration(microseconds: map[Columns.thirdLap]) + secondLap.finishTime,
-    );
-  }
+  Map<String, dynamic> toJson() => _$RecordToJson(this);
 
-  Map<String, dynamic> toMap() {
-    final map = {
-      if (id != null) Columns.id: id,
-      Columns.date: (dateTime == null)
-          ? DateTime.now().microsecondsSinceEpoch
-          : dateTime.microsecondsSinceEpoch,
-      Columns.firstLap: firstLap.duration.inMicroseconds,
-      Columns.secondLap: secondLap.duration.inMicroseconds,
-      Columns.thirdLap: thirdLap.duration.inMicroseconds,
-    };
-    return map;
-  }
+  @JsonKey(ignore: true)
+  Duration? get totalTime => thirdLap?.finishTime;
 
-  bool get isEmpty =>
-      id == null && firstLap == null && secondLap == null && thirdLap == null;
+  @JsonKey(ignore: true)
+  bool get isEmpty => firstLap == null && secondLap == null && thirdLap == null;
+  @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+  @JsonKey(ignore: true)
   bool get isFilled =>
       firstLap != null && secondLap != null && thirdLap != null;
-  Duration get totalTime => thirdLap.finishTime;
 
   void clear() {
-    id = null;
-    dateTime = null;
     firstLap = null;
     secondLap = null;
     thirdLap = null;

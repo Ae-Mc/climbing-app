@@ -16,14 +16,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  Animation<double> _fadeAnimation;
-  Animation<RelativeRect> _playIconMovementAnimation;
-  Animation<RelativeRect> _lapIconMovementAnimation;
-  AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<RelativeRect> _playIconMovementAnimation;
+  late Animation<RelativeRect> _lapIconMovementAnimation;
+  late AnimationController _controller;
   final Stopwatch _stopwatch = Stopwatch();
-  Timer _timer;
+  late Timer _timer;
   String _displayedTime = stringFromDuration(Duration.zero);
-  Record record = Record();
+  late Record record = Record();
 
   @override
   bool get wantKeepAlive => true;
@@ -55,12 +55,12 @@ class _HomeScreenState extends State<HomeScreen>
             );
           else if (record.thirdLap == null)
             record.secondLap = Lap(
-              duration: _stopwatch.elapsed - record.firstLap.finishTime,
+              duration: _stopwatch.elapsed - record.firstLap!.finishTime,
               finishTime: _stopwatch.elapsed,
             );
           else
             record.thirdLap = Lap(
-              duration: _stopwatch.elapsed - record.secondLap.finishTime,
+              duration: _stopwatch.elapsed - record.secondLap!.finishTime,
               finishTime: _stopwatch.elapsed,
             );
         }
@@ -131,11 +131,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             (record.firstLap != null)
                 ? Cell(
-                    text: stringFromDuration(record.firstLap.duration),
+                    text: stringFromDuration(record.firstLap!.duration),
                     alignment: Alignment.center)
                 : emptyCell,
             (record.firstLap != null)
-                ? Cell(text: stringFromDuration(record.firstLap.finishTime))
+                ? Cell(text: stringFromDuration(record.firstLap!.finishTime))
                 : emptyCell,
           ],
         ),
@@ -147,11 +147,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             (record.secondLap != null)
                 ? Cell(
-                    text: stringFromDuration(record.secondLap.duration),
+                    text: stringFromDuration(record.secondLap!.duration),
                     alignment: Alignment.center)
                 : emptyCell,
             (record.secondLap != null)
-                ? Cell(text: stringFromDuration(record.secondLap.finishTime))
+                ? Cell(text: stringFromDuration(record.secondLap!.finishTime))
                 : emptyCell,
           ],
         ),
@@ -163,11 +163,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             (record.thirdLap != null)
                 ? Cell(
-                    text: stringFromDuration(record.thirdLap.duration),
+                    text: stringFromDuration(record.thirdLap!.duration),
                     alignment: Alignment.center)
                 : emptyCell,
             (record.thirdLap != null)
-                ? Cell(text: stringFromDuration(record.thirdLap.finishTime))
+                ? Cell(text: stringFromDuration(record.thirdLap!.finishTime))
                 : emptyCell,
           ],
         ),
@@ -205,8 +205,6 @@ class _HomeScreenState extends State<HomeScreen>
               _stopwatch.stop();
             } else {
               if (record.isFilled) {
-                print(record.toMap());
-                print(record);
                 await DatabaseHelper.of(context, listen: false).insert(record);
                 reset();
               } else {

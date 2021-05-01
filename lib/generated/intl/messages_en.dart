@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "First" : MessageLookupByLibrary.simpleMessage("First"),
     "History" : MessageLookupByLibrary.simpleMessage("History"),
     "Home" : MessageLookupByLibrary.simpleMessage("Home"),
+    "ITMOClimbing" : MessageLookupByLibrary.simpleMessage("ITMO Climbing"),
     "Lap" : MessageLookupByLibrary.simpleMessage("Lap"),
     "LapTime" : MessageLookupByLibrary.simpleMessage("Lap time"),
     "Second" : MessageLookupByLibrary.simpleMessage("Second"),

@@ -5,8 +5,8 @@ class Cell extends StatelessWidget {
   final Alignment alignment;
 
   const Cell({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.alignment = Alignment.center,
   }) : super(key: key);
 

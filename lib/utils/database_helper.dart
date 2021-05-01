@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:traverse/models/db_record.dart';
 import 'package:traverse/models/record.dart';
 
 const String traverseTableName = 'traverse';
@@ -19,14 +20,15 @@ class Columns {
 class DatabaseHelper extends ChangeNotifier {
   static final _databaseName = 'traverse.db';
   static final _databaseVersion = 1;
-  List<Record> records = [];
+  List<DBRecord> records = [];
 
   DatabaseHelper._();
+
   static final instance = DatabaseHelper._();
-  static Database _database;
+  static Database? _database;
   Future<Database> get database async {
     if (_database == null) _database = await _initDatabase();
-    return _database;
+    return _database!;
   }
 
   Future<Database> _initDatabase() async {
@@ -49,12 +51,11 @@ class DatabaseHelper extends ChangeNotifier {
 
   Future<int> insert(Record record) async {
     Database db = await database;
-    final recordMap = record.toMap();
+    final recordMap = record.toJson();
     final int id = await db.insert(traverseTableName, recordMap);
-    if (id != null) {
-      record = Record.fromMap(recordMap);
-      record.id = id;
-      records.add(record);
+    if (id != 0) {
+      DBRecord dbRecord = DBRecord.fromJson(record.toJson()..['id'] = id);
+      records.add(dbRecord);
       notifyListeners();
     } else {
       print(db.isOpen);
@@ -62,7 +63,7 @@ class DatabaseHelper extends ChangeNotifier {
     return id;
   }
 
-  Future<List<Record>> queryAll() async {
+  Future<List<DBRecord>> queryAll() async {
     Database db = await database;
     List<Map<String, dynamic>> rows = await db.query(
       traverseTableName,
@@ -75,7 +76,7 @@ class DatabaseHelper extends ChangeNotifier {
       ],
     );
     if (rows.isEmpty) return records = [];
-    return records = rows.map((e) => Record.fromMap(e)).toList();
+    return records = rows.map((e) => DBRecord.fromJson(e)).toList();
   }
 
   Future<void> delete(int id) async {
