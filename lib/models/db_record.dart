@@ -1,5 +1,6 @@
+import 'package:itmo_climbing/models/lap.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:traverse/models/lap.dart';
+
 part 'db_record.g.dart';
 
 @JsonSerializable()
@@ -23,8 +24,9 @@ class DBRecord {
 
   Map<String, dynamic> toJson() => _$DBRecordToJson(this);
 
+  @override
   String toString() {
-    return date.toString() + ' ' + firstLap.toString();
+    return '$id: ${date.toString()} (${firstLap.toString()}';
   }
 
   @JsonKey(ignore: true)

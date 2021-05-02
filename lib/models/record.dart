@@ -1,8 +1,9 @@
-import 'package:traverse/models/lap.dart';
+import 'package:itmo_climbing/models/lap.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'record.g.dart';
 
-@JsonSerializable(createFactory: false)
+@JsonSerializable()
 class Record {
   Lap? firstLap;
   Lap? secondLap;
@@ -16,8 +17,9 @@ class Record {
     this.thirdLap,
   }) : date = date ?? DateTime.now();
 
+  @override
   String toString() {
-    return date.toString() + ' ' + firstLap.toString();
+    return '$date $firstLap';
   }
 
   Map<String, dynamic> toJson() => _$RecordToJson(this);
@@ -34,6 +36,7 @@ class Record {
       firstLap != null && secondLap != null && thirdLap != null;
 
   void clear() {
+    date = DateTime.now();
     firstLap = null;
     secondLap = null;
     thirdLap = null;

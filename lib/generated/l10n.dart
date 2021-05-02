@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
 
 class S {
   S();
@@ -18,28 +18,31 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null, 'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(_current != null,
+        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       final instance = S();
       S._current = instance;
- 
+
       return instance;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null, 'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(instance != null,
+        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -52,6 +55,16 @@ class S {
     return Intl.message(
       'About',
       name: 'About',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Climb`
+  String get Climb {
+    return Intl.message(
+      'Climb',
+      name: 'Climb',
       desc: '',
       args: [],
     );
@@ -82,6 +95,26 @@ class S {
     return Intl.message(
       'First',
       name: 'First',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `First lap`
+  String get FirstLap {
+    return Intl.message(
+      'First lap',
+      name: 'FirstLap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guide`
+  String get Guide {
+    return Intl.message(
+      'Guide',
+      name: 'Guide',
       desc: '',
       args: [],
     );
@@ -147,6 +180,36 @@ class S {
     );
   }
 
+  /// `Left`
+  String get Left {
+    return Intl.message(
+      'Left',
+      name: 'Left',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Marks`
+  String get Marks {
+    return Intl.message(
+      'Marks',
+      name: 'Marks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Right`
+  String get Right {
+    return Intl.message(
+      'Right',
+      name: 'Right',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total time`
   String get TotalTime {
     return Intl.message(
@@ -167,6 +230,16 @@ class S {
     );
   }
 
+  /// `Second lap`
+  String get SecondLap {
+    return Intl.message(
+      'Second lap',
+      name: 'SecondLap',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get Settings {
     return Intl.message(
@@ -182,6 +255,16 @@ class S {
     return Intl.message(
       'Third',
       name: 'Third',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Third lap`
+  String get ThirdLap {
+    return Intl.message(
+      'Third lap',
+      name: 'ThirdLap',
       desc: '',
       args: [],
     );

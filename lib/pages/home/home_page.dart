@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traverse/generated/l10n.dart';
-import 'package:traverse/models/lap.dart';
-import 'package:traverse/models/record.dart';
-import 'package:traverse/utils/database_helper.dart';
-import 'package:traverse/utils/functions.dart';
-import 'package:traverse/widgets/cell.dart';
+import 'package:itmo_climbing/generated/l10n.dart';
+import 'package:itmo_climbing/models/lap.dart';
+import 'package:itmo_climbing/models/record.dart';
+import 'package:itmo_climbing/utils/database_helper.dart';
+import 'package:itmo_climbing/utils/functions.dart';
+import 'package:itmo_climbing/widgets/cell.dart';
+import 'package:pedantic/pedantic.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation<double> _fadeAnimation;
   late Animation<RelativeRect> _playIconMovementAnimation;
   late Animation<RelativeRect> _lapIconMovementAnimation;
@@ -24,9 +24,6 @@ class _HomeScreenState extends State<HomeScreen>
   late Timer _timer;
   String _displayedTime = stringFromDuration(Duration.zero);
   late Record record = Record();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -48,21 +45,22 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() {
         if (_stopwatch.isRunning) {
           _displayedTime = stringFromDuration(_stopwatch.elapsed);
-          if (record.secondLap == null)
+          if (record.secondLap == null) {
             record.firstLap = Lap(
               duration: _stopwatch.elapsed,
               finishTime: _stopwatch.elapsed,
             );
-          else if (record.thirdLap == null)
+          } else if (record.thirdLap == null) {
             record.secondLap = Lap(
               duration: _stopwatch.elapsed - record.firstLap!.finishTime,
               finishTime: _stopwatch.elapsed,
             );
-          else
+          } else {
             record.thirdLap = Lap(
               duration: _stopwatch.elapsed - record.secondLap!.finishTime,
               finishTime: _stopwatch.elapsed,
             );
+          }
         }
       });
     });
@@ -79,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -176,19 +173,20 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _bottomButtonsStack() {
-    final lapButton = () => FloatingActionButton(
+    Widget lapButton() => FloatingActionButton(
           onPressed: () {
             if (_stopwatch.isRunning) {
               if (record.isFilled) {
                 _stopwatch.stop();
                 _stopwatch.reset();
               } else {
-                if (record.firstLap == null)
+                if (record.firstLap == null) {
                   record.firstLap = Lap();
-                else if (record.secondLap == null)
+                } else if (record.secondLap == null) {
                   record.secondLap = Lap();
-                else
+                } else {
                   record.thirdLap = Lap();
+                }
               }
             } else {
               reset();
@@ -199,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         );
 
-    final playButton = () => FloatingActionButton(
+    Widget playButton() => FloatingActionButton(
           onPressed: () async {
             if (_stopwatch.isRunning) {
               _stopwatch.stop();
@@ -209,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
                 reset();
               } else {
                 _stopwatch.start();
-                _controller.forward();
+                unawaited(_controller.forward());
                 if (record.isEmpty) record.firstLap = Lap();
               }
             }

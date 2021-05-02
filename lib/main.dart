@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:traverse/generated/l10n.dart';
-import 'package:traverse/screens/main_screen.dart';
-import 'package:traverse/style.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:traverse/utils/database_helper.dart';
+import 'package:itmo_climbing/generated/l10n.dart';
+import 'package:itmo_climbing/router.gr.dart';
+import 'package:itmo_climbing/theme/style.dart';
+import 'package:itmo_climbing/utils/database_helper.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final _appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -19,11 +21,10 @@ class MyApp extends StatelessWidget {
         DatabaseHelper.instance.queryAll();
         return DatabaseHelper.instance;
       },
-      child: MaterialApp(
+      child: MaterialApp.router(
         onGenerateTitle: (context) => S.current.ITMOClimbing,
-        theme: Style.themeData,
+        theme: Style().themeData,
         debugShowCheckedModeBanner: false,
-        home: MainScreen(),
         supportedLocales: [
           Locale('ru'),
           Locale('en'),
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        routerDelegate: _appRouter.delegate(),
+        routeInformationParser: _appRouter.defaultRouteParser(),
       ),
     );
   }

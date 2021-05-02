@@ -1,97 +1,103 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:itmo_climbing/models/db_record.dart';
+import 'package:itmo_climbing/models/record.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:traverse/models/db_record.dart';
-import 'package:traverse/models/record.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
+import 'package:sembast/utils/value_utils.dart';
 
-const String traverseTableName = 'traverse';
+/// Name of table for storing traverse results
+const String _traverseTableName = 'traverse';
 
-class Columns {
-  static const id = 'id';
-  static const date = 'date';
-  static const firstLap = 'firstLap';
-  static const secondLap = 'secondLap';
-  static const thirdLap = 'thirdLap';
+enum ClassStatus {
+  /// Not initialized
+  notInitialized,
 
-  Columns._();
+  /// Initialization not completed
+  initializing,
+
+  /// Initialized
+  initialized,
 }
 
 class DatabaseHelper extends ChangeNotifier {
-  static final _databaseName = 'traverse.db';
-  static final _databaseVersion = 1;
+  static final _databaseName = 'climbing.db';
+  final _traverseStore = intMapStoreFactory.store(_traverseTableName);
+
+  /// List of travers results
   List<DBRecord> records = [];
 
   DatabaseHelper._();
 
   static final instance = DatabaseHelper._();
-  static Database? _database;
+  static late Database _database;
+
+  static ClassStatus get status => _status;
+  static ClassStatus _status = ClassStatus.notInitialized;
+  Future<ClassStatus>? initializationFuture;
+  static late String appDataDirectory;
+
   Future<Database> get database async {
-    if (_database == null) _database = await _initDatabase();
-    return _database!;
-  }
-
-  Future<Database> _initDatabase() async {
-    Database db = await openDatabase(
-      await getDatabasesPath() + '/' + _databaseName,
-      version: _databaseVersion,
-      onCreate: (db, version) async {
-        await db.execute(
-          "CREATE TABLE $traverseTableName ("
-          "${Columns.id} INTEGER PRIMARY KEY, "
-          "${Columns.date} INTEGER NOT NULL, "
-          "${Columns.firstLap} INTEGER NOT NULL, "
-          "${Columns.secondLap} INTEGER NOT NULL, "
-          "${Columns.thirdLap} INTEGER NOT NULL)",
-        );
-      },
-    );
-    return db;
-  }
-
-  Future<int> insert(Record record) async {
-    Database db = await database;
-    final recordMap = record.toJson();
-    final int id = await db.insert(traverseTableName, recordMap);
-    if (id != 0) {
-      DBRecord dbRecord = DBRecord.fromJson(record.toJson()..['id'] = id);
-      records.add(dbRecord);
-      notifyListeners();
-    } else {
-      print(db.isOpen);
+    if (status == ClassStatus.notInitialized) {
+      _status = ClassStatus.initializing;
+      initializationFuture = init();
+      await initializationFuture!;
+    } else if (status == ClassStatus.initializing) {
+      await initializationFuture!;
     }
-    return id;
+    return _database;
+  }
+
+  Future<ClassStatus> init() async {
+    appDataDirectory = (await getApplicationDocumentsDirectory()).path;
+    final databaseFactory = databaseFactoryIo;
+    _database = await databaseFactory
+        .openDatabase(p.join(appDataDirectory, _databaseName));
+    _status = ClassStatus.initialized;
+    notifyListeners();
+    return _status;
+  }
+
+  Future<DBRecord> insert(Record record) async {
+    final db = await database;
+    final id = await _traverseStore.add(db, record.toJson());
+    final dbRecord = DBRecord.fromJson(record.toJson()..['id'] = id);
+    records.add(dbRecord);
+    notifyListeners();
+    return dbRecord;
   }
 
   Future<List<DBRecord>> queryAll() async {
-    Database db = await database;
-    List<Map<String, dynamic>> rows = await db.query(
-      traverseTableName,
-      columns: [
-        Columns.id,
-        Columns.date,
-        Columns.firstLap,
-        Columns.secondLap,
-        Columns.thirdLap,
-      ],
-    );
+    final db = await database;
+    List<RecordSnapshot<int, Map<String, dynamic>>> rows =
+        await _traverseStore.find(db);
     if (rows.isEmpty) return records = [];
-    return records = rows.map((e) => DBRecord.fromJson(e)).toList();
+    return records = rows.map((e) {
+      Map<String, dynamic> recordJson = cloneMap(e.value);
+      recordJson['id'] = e.key;
+      return DBRecord.fromJson(recordJson);
+    }).toList();
   }
 
   Future<void> delete(int id) async {
-    Database db = await database;
-    int count = await db.delete(
-      traverseTableName,
-      where: '${Columns.id} = $id',
+    final db = await database;
+    final count = await _traverseStore.delete(
+      db,
+      finder: Finder(filter: Filter.custom((record) => record.key == id)),
     );
     if (count > 0) {
       records.removeWhere((element) => element.id == id);
       notifyListeners();
+    } else {
+      print(id);
+      print(await queryAll());
     }
   }
 
-  static DatabaseHelper of(BuildContext context, {listen = true}) {
+  static DatabaseHelper of(BuildContext context, {bool listen = true}) {
     return Provider.of<DatabaseHelper>(context, listen: listen);
   }
 }
