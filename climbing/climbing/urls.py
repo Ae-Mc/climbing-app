@@ -13,9 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from climbing import settings
+from django.urls.conf import include
+from backend import views
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r"categories", views.CategoryViewSet)
+router.register(r"groups", views.GroupViewSet)
+router.register(r"images", views.ImageViewSet)
+router.register(r"tracks", views.TrackViewSet)
+router.register(r"users", views.UserViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("api/", include(router.urls)),
+    path(r"auth/", include("djoser.urls")),
+    path(r"auth/", include("djoser.urls.authtoken")),
+    path("admin/", admin.site.urls),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
