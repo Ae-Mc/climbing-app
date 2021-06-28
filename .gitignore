@@ -141,5 +141,6 @@ cython_debug/
 /climbing/climbing/secret.py
 secret.py
 
-# Cache and media
-/climbing/media
+# Cache, static and media
+/climbing/media/
+/climbing/static/
