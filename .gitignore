@@ -139,6 +139,7 @@ cython_debug/
 
 # Secure
 /climbing/climbing/secret.py
+secret.py
 
 # Cache and media
 /climbing/media
