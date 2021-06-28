@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User, Group
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 from .models import Category, Image, Track
 from rest_framework import serializers
 
@@ -39,7 +38,7 @@ class ImageReadSerializer(serializers.ModelSerializer):
         fields = ["url", "image"]
 
 
-class TrackSerializer(WritableNestedModelSerializer):
+class TrackSerializer(serializers.HyperlinkedModelSerializer):
     author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     category = serializers.SlugRelatedField(
         slug_field="name",
