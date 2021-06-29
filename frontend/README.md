@@ -1,4 +1,4 @@
-# climbing
+# frontend
 
 ## Project setup
 ```
