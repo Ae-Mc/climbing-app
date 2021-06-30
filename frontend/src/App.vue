@@ -12,6 +12,14 @@
             <v-list-item-title> Главная </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/categories">
+          <v-list-item-icon>
+            <v-icon large>mdi-format-list-bulleted</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title> Категории </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item link to="/about">
           <v-list-item-icon
             ><v-icon large>mdi-information</v-icon></v-list-item-icon

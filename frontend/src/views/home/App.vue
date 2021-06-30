@@ -1,9 +1,13 @@
 <template>
-  <v-layout fill-height class="pa-4">
-    <v-row justify="center">
-      <router-view />
-    </v-row>
-  </v-layout>
+  <v-row justify="center">
+    <v-col cols="12" lg="3"> </v-col>
+    <v-col cols="12" lg="6">
+      <v-layout fill-height class="pa-4">
+        <router-view />
+      </v-layout>
+    </v-col>
+    <v-col cols="12" lg="3"> </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">

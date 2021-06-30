@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter, { Route, RouteConfig } from 'vue-router'
+import VueRouter, { RouteConfig } from 'vue-router'
 import MainApp from '../views/home/App.vue'
 import Login from '../views/Login.vue'
 import Register from "../views/Register.vue";
@@ -27,6 +27,11 @@ const routes: Array<RouteConfig> = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/home/About.vue')
+      },
+      {
+        path: 'categories',
+        name: 'Categories',
+        component: () => import('../views/home/Categories.vue')
       }
     ]
   },
