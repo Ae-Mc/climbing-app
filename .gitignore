@@ -138,9 +138,9 @@ dmypy.json
 cython_debug/
 
 # Secure
-/climbing/climbing/secret.py
+/backend/climbing/secret.py
 secret.py
 
 # Cache, static and media
-/climbing/media/
-/climbing/static/
+/backend/climbing/media/
+/backend/climbing/static/
