@@ -142,5 +142,5 @@ cython_debug/
 secret.py
 
 # Cache, static and media
-/backend/climbing/media/
-/backend/climbing/static/
+/backend/media/
+/backend/static/
