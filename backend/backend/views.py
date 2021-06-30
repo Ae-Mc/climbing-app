@@ -20,18 +20,18 @@ from rest_framework import permissions
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageReadSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class TrackViewSet(viewsets.ModelViewSet):
     queryset = Track.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request: Request):
         data = dict(request.data.lists())
@@ -72,7 +72,7 @@ class TrackViewSet(viewsets.ModelViewSet):
         trackSerializer.save()
         for imageSerializer in imageSerializers:
             imageSerializer.save()
-        return Response('OK', status=status.HTTP_201_CREATED)
+        return Response("OK", status=status.HTTP_201_CREATED)
 
     def get_serializer_class(self):
         if self.request.method in ["GET"]:
