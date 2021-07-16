@@ -16,6 +16,7 @@
                   prepend-icon="mdi-account"
                   label="Имя пользователя"
                   :error-messages="errors"
+                  name="username"
                   required
                 ></v-text-field>
               </validation-provider>
@@ -33,6 +34,9 @@
                   required
                 ></v-text-field>
               </validation-provider>
+              <div v-if="errorText != null" class="error--text">
+                {{ errorText }}
+              </div>
               <v-btn
                 @click.stop="submit"
                 type="submit"
@@ -55,6 +59,7 @@
 import Vue from "vue";
 import { extend, ValidationProvider, ValidationObserver } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
+import axios from "axios";
 
 extend("required", { ...required, message: "{_field_} не может быть пустым" });
 
@@ -62,14 +67,33 @@ export default Vue.extend({
   data: () => ({
     username: "",
     email: "",
-    password: ""
+    password: "",
+    errorText: null
   }),
   methods: {
     validate() {
       this.$refs.observer.validate();
     },
     submit() {
-      alert("Submit");
+      axios
+        .post(`${Vue.prototype.$hostname}/auth/token/login/`, {
+          username: this.username,
+          password: this.password
+        })
+        .then(response => {
+          this.errorText = null;
+          console.log(response);
+        })
+        .catch(error => {
+          if (error.response) {
+            this.errorText = "Не удалось войти с указанными данными";
+            if (Vue.prototype.$debug) {
+              console.log(error.response);
+            }
+          } else {
+            this.errorText = "Ошибка подключения к серверу аутентификации";
+          }
+        });
     }
   },
   components: {
