@@ -11,26 +11,23 @@
     >
       Не удалось загрузить категории
     </v-chip>
-    <v-row
-      v-for="i in ((categories.length / cols) | 0) +
-      (categories.length % cols > 0 ? 1 : 0)"
-      :key="i"
-      justify="space-between"
-    >
-      <v-col v-for="j in cols" :key="j" :cols="undefined">
-        <div v-if="(i - 1) * cols + j - 1 < categories.length">
-          <v-card class="pa-1" rounded="xl">
-            <center>{{ categories[(i - 1) * cols + j - 1].name }}</center>
-          </v-card>
-        </div>
-        <div v-else />
-      </v-col>
-    </v-row>
-    <!-- <v-row justify="center" class="mt-9">
-      <v-chip filter-icon="mdi-plus" filter input-value="true" @click="true">
-        Добавить категорию
-      </v-chip>
-    </v-row> -->
+    <div v-else>
+      <v-row
+        v-for="i in ((categories.length / cols) | 0) +
+        (categories.length % cols > 0 ? 1 : 0)"
+        :key="i"
+        justify="space-between"
+      >
+        <v-col v-for="j in cols" :key="j" :cols="undefined">
+          <div v-if="(i - 1) * cols + j - 1 < categories.length">
+            <v-card class="pa-1" rounded="xl">
+              <center>{{ categories[(i - 1) * cols + j - 1].name }}</center>
+            </v-card>
+          </div>
+          <div v-else />
+        </v-col>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
@@ -56,10 +53,11 @@ export default Vue.extend({
   },
   methods: {
     loadCategories() {
+      this.isError = false;
       this.loading = true;
       this.categories = [];
       axios
-        .get("http://192.168.1.2:8000/api/categories")
+        .get(Vue.prototype.$hostname + "/api/categories")
         .then(response => {
           this.categories = response.data;
         })

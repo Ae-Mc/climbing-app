@@ -3,7 +3,9 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.prototype.$hostname = "http://localhost:8000";
+Vue.prototype.$debug = true;
 
 new Vue({
   router,
