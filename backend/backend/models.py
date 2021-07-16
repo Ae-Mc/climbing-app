@@ -2,6 +2,7 @@ import time
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import deletion
+from django.utils import timezone
 
 # Create your models here.
 
@@ -29,6 +30,7 @@ class Track(models.Model):
     author = models.ForeignKey(
         User, on_delete=deletion.PROTECT, related_name="author"
     )
+    creationDate = models.DateField(default=timezone.now)
 
 
 class Image(models.Model):
