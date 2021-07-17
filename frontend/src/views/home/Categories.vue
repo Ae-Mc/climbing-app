@@ -33,12 +33,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import axios from "axios";
 
 export default Vue.extend({
   name: "Categories",
   data: () => ({
-    categories: [],
     loading: true,
     isError: false
   }),
@@ -49,6 +47,14 @@ export default Vue.extend({
     cols() {
       const { md, lg, xl } = this.$vuetify.breakpoint;
       return xl ? 12 : lg ? 6 : md ? 7 : 5;
+    },
+    categories: {
+      get() {
+        return this.$store.state.data.categories;
+      },
+      set(t) {
+        return t;
+      }
     }
   },
   methods: {
@@ -56,11 +62,8 @@ export default Vue.extend({
       this.isError = false;
       this.loading = true;
       this.categories = [];
-      axios
-        .get(Vue.prototype.$hostname + "/api/categories")
-        .then(response => {
-          this.categories = response.data;
-        })
+      this.$store
+        .dispatch("data/loadCategories")
         .catch(() => (this.isError = true))
         .finally(() => (this.loading = false));
     }
