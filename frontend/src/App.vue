@@ -3,6 +3,13 @@
     <v-app-bar color="primary" app dark dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>Скалолазание ИТМО</v-app-bar-title>
+      <v-spacer />
+      <div v-if="status.loggedIn">
+        <span
+          >Вы вошли как <b>{{ user.name }}</b></span
+        >
+        <v-icon @click="logout" class="ml-4"> mdi-logout </v-icon>
+      </div>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
       <v-list dense nav>
@@ -30,7 +37,7 @@
         </v-list-item>
       </v-list>
       <v-list dense nav slot="append">
-        <v-list-item link to="/login">
+        <v-list-item link to="/login" v-if="!status.loggedIn">
           <v-list-item-icon>
             <v-icon large>mdi-account-circle</v-icon>
           </v-list-item-icon>
@@ -38,14 +45,14 @@
             <v-list-item-title> Вход </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/register">
+        <!-- <v-list-item link to="/register" v-if="!status.loggedIn">
           <v-list-item-icon>
             <v-icon large>mdi-account-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title> Регистрация </v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -62,13 +69,30 @@
 </template>
 
 <script lang="ts">
+import axios from "axios";
 import Vue from "vue";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "RootApp",
-
+  computed: mapState("auth", {
+    status: "status",
+    user: "user"
+  }),
   data: () => ({
     drawer: false
-  })
+  }),
+  mounted: function() {
+    if (this.status.loggedIn) {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Token ${this.user.token}`;
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout");
+    }
+  }
 });
 </script>

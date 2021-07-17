@@ -12,7 +12,7 @@
                 rules="required"
               >
                 <v-text-field
-                  v-model="username"
+                  v-model="user.name"
                   prepend-icon="mdi-account"
                   label="Имя пользователя"
                   :error-messages="errors"
@@ -26,7 +26,7 @@
                 rules="required"
               >
                 <v-text-field
-                  v-model="password"
+                  v-model="user.password"
                   prepend-icon="mdi-lock"
                   label="Пароль"
                   :error-messages="errors"
@@ -59,15 +59,13 @@
 import Vue from "vue";
 import { extend, ValidationProvider, ValidationObserver } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
-import axios from "axios";
+import User from "@/models/user";
 
 extend("required", { ...required, message: "{_field_} не может быть пустым" });
 
 export default Vue.extend({
   data: () => ({
-    username: "",
-    email: "",
-    password: "",
+    user: new User(),
     errorText: null
   }),
   methods: {
@@ -75,14 +73,10 @@ export default Vue.extend({
       this.$refs.observer.validate();
     },
     submit() {
-      axios
-        .post(`${Vue.prototype.$hostname}/auth/token/login/`, {
-          username: this.username,
-          password: this.password
-        })
-        .then(response => {
-          this.errorText = null;
-          console.log(response);
+      this.$store
+        .dispatch("auth/login", this.user)
+        .then(() => {
+          this.$router.push("/");
         })
         .catch(error => {
           if (error.response) {
