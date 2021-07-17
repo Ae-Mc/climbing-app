@@ -53,13 +53,14 @@ class TrackSerializer(serializers.HyperlinkedModelSerializer):
             "category",
             "author",
             "description",
+            "creationDate",
         ]
 
 
 class TrackReadSelializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     category = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    images = ImageReadSerializer(many=True, default=[], source='image_set')
+    images = ImageReadSerializer(many=True, default=[], source="image_set")
 
     class Meta:
         model = Track
@@ -70,4 +71,5 @@ class TrackReadSelializer(serializers.ModelSerializer):
             "author",
             "description",
             "images",
+            "creationDate",
         ]
