@@ -13,7 +13,7 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
       <v-list dense nav>
-        <v-list-item link to="/">
+        <v-list-item link to="/tracks">
           <v-list-item-icon><v-icon large>mdi-home</v-icon></v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title> Главная </v-list-item-title>
@@ -72,6 +72,7 @@
 import axios from "axios";
 import Vue from "vue";
 import { mapState } from "vuex";
+import { auth } from "./store/modules/auth";
 
 export default Vue.extend({
   name: "RootApp",
@@ -82,7 +83,7 @@ export default Vue.extend({
   data: () => ({
     drawer: false
   }),
-  mounted: function() {
+  mounted() {
     if (this.status.loggedIn) {
       axios.defaults.headers.common[
         "Authorization"
@@ -91,7 +92,11 @@ export default Vue.extend({
   },
   methods: {
     logout() {
-      this.$store.dispatch("auth/logout");
+      auth.actions.logout().then(() => {
+        if (this.$router.currentRoute.meta?.requiresAuth) {
+          this.$router.push("/login");
+        }
+      });
     }
   }
 });
