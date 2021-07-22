@@ -23,17 +23,23 @@ const routes: Array<RouteConfig> = [
         path: 'tracks',
         name: 'Tracks',
         // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
+        // this generates a separate chunk (tracks.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '@/views/home/Tracks.vue')
+        component: () => import(/* webpackChunkName: "tracks" */ '@/views/home/tracks/index.vue')
       },
       {
         path: 'tracks/new',
         name: 'AddTrack',
-        component: () => import('@/views/home/AddTrack.vue'),
+        component: () => import('@/views/home/tracks/AddTrack.vue'),
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        path: 'tracks/:id',
+        name: 'Track',
+        component: () => import('@/views/home/tracks/Track.vue'),
+        props: true
       },
       {
         path: 'about',
