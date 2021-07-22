@@ -10,6 +10,9 @@ Vue.prototype.$debug = true;
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
+axios.defaults.headers.post = {
+  'Content-Type': 'multipart/form-data'
+}
 
 new Vue({
   router,
