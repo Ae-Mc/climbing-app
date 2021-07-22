@@ -1,3 +1,4 @@
+from django.http.request import QueryDict
 from rest_framework.request import Request
 from rest_framework.response import Response
 from .serializers import (
@@ -34,15 +35,22 @@ class TrackViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request: Request):
-        data = dict(request.data.lists())
-        print(data)
+        data: dict
+        if isinstance(request.data, QueryDict):
+            data = dict(request.data.lists())
+        else:
+            return Response(
+                ["Bad request format. Only allowed is multipart/form-data"],
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         images = data.pop("images", [])
         trackSerializer = TrackSerializer(
             data={
-                "name": data.get("name", None)[0] or None,
-                "category": data.get("category", None)[0] or None,
-                "description": data.get("description", None)[0] or None,
-                "author": self.request.user.id,
+                "name": data.get("name", [None])[0] or None,
+                "category": data.get("category", [None])[0] or None,
+                "description": data.get("description", [None])[0] or None,
+                "author": data.get("author", [self.request.user.id])[0],
+                "creationDate": data.get("creationDate", [None])[0],
             }
         )
         if not trackSerializer.is_valid():
@@ -50,11 +58,6 @@ class TrackViewSet(viewsets.ModelViewSet):
                 trackSerializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        print(trackSerializer.validated_data)
-        if not trackSerializer.is_valid():
-            return Response(
-                trackSerializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
         saved = trackSerializer.save()
         trackID = saved.id
         imageSerializers = []

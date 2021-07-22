@@ -14,7 +14,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ("url", "username", "email", "groups")
+        fields = ("id", "username", "email", "groups")
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -35,7 +35,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 class ImageReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ["url", "image"]
+        fields = ["image"]
 
 
 class TrackSerializer(serializers.HyperlinkedModelSerializer):
@@ -65,7 +65,7 @@ class TrackReadSelializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = [
-            "url",
+            "id",
             "name",
             "category",
             "author",
