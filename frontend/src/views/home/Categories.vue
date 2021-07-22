@@ -21,7 +21,7 @@
         <v-col v-for="j in cols" :key="j" :cols="undefined">
           <div v-if="(i - 1) * cols + j - 1 < categories.length">
             <v-card class="pa-1" rounded="xl">
-              <center>{{ categories[(i - 1) * cols + j - 1].name }}</center>
+              <center>{{ categories[(i - 1) * cols + j - 1] }}</center>
             </v-card>
           </div>
           <div v-else />
@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts">
+import { data } from "@/store/modules/data";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -50,7 +51,7 @@ export default Vue.extend({
     },
     categories: {
       get() {
-        return this.$store.state.data.categories;
+        return data.state.categories;
       },
       set(t) {
         return t;
@@ -62,8 +63,8 @@ export default Vue.extend({
       this.isError = false;
       this.loading = true;
       this.categories = [];
-      this.$store
-        .dispatch("data/loadCategories")
+      data.actions
+        .loadCategories()
         .catch(() => (this.isError = true))
         .finally(() => (this.loading = false));
     }
