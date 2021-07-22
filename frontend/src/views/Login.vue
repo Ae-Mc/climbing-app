@@ -6,34 +6,26 @@
         <v-card-text>
           <validation-observer v-slot="{ invalid }" ref="observer">
             <v-form @submit.prevent="validate">
-              <validation-provider
-                v-slot="{ errors }"
-                name="Имя пользователя"
+              <text-field
+                v-model="user.name"
+                field-name="Имя пользователя"
                 rules="required"
-              >
-                <v-text-field
-                  v-model="user.name"
-                  prepend-icon="mdi-account"
-                  label="Имя пользователя"
-                  :error-messages="errors"
-                  name="username"
-                  required
-                ></v-text-field>
-              </validation-provider>
-              <validation-provider
-                v-slot="{ errors }"
-                name="Пароль"
+                icon="mdi-account"
+                label="Имя пользователя"
+                name="username"
+                :hide-details="false"
+                required
+              ></text-field>
+              <text-field
+                v-model="user.password"
+                field-name="Пароль"
                 rules="required"
-              >
-                <v-text-field
-                  v-model="user.password"
-                  prepend-icon="mdi-lock"
-                  label="Пароль"
-                  :error-messages="errors"
-                  type="password"
-                  required
-                ></v-text-field>
-              </validation-provider>
+                icon="mdi-lock"
+                label="Пароль"
+                type="password"
+                :hide-details="false"
+                required
+              ></text-field>
               <div v-if="errorText != null" class="error--text">
                 {{ errorText }}
               </div>
@@ -57,11 +49,11 @@
 </template>
 <script>
 import Vue from "vue";
-import { extend, ValidationProvider, ValidationObserver } from "vee-validate";
-import { required } from "vee-validate/dist/rules";
 import User from "@/models/user";
-
-extend("required", { ...required, message: "{_field_} не может быть пустым" });
+import TextField from "@/components/FormFields/TextField.vue";
+import { ValidationObserver } from "vee-validate";
+import { auth } from "@/store/modules/auth";
+import "@/utils/validation-rules";
 
 export default Vue.extend({
   data: () => ({
@@ -73,8 +65,8 @@ export default Vue.extend({
       this.$refs.observer.validate();
     },
     submit() {
-      this.$store
-        .dispatch("auth/login", this.user)
+      auth.actions
+        .login(this.user)
         .then(() => {
           this.$router.push("/");
         })
@@ -91,8 +83,8 @@ export default Vue.extend({
     }
   },
   components: {
-    ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    TextField
   }
 });
 </script>
