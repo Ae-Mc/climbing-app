@@ -16,7 +16,9 @@
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.0.0-beta.3",
+    "vuexok": "^1.0.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.28.1",
@@ -52,7 +54,17 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "@typescript-eslint/no-this-alias": [
+        "error",
+        {
+          "allowDestructuring": true,
+          "allowedNames": [
+            "vm"
+          ]
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
