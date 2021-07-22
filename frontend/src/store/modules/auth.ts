@@ -1,54 +1,54 @@
-import mutations from '@/store/mutations'
+import { createModule } from 'vuexok'
 import axios from "axios";
 import User from "@/models/user"
 
-export const auth = {
+export const auth = createModule('auth', {
   namespaced: true,
 
   state: {
     status: {
       loggedIn: false
     },
-    user: null,
+    user: null as User | null,
   },
 
   actions: {
-    async login({ commit }: any, user: User) {
+    async login(_, user: User): Promise<User> {
       try {
         const response = await axios.post('auth/token/login', {
           username: user.name, password: user.password
         }, { withCredentials: false });
         user.token = response.data.auth_token;
         delete user.password;
-        commit(mutations.LOGIN_SUCCESS, user);
+        auth.mutations.loginSuccess(user);
         return await Promise.resolve(user);
       } catch (error) {
-        commit(mutations.LOGIN_FAILURE);
+        auth.mutations.loginFailure();
         return await Promise.reject(error);
       }
     },
 
-    async logout({ commit }: any) {
+    async logout(): Promise<void> {
       await axios.post('auth/token/logout');
-      commit(mutations.LOGOUT);
+      auth.mutations.logout();
     }
   },
 
   mutations: {
-    [mutations.LOGIN_SUCCESS](state: any, user: User) {
+    loginSuccess(state, user: User): void {
       state.status.loggedIn = true;
       state.user = user;
       axios.defaults.headers.common['Authorization'] = `Token ${user.token}`;
     },
-    [mutations.LOGIN_FAILURE](state: any) {
+    loginFailure(state): void {
       state.status.loggedIn = false;
       state.user = null;
       delete axios.defaults.headers.common['Authorization'];
     },
-    [mutations.LOGOUT](state: any): void {
+    logout(state): void {
       state.status.loggedIn = false;
       state.user = null;
       delete axios.defaults.headers.common['Authorization'];
     }
   },
-}
+})
