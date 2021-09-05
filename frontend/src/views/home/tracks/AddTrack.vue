@@ -1,5 +1,8 @@
 <template>
-  <v-card class="flex-grow-1" shaped id="addTrackCard">
+  <v-card class="flex-grow-1" shaped id="addTrackCard" :loading="sending">
+    <template slot="progress">
+      <v-progress-linear indeterminate></v-progress-linear>
+    </template>
     <validation-observer v-slot="{ invalid }" ref="observer">
       <v-form class="flex-grow-1" @submit.prevent="submit">
         <v-card-title>Добавление трассы</v-card-title>
@@ -76,11 +79,19 @@
           <span v-else class="error--text mt-4">{{ imagesError }}</span>
         </v-card-text>
         <v-card-actions>
-          <v-btn type="submit" @click.stop="submit" :disabled="invalid">
-            Добавить
+          <v-btn type="submit" :disabled="invalid || sending">
+            <template v-if="sending">
+              <v-progress-circular indeterminate color="primary" />
+            </template>
+            <template v-else>Добавить</template>
           </v-btn>
           <v-btn @click="clear">Очистить</v-btn>
         </v-card-actions>
+        <v-card-actions
+          v-if="errors.length > 0"
+          class="error--text pt-0"
+          v-html="errors.join('<br />')"
+        />
       </v-form>
     </validation-observer>
   </v-card>
@@ -103,7 +114,9 @@ export default Vue.extend({
       datePickerActive: false,
       images: [] as File[],
       imagesSources: [] as string[],
-      imagesError: null as null | string
+      imagesError: null as null | string,
+      errors: [] as string[],
+      sending: false as boolean
     };
   },
 
@@ -142,14 +155,14 @@ export default Vue.extend({
   methods: {
     updateImages() {
       this.imagesError = null;
-      this.imagesSources = [];
+      this.imagesSources = new Array(this.images.length);
       let readers = [] as FileReader[];
 
       for (let i = 0; i < this.images.length; i++) {
         readers.push(new FileReader());
         readers[readers.length - 1].onload = e => {
           if (typeof e.target?.result === "string") {
-            this.imagesSources.push(e.target.result);
+            this.imagesSources[i] = e.target.result;
           } else {
             this.imagesError =
               "Не удалось загрузить одно или несколько изображений";
@@ -164,6 +177,8 @@ export default Vue.extend({
       this.updateImages();
     },
     sendTrack() {
+      this.errors = [];
+      this.sending = true;
       addTrack.actions
         .sendTrack(this.images)
         .then(() => {
@@ -171,10 +186,21 @@ export default Vue.extend({
           this.$router.push("/tracks");
         })
         .catch(error => {
-          console.log(error.response);
-          console.log(error.request);
+          if (error.response) {
+            this.errors.push(
+              "Произошла ошибка при добавлении трассы. Код ошибки: " +
+                error.response.status.toString()
+            );
+            console.log(error.response);
+          } else {
+            this.errors.push(
+              "Произошла ошибка при добавлении трассы. Проверьте подключение к интернету"
+            );
+            console.log(error.request);
+          }
           console.log(error.message);
-        });
+        })
+        .finally(() => (this.sending = false));
     },
     submit() {
       this.sendTrack();
