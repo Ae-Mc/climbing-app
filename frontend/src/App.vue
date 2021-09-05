@@ -94,7 +94,7 @@ export default Vue.extend({
     logout() {
       auth.actions.logout().then(() => {
         if (this.$router.currentRoute.meta?.requiresAuth) {
-          this.$router.push("/login");
+          this.$router.push({ name: "Login" });
         }
       });
     }
