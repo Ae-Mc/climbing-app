@@ -44,7 +44,7 @@ export const data = createModule('data', {
         return new Map();
       }
     },
-    track(state, id: number): FetchedTrack | null {
+    track: (state) => (id: number): FetchedTrack | null => {
       return state.tracks?.find((track) => track.id === id) || null;
     }
   },
