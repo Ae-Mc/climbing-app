@@ -1,3 +1,4 @@
+import { auth } from '@/store/modules/auth'
 import SendableTrack from "@/models/track/sendableTrack";
 import axios from "axios";
 import { createModule } from "vuexok";
@@ -24,6 +25,9 @@ export const addTrack = createModule('addTrack', {
       if (track.creationDate) {
         data.append('creationDate', track.creationDate)
       }
+      if (track.author) {
+        data.append('author', track.author);
+      }
       if (track.images) {
         images.forEach(image => {
           data.append('images', image)
@@ -46,6 +50,9 @@ export const addTrack = createModule('addTrack', {
     setDescription(state, description: string) {
       state.track.description = description;
     },
+    setAuthor(state, author: string) {
+      state.track.author = author;
+    },
     setCreationDate(state, creationDate: string) {
       state.track.creationDate = creationDate;
     },
@@ -54,6 +61,8 @@ export const addTrack = createModule('addTrack', {
     },
     clear(state) {
       state.track = new SendableTrack()
+      if (auth.state.user?.name)
+        state.track.author = auth.state.user?.name;
     },
   }
 })

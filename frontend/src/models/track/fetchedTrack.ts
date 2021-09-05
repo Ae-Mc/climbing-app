@@ -2,7 +2,8 @@ export default class FetchedTrack {
   id!: number
   name!: string
   category!: string
-  author!: { username: string, email?: string }
+  author!: string
+  uploader!: { username: string, email?: string }
   description!: string
   images!: { image: string }[]
   creationDate!: string

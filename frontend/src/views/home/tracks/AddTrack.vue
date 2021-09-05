@@ -21,6 +21,14 @@
             :items="categories"
             required
           />
+          <text-field
+            field-name="Автор"
+            label="Автор"
+            icon="mdi-account"
+            rules="required"
+            v-model="author"
+            required
+          />
           <textarea-field
             field-name="Описание"
             label="Описание"
@@ -28,15 +36,14 @@
             rules="required"
             v-model="description"
             required
-          >
-          </textarea-field>
+          />
           <date-field
             field-name="Дата создания"
             rules="requiredWomanSex"
             label="Дата создания трассы"
             v-model="creationDate"
             icon="mdi-calendar"
-          ></date-field>
+          />
           <validation-provider
             v-slot="{ errors }"
             name="Фотографии"
@@ -52,7 +59,7 @@
               @change="updateImages()"
               :error-messages="errors"
               hide-details="auto"
-            ></v-file-input>
+            />
           </validation-provider>
 
           <div v-if="imagesError == null">
@@ -88,6 +95,7 @@ import AutocompleteField from "@/components/FormFields/AutocompleteField.vue";
 import TextareaField from "@/components/FormFields/TextareaField.vue";
 import DateField from "@/components/FormFields/DateField.vue";
 import "@/utils/validation-rules";
+import { auth } from "@/store/modules/auth";
 
 export default Vue.extend({
   data() {
@@ -101,6 +109,9 @@ export default Vue.extend({
 
   mounted() {
     data.actions.loadCategories();
+    if (!addTrack.state.track.author && auth.state.user) {
+      addTrack.mutations.setAuthor(auth.state.user?.name);
+    }
   },
 
   computed: {
@@ -113,6 +124,10 @@ export default Vue.extend({
     category: {
       get: () => addTrack.state.track.category,
       set: addTrack.mutations.setCategory
+    },
+    author: {
+      get: () => addTrack.state.track.author,
+      set: addTrack.mutations.setAuthor
     },
     description: {
       get: () => addTrack.state.track.description,
@@ -176,4 +191,3 @@ export default Vue.extend({
   }
 });
 </script>
-    Autocomplete
