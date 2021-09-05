@@ -17,7 +17,7 @@
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.0.0-beta.3",
+    "vuex-persistedstate": "^4.0.0",
     "vuexok": "^1.0.1"
   },
   "devDependencies": {
