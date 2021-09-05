@@ -15,8 +15,6 @@ from django.contrib.auth.models import User, Group
 from rest_framework import status, viewsets
 from rest_framework import permissions
 
-# Create your views here.
-
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -46,10 +44,11 @@ class TrackViewSet(viewsets.ModelViewSet):
         images = data.pop("images", [])
         trackSerializer = TrackSerializer(
             data={
-                "name": data.get("name", [None])[0] or None,
-                "category": data.get("category", [None])[0] or None,
-                "description": data.get("description", [None])[0] or None,
-                "author": data.get("author", [self.request.user.id])[0],
+                "name": data.get("name", [None])[0],
+                "category": data.get("category", [None])[0],
+                "description": data.get("description", [None])[0],
+                "author": data.get("author", [None])[0],
+                "uploader": data.get("uploader", [self.request.user.id])[0],
                 "creationDate": data.get("creationDate", [None])[0],
             }
         )

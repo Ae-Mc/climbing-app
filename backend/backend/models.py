@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.db.models import deletion
 from django.utils import timezone
 
-# Create your models here.
-
 
 def generate_imageset_upload_to(instance, filename=None):
     return f"images/{instance.id}_{str(int(time.time()))}.png"
@@ -22,15 +20,19 @@ class Category(models.Model):
 
 
 class Track(models.Model):
-    name = models.CharField(max_length=1000)
+    name = models.CharField(max_length=300)
     description = models.TextField()
     category = models.ForeignKey(
         Category, on_delete=deletion.PROTECT, related_name="category"
     )
-    author = models.ForeignKey(
-        User, on_delete=deletion.PROTECT, related_name="author"
+    author = models.CharField(max_length=100)
+    uploader = models.ForeignKey(
+        User, on_delete=deletion.PROTECT, related_name="uploader"
     )
     creationDate = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return f"Track object ({self.id}) {self.name} by {self.author}"
 
 
 class Image(models.Model):
