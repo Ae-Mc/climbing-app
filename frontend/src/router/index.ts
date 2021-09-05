@@ -39,7 +39,9 @@ const routes: Array<RouteConfig> = [
         path: 'tracks/:id',
         name: 'Track',
         component: () => import('@/views/home/tracks/Track.vue'),
-        props: true
+        props: (route) => ({
+          id: parseInt(route.params.id)
+        })
       },
       {
         path: 'about',

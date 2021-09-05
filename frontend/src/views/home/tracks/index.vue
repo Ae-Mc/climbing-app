@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import { data } from "@/store/modules/data";
 import Vue from "vue";
 import { mapGetters } from "vuex";
 
@@ -29,7 +30,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.$store.dispatch("data/loadTracks");
+    data.actions.loadTracks();
   },
 
   computed: {
@@ -48,9 +49,11 @@ export default Vue.extend({
         return [];
       },
       set(value: number[]) {
-        // TODO: redirect to track page
         const trackId = value[0];
-        console.log(`Redirect to tracks/${trackId}`);
+        this.$router.push({
+          name: "Track",
+          params: { id: trackId.toString() }
+        });
       }
     }
   }
