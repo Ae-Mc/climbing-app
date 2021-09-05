@@ -29,9 +29,9 @@ export const addTrack = createModule('addTrack', {
         data.append('author', track.author);
       }
       if (track.images) {
-        images.forEach(image => {
-          data.append('images', image)
-        });
+        for (let i = 0; i < images.length; i++) {
+          data.append('images', images[i]);
+        }
       }
 
       return axios.post('/api/tracks/', data);
