@@ -82,10 +82,10 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.meta?.requiresAuth === true && !auth.state.status.loggedIn) {
     return next('/login');
-  } else if (to.meta?.requiresNotAuthenticated === true && !auth.state.status.loggedIn) {
-    next(to.fullPath);
+  } else if (to.meta?.requiresNotAuthenticated === true && auth.state.status.loggedIn) {
+    return false;
   }
-  return false;
+  next();
 })
 
 export default router
