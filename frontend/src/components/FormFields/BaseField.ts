@@ -25,10 +25,15 @@ export default Vue.extend({
       type: String,
       default: ""
     },
-    fieldName: String,
+    fieldName: {
+      type: String,
+      default: function () {
+        return this.label === null ? "Поле" : this.label;
+      },
+    },
     label: {
       type: String,
-      default: ""
+      default: null
     },
     icon: String,
     hideDetails: {
@@ -55,7 +60,4 @@ export default Vue.extend({
       return Object.assign({}, this.$listeners);
     }
   },
-  render(h) {
-    return h('span', ['test']);
-  }
 })
