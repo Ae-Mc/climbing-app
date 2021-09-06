@@ -9,8 +9,7 @@ export const addTrack = createModule('addTrack', {
     track: new SendableTrack(),
   },
   actions: {
-    async sendTrack(context, images: File[] = []) {
-      addTrack.mutations.setImages(images)
+    async sendTrack(context) {
       const track = context.state.track;
       const data = new FormData();
       if (track.name) {
@@ -29,8 +28,8 @@ export const addTrack = createModule('addTrack', {
         data.append('author', track.author);
       }
       if (track.images) {
-        for (let i = 0; i < images.length; i++) {
-          data.append('images', images[i]);
+        for (let i = 0; i < track.images.length; i++) {
+          data.append('images', track.images[i]);
         }
       }
 

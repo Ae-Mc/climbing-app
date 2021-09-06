@@ -50,13 +50,15 @@
           <validation-provider
             v-slot="{ errors }"
             name="Фотографии"
-            rules="requiredMany"
+            rules="requiredMany|size50MB"
           >
             <v-file-input
               accept="image/*"
               label="Фотографии трассы"
               multiple
               chips
+              show-size
+              counter
               v-model="images"
               prepend-icon="mdi-camera-plus"
               @change="updateImages()"
@@ -64,17 +66,24 @@
               hide-details="auto"
             />
           </validation-provider>
-
-          <div v-if="imagesError == null">
-            <v-card
-              tile
-              v-for="src in imagesSources"
-              :key="src"
-              class="mb-4"
-              outlined
-            >
-              <v-img :src="src" />
-            </v-card>
+          <div class="mt-2">
+            <v-progress-linear
+              indeterminate
+              rounded
+              v-if="
+                imagesSources.some((x) => x.length > 0) &&
+                imagesSources.some((x) => x.length == 0)
+              "
+            />
+          </div>
+          <div
+            v-if="
+              imagesError == null && imagesSources.every((x) => x.length > 0)
+            "
+          >
+            <div v-for="src in imagesSources" :key="src" class="mb-1">
+              <img :src="src" />
+            </div>
           </div>
           <span v-else class="error--text mt-4">{{ imagesError }}</span>
         </v-card-text>
@@ -101,12 +110,12 @@ import Vue from "vue";
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import { addTrack } from "@/store/modules/addTrack";
 import { data } from "@/store/modules/data";
+import { auth } from "@/store/modules/auth";
 import TextField from "@/components/FormFields/TextField.vue";
 import AutocompleteField from "@/components/FormFields/AutocompleteField.vue";
 import TextareaField from "@/components/FormFields/TextareaField.vue";
 import DateField from "@/components/FormFields/DateField.vue";
 import "@/utils/validation-rules";
-import { auth } from "@/store/modules/auth";
 
 export default Vue.extend({
   data() {
@@ -131,7 +140,6 @@ export default Vue.extend({
     categories: () => data.state.categories,
     name: {
       get: () => addTrack.state.track.name,
-
       set: addTrack.mutations.setName
     },
     category: {
@@ -153,9 +161,21 @@ export default Vue.extend({
   },
 
   methods: {
+    refreshImagesPreview() {
+      if (this.imagesSources.some(x => x.length == 0)) {
+        setTimeout(() => this.refreshImagesPreview(), 100);
+      } else {
+        let temp = this.imagesSources;
+        this.imagesSources = [];
+        this.imagesSources = temp;
+      }
+    },
     updateImages() {
       this.imagesError = null;
-      this.imagesSources = new Array(this.images.length);
+      this.imagesSources = [];
+      for (let i = 0; i < this.images.length; i++) {
+        this.imagesSources.push("");
+      }
       let readers = [] as FileReader[];
 
       for (let i = 0; i < this.images.length; i++) {
@@ -170,6 +190,7 @@ export default Vue.extend({
         };
         readers[readers.length - 1].readAsDataURL(this.images[i]);
       }
+      this.refreshImagesPreview();
     },
     clear() {
       addTrack.mutations.clear();
@@ -179,8 +200,9 @@ export default Vue.extend({
     sendTrack() {
       this.errors = [];
       this.sending = true;
+      addTrack.mutations.setImages(this.images);
       addTrack.actions
-        .sendTrack(this.images)
+        .sendTrack()
         .then(() => {
           addTrack.mutations.clear();
           this.$router.push("/tracks");
@@ -217,3 +239,13 @@ export default Vue.extend({
   }
 });
 </script>
+<style>
+img {
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+</style>
