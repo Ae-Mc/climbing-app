@@ -13,6 +13,14 @@ export const auth = createModule('auth', {
   },
 
   actions: {
+    async register(_, user: User): Promise<void> {
+      return axios.post(
+        'auth/users/',
+        { username: user.name, password: user.password },
+        { withCredentials: false }
+      );
+    },
+
     async login(_, user: User): Promise<User> {
       try {
         const response = await axios.post('auth/token/login', {
@@ -31,7 +39,7 @@ export const auth = createModule('auth', {
     async logout(): Promise<void> {
       await axios.post('auth/token/logout');
       auth.mutations.logout();
-    }
+    },
   },
 
   mutations: {
