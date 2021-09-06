@@ -4,7 +4,7 @@ export default class SendableTrack {
   description?: string
   author?: string
   creationDate?: string
-  images?: File[]
+  images: File[]
 
   constructor(
     name?: string,
@@ -12,7 +12,7 @@ export default class SendableTrack {
     description?: string,
     author?: string,
     creationDate?: string,
-    images?: File[],
+    images: File[] = [],
   ) {
     this.name = name;
     this.category = category;
