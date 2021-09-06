@@ -1,53 +1,44 @@
 <template>
   <v-layout fill-height>
     <v-row align="center" justify="center">
-      <v-card>
-        <v-card-title>Вход</v-card-title>
-        <v-card-text>
-          <validation-observer v-slot="{ invalid }" ref="observer">
-            <v-form @submit.prevent="validate">
+      <validation-observer v-slot="{ invalid }" ref="observer">
+        <v-form @submit.prevent="validate" @submit="submit">
+          <v-card>
+            <v-card-title>Вход</v-card-title>
+            <v-card-text>
               <text-field
                 v-model="user.name"
-                field-name="Имя пользователя"
                 rules="required"
                 icon="mdi-account"
                 label="Имя пользователя"
                 name="username"
-                :hide-details="false"
                 required
               ></text-field>
               <text-field
                 v-model="user.password"
-                field-name="Пароль"
                 rules="required"
                 icon="mdi-lock"
                 label="Пароль"
                 type="password"
-                :hide-details="false"
                 required
               ></text-field>
               <div v-if="errorText != null" class="error--text">
                 {{ errorText }}
               </div>
-              <v-btn
-                @click.stop="submit"
-                type="submit"
-                class="mr-4 mt-4"
-                :disabled="invalid"
-              >
-                Войти
-              </v-btn>
-              <v-btn @click.stop="$router.push('/register')" class="mt-4">
+            </v-card-text>
+            <v-card-actions>
+              <v-btn type="submit" :disabled="invalid"> Войти </v-btn>
+              <v-btn @click.stop="$router.push('/register')">
                 Зарегестрироваться
               </v-btn>
-            </v-form>
-          </validation-observer>
-        </v-card-text>
-      </v-card>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </validation-observer>
     </v-row>
   </v-layout>
 </template>
-<script>
+<script lang="ts">
 import Vue from "vue";
 import User from "@/models/user";
 import TextField from "@/components/FormFields/TextField.vue";
@@ -58,11 +49,14 @@ import "@/utils/validation-rules";
 export default Vue.extend({
   data: () => ({
     user: new User(),
-    errorText: null
+    errorText: null as null | string
   }),
+
   methods: {
     validate() {
-      this.$refs.observer.validate();
+      (this.$refs.observer as InstanceType<
+        typeof ValidationObserver
+      >).validate();
     },
     submit() {
       auth.actions
