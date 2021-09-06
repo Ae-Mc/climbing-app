@@ -58,12 +58,18 @@ const routes: Array<RouteConfig> = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      requiresNotAuthenticated: true
+    }
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    meta: {
+      requiresNotAuthenticated: true
+    }
   }
 ]
 
@@ -75,9 +81,11 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta?.requiresAuth === true && !auth.state.status.loggedIn) {
-    return next('/login')
+    return next('/login');
+  } else if (to.meta?.requiresNotAuthenticated === true && !auth.state.status.loggedIn) {
+    next(to.fullPath);
   }
-  next()
+  return false;
 })
 
 export default router
