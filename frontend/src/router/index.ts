@@ -7,6 +7,8 @@ import Register from "@/views/Register.vue";
 
 Vue.use(VueRouter)
 
+const DEFAULT_TITLE = "Скалолазание ИТМО";
+
 const routes: Array<RouteConfig> = [
   {
     path: '/',
@@ -86,6 +88,12 @@ router.beforeEach(async (to, from, next) => {
     return false;
   }
   next();
+})
+
+router.afterEach(async (to, from) => {
+  Vue.nextTick(() => {
+    document.title = to.meta?.title || DEFAULT_TITLE;
+  })
 })
 
 export default router
