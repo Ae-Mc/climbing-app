@@ -18,7 +18,7 @@
       {{ track.description }}
       <h3>Фотографии</h3>
       <v-card v-for="image in track.images" :key="image.image" tile outlined>
-        <v-img :src="image.image"></v-img>
+        <img :src="image.image" />
       </v-card>
     </v-card-text>
   </v-card>
@@ -55,3 +55,13 @@ export default Vue.extend({
   methods: {}
 });
 </script>
+<style>
+img {
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+</style>
