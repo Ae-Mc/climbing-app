@@ -68,9 +68,10 @@ MIDDLEWARE = [
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8080",
-        "http://192.168.1.33",
-        "http://192.168.1.33:8080",
         "https://climbing.ae-mc.ru",
+    ]
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^http://192\.168\.1\.[\d]{1,3}(:8080)?$",
     ]
     CORS_ALLOW_CREDENTIALS = True
     SESSION_COOKIE_SAMESITE = None
