@@ -52,7 +52,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { extend, ValidationObserver } from "vee-validate";
-import { is, required } from "vee-validate/dist/rules";
+import { is } from "vee-validate/dist/rules";
 import TextField from "@/components/FormFields/TextField.vue";
 import { auth } from "@/store/modules/auth";
 import User from "@/models/user";

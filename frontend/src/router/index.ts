@@ -81,7 +81,7 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   if (to.meta?.requiresAuth === true && !auth.state.status.loggedIn) {
     return next('/login');
   } else if (to.meta?.requiresNotAuthenticated === true && auth.state.status.loggedIn) {
@@ -90,7 +90,7 @@ router.beforeEach(async (to, from, next) => {
   next();
 })
 
-router.afterEach(async (to, from) => {
+router.afterEach(async (to) => {
   Vue.nextTick(() => {
     document.title = to.meta?.title || DEFAULT_TITLE;
   })
