@@ -98,6 +98,11 @@ export default Vue.extend({
         }
       });
     }
+  },
+  metaInfo() {
+    return {
+      title: "Скалолазание ИТМО"
+    };
   }
 });
 </script>
