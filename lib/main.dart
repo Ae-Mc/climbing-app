@@ -13,6 +13,8 @@ void main() {
 class MyApp extends StatelessWidget {
   final _appRouter = AppRouter();
 
+  MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -25,11 +27,11 @@ class MyApp extends StatelessWidget {
         onGenerateTitle: (context) => S.current.ITMOClimbing,
         theme: Style().themeData,
         debugShowCheckedModeBanner: false,
-        supportedLocales: [
+        supportedLocales: const [
           Locale('ru'),
           Locale('en'),
         ],
-        localizationsDelegates: [
+        localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

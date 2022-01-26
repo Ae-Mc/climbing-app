@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:itmo_climbing/models/db_record.dart';
 import 'package:itmo_climbing/models/record.dart';
 import 'package:path/path.dart' as p;
@@ -24,7 +23,7 @@ enum ClassStatus {
 }
 
 class DatabaseHelper extends ChangeNotifier {
-  static final _databaseName = 'climbing.db';
+  static const _databaseName = 'climbing.db';
   final _traverseStore = intMapStoreFactory.store(_traverseTableName);
 
   /// List of travers results
@@ -91,9 +90,6 @@ class DatabaseHelper extends ChangeNotifier {
     if (count > 0) {
       records.removeWhere((element) => element.id == id);
       notifyListeners();
-    } else {
-      print(id);
-      print(await queryAll());
     }
   }
 

@@ -7,14 +7,16 @@ import 'package:itmo_climbing/router.gr.dart';
 class TracksPage extends BaseListViewPage<Track> {
   final List<Track> tracks;
 
-  TracksPage(List<Track> tracks) : tracks = tracks..sort();
+  TracksPage(List<Track> tracks, {Key? key})
+      : tracks = tracks..sort(),
+        super(key: key);
 
   @override
   Widget? getItemLeading(BuildContext context, Track item) {
     return IntrinsicHeight(
       child: IntrinsicWidth(
         child: ConstrainedBox(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             minWidth: 32,
             minHeight: 32,
           ),
@@ -24,7 +26,7 @@ class TracksPage extends BaseListViewPage<Track> {
               borderRadius: BorderRadius.circular(4),
               color: Theme.of(context).colorScheme.secondaryVariant,
             ),
-            padding: EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4),
             child: Text(
               item.category,
               style: Theme.of(context).textTheme.headline6?.copyWith(

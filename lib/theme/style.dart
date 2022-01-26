@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Style {
-  final Color primaryColor = Color(0xFF385790);
+  final Color primaryColor = const Color(0xFF385790);
 
-  TextTheme get textTheme => TextTheme();
+  TextTheme get textTheme => const TextTheme();
 
   ThemeData get themeData => ThemeData(
         primaryColor: primaryColor,

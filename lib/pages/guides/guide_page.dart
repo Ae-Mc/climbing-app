@@ -23,7 +23,7 @@ class GuidePage extends BaseListViewPage<Stand> {
 
   final Guide guide;
 
-  GuidePage({required this.guide});
+  const GuidePage({required this.guide, Key? key}) : super(key: key);
 
   @override
   void itemOnTap(BuildContext context, int index) {

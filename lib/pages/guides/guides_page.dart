@@ -5,6 +5,8 @@ import 'package:itmo_climbing/pages/guides/base_listview_page.dart';
 import 'package:itmo_climbing/router.gr.dart';
 
 class GuidesPage extends BaseListViewPage<Guide> {
+  const GuidesPage({Key? key}) : super(key: key);
+
   @override
   List<Guide> get items => [
         Guide(

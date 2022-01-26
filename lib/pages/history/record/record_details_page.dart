@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:itmo_climbing/generated/l10n.dart';
@@ -19,7 +18,7 @@ class RecordDetailsPage extends StatelessWidget {
         child: IntrinsicHeight(
           child: Theme(
             data: Theme.of(context).copyWith(
-              cardTheme: CardTheme(margin: EdgeInsets.all(16)),
+              cardTheme: const CardTheme(margin: EdgeInsets.all(16)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -28,7 +27,7 @@ class RecordDetailsPage extends StatelessWidget {
                   flex: 3,
                   child: Card(
                     child: Padding(
-                      padding: EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(24),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -83,7 +82,7 @@ class RecordDetailsPage extends StatelessWidget {
       flex: flex,
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +102,7 @@ class RecordDetailsPage extends StatelessWidget {
                                     .indicatorColors
                                     .length],
                       ),
-                      padding: EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       child: Text(
                         number.toString(),
                         style: Theme.of(context).textTheme.headline6!.copyWith(
@@ -111,7 +110,7 @@ class RecordDetailsPage extends StatelessWidget {
                             ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       title,
                       style: Theme.of(context).textTheme.headline5,

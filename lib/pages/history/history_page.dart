@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:itmo_climbing/generated/l10n.dart';
 import 'package:itmo_climbing/router.gr.dart';
@@ -8,6 +7,8 @@ import 'package:itmo_climbing/utils/database_helper.dart';
 import 'package:itmo_climbing/utils/functions.dart';
 
 class HistoryPage extends StatefulWidget {
+  const HistoryPage({Key? key}) : super(key: key);
+
   @override
   _HistoryPageState createState() => _HistoryPageState();
 }
@@ -23,7 +24,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('Rebuild history screen');
     return Column(
       children: [
         ListTile(
@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ],
           ),
-          trailing: SizedBox(width: 48),
+          trailing: const SizedBox(width: 48),
         ),
         Expanded(
           child: FutureBuilder(
@@ -57,7 +57,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 return ListView.builder(
                   itemCount:
                       DatabaseHelper.of(context, listen: true).records.length,
-                  padding: EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.only(bottom: 16),
                   itemBuilder: (context, index) {
                     final record = DatabaseHelper.of(context).records[index];
                     return Card(
@@ -86,7 +86,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           onPressed: () =>
                               DatabaseHelper.of(context, listen: false)
                                   .delete(record.id),
-                          icon: Icon(Icons.delete),
+                          icon: const Icon(Icons.delete),
                         ),
                       ),
                     );
@@ -95,9 +95,9 @@ class _HistoryPageState extends State<HistoryPage> {
               }
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasError) {
-                return Text('Error fetching history');
+                return const Text('Error fetching history');
               }
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             },
           ),
         ),

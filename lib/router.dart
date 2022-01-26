@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:itmo_climbing/pages/guides/guide_page.dart';
 import 'package:itmo_climbing/pages/guides/guides_page.dart';

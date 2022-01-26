@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseListViewPage<T> extends StatelessWidget {
+  const BaseListViewPage({Key? key}) : super(key: key);
+
   List<T> get items;
 
   @override
@@ -17,7 +19,7 @@ abstract class BaseListViewPage<T> extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Icon(CupertinoIcons.right_chevron),
+        trailing: const Icon(CupertinoIcons.right_chevron),
       ),
     );
   }

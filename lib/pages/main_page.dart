@@ -4,17 +4,19 @@ import 'package:itmo_climbing/generated/l10n.dart';
 import 'package:itmo_climbing/router.gr.dart';
 
 class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
-      routes: [
+      routes: const [
         HistoryRouter(),
         HomeRouter(),
         GuideRouter(),
       ],
       appBarBuilder: (_, tabsRouter) => AppBar(
         title: Text(S.current.ITMOClimbing),
-        leading: AutoBackButton(),
+        leading: const AutoBackButton(),
         automaticallyImplyLeading: true,
         titleSpacing: 0,
       ),
@@ -24,15 +26,15 @@ class MainPage extends StatelessWidget {
         onTap: (newIndex) => router.setActiveIndex(newIndex),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.history),
+            icon: const Icon(Icons.history),
             label: S.current.History,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             label: S.current.Home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_rounded),
+            icon: const Icon(Icons.menu_book_rounded),
             label: S.current.Guide,
           ),
         ],

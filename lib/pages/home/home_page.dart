@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:itmo_climbing/generated/l10n.dart';
 import 'package:itmo_climbing/models/lap.dart';
@@ -11,6 +10,8 @@ import 'package:itmo_climbing/widgets/cell.dart';
 import 'package:pedantic/pedantic.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -29,19 +30,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 301),
+      duration: const Duration(milliseconds: 301),
     );
     _fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _lapIconMovementAnimation = RelativeRectTween(
-      begin: RelativeRect.fromLTRB(0, 0, 0, 32),
-      end: RelativeRect.fromLTRB(-35, 0, 35, 32),
+      begin: const RelativeRect.fromLTRB(0, 0, 0, 32),
+      end: const RelativeRect.fromLTRB(-35, 0, 35, 32),
     ).animate(_controller);
     _playIconMovementAnimation = RelativeRectTween(
-      begin: RelativeRect.fromLTRB(0, 0, 0, 32),
-      end: RelativeRect.fromLTRB(35, 0, -35, 32),
+      begin: const RelativeRect.fromLTRB(0, 0, 0, 32),
+      end: const RelativeRect.fromLTRB(35, 0, -35, 32),
     ).animate(_controller);
 
-    _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       setState(() {
         if (_stopwatch.isRunning) {
           _displayedTime = stringFromDuration(_stopwatch.elapsed);
@@ -78,20 +79,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Spacer(),
+          const Spacer(),
           Text(
             _displayedTime,
             style: Theme.of(context).textTheme.headline2,
           ),
-          SizedBox(height: 16),
-          Spacer(),
+          const SizedBox(height: 16),
+          const Spacer(),
           _table(context),
-          Spacer(),
-          SizedBox(height: 16),
+          const Spacer(),
+          const SizedBox(height: 16),
           _bottomButtonsStack(),
         ],
       ),
