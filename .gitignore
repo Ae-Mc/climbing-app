@@ -34,6 +34,11 @@ android/key.properties
 .pub/
 /build/
 
+# generated files
+*.gr.dart
+*.g.dart
+lib/generated
+
 # Web related
 lib/generated_plugin_registrant.dart
 
