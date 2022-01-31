@@ -36,7 +36,9 @@ dependencies:
 
   assorted_layout_widgets: ^5.5.0
   auto_route: ^3.2.2
+  dartz: ^0.10.1
   dio: ^4.0.4
+  equatable: ^2.0.3
   flutter_bloc: ^8.0.1
   flutter_svg: ^1.0.3
   freezed_annotation: ^1.1.0
@@ -53,7 +55,6 @@ dev_dependencies:
   auto_route_generator: ^3.2.1
   build_runner: ^2.1.7
   dart_code_metrics: ^4.10.0-dev.2
-  equatable: ^2.0.3
   flutter_gen_runner: ^4.1.5
   freezed: ^1.1.1
   json_serializable: ^6.1.4
