@@ -31,6 +31,8 @@ class SplashPage extends StatelessWidget {
             Expanded(
               child: Center(
                 child: SizedBox(
+                  height: 48,
+                  width: 48,
                   child: CircularProgressIndicator.adaptive(
                     valueColor: AlwaysStoppedAnimation(
                       AppTheme.of(context).colorTheme.onBackgroundVariant,
