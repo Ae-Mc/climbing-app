@@ -35,8 +35,10 @@ android/key.properties
 /build/
 
 # generated files
-*.gr.dart
+*.config.dart
+*.freezed.dart
 *.g.dart
+*.gr.dart
 lib/generated
 
 # Web related
