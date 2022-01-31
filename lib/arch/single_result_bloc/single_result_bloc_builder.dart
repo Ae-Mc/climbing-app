@@ -10,13 +10,13 @@ typedef SingleResultListener<SingleResult> = void Function(
 
 /// Виджет-прослойка над bloc-builder для работы с SingleResultBloc
 class SingleResultBlocBuilder<
-    B extends SingleResultBloc<Object?, S, SingleResult>,
-    S,
+    Bloc extends SingleResultBloc<Object?, State, SingleResult>,
+    State,
     SingleResult> extends StatelessWidget {
-  final B? bloc;
+  final Bloc? bloc;
   final SingleResultListener<SingleResult> onSingleResult;
-  final BlocWidgetBuilder<S> builder;
-  final BlocBuilderCondition<S>? buildWhen;
+  final BlocWidgetBuilder<State> builder;
+  final BlocBuilderCondition<State>? buildWhen;
 
   const SingleResultBlocBuilder({
     required this.onSingleResult,
@@ -29,7 +29,7 @@ class SingleResultBlocBuilder<
   @override
   Widget build(BuildContext context) {
     return StreamListener<SingleResult>(
-      stream: (bloc ?? context.read<B>()).singleResults,
+      stream: (bloc ?? context.read<Bloc>()).singleResults,
       onData: (data) => onSingleResult(context, data),
       child: BlocBuilder(
         bloc: bloc,
