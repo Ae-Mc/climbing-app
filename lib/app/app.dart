@@ -24,15 +24,20 @@ class App extends StatelessWidget {
           return AppThemeProvider(
             theme: state,
             child: MaterialApp.router(
+              title: 'Скалолазание ИТМО',
               routeInformationParser: router.defaultRouteParser(),
               routerDelegate: router.delegate(),
+              debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 colorScheme: const ColorScheme.light().copyWith(
                   background: state.colorTheme.background,
                   brightness: state.colorTheme.brightness,
+                  onPrimary: state.colorTheme.onPrimary,
                   primary: state.colorTheme.primary,
                 ),
+                iconTheme: IconThemeData(color: state.colorTheme.primary),
                 textTheme: TextTheme(bodyText1: state.textTheme.body1Regular),
+                fontFamily: state.textTheme.fontFamily,
               ),
             ),
           );
