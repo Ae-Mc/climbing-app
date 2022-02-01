@@ -21,8 +21,7 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SplashBloc>(
-      create: (context) =>
-          SplashBloc(GetIt.I.get())..add(const SplashBlocEventInit()),
+      create: (context) => GetIt.I()..add(const SplashBlocEventInit()),
       child: SingleResultBlocBuilder<SplashBloc, SplashBlocState,
           SplashBlocSingleResult>(
         onSingleResult: onInitialized,
@@ -49,7 +48,8 @@ class SplashPage extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Center(
+                      child: FractionallySizedBox(
+                        heightFactor: 0.3,
                         child: InitializationIndicator(
                           isFailure: state is SplashBlocStateFailure,
                           callback: () => BlocProvider.of<SplashBloc>(context)

@@ -12,15 +12,21 @@ class InitializationIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      width: 48,
+    return AspectRatio(
+      aspectRatio: 1,
       child: isFailure
-          ? IconButton(
+          ? FloatingActionButton(
               onPressed: callback,
-              icon: Icon(
-                Icons.replay,
-                color: AppTheme.of(context).colorTheme.onBackgroundVariant,
+              backgroundColor: AppTheme.of(context).colorTheme.button,
+              child: FractionallySizedBox(
+                heightFactor: 0.6,
+                widthFactor: 0.6,
+                child: FittedBox(
+                  child: Icon(
+                    Icons.replay,
+                    color: AppTheme.of(context).colorTheme.onBackgroundVariant,
+                  ),
+                ),
               ),
             )
           : CircularProgressIndicator.adaptive(

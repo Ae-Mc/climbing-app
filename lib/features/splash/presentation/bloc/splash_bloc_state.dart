@@ -4,7 +4,7 @@ part 'splash_bloc_state.freezed.dart';
 
 @freezed
 class SplashBlocState with _$SplashBlocState {
-  const factory SplashBlocState() = _SplashBlocState;
+  const factory SplashBlocState.normal() = SplashBlocStateNormal;
   const factory SplashBlocState.failure(Failure failure) =
       SplashBlocStateFailure;
 }
