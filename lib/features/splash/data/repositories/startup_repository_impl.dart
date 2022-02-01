@@ -13,9 +13,9 @@ class StartupRepositoryImpl implements StartupRepository {
     await Future.delayed(const Duration(seconds: 3));
     _isInited = true;
 
-    return const Left(Failure('Initialization error'));
+    // return const Left(Failure('Initialization error'));
 
-    // return const Right(null);
+    return const Right(null);
   }
 
   @override

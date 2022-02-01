@@ -1,4 +1,5 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
+import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
@@ -9,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   void onInitialized(BuildContext _, SplashBlocSingleResult __) {
-    GetIt.I.get<Logger>().d('Initialized');
+    // ignore: avoid-ignoring-return-values
+    GetIt.I<AppRouter>().replace(const HomeRoute());
   }
 
   @override
