@@ -1,4 +1,5 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
+import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/features/home_page/presentation/widgets/year_widget.dart';
 import 'package:flutter/material.dart';
@@ -57,5 +58,9 @@ class HomePage extends StatelessWidget {
   }
 
   void bottomNavBarOnTap(int index) {
+    if (index == 1) {
+      // ignore: avoid-ignoring-return-values
+      GetIt.I<AppRouter>().push(const AuthRoute());
+    }
   }
 }
