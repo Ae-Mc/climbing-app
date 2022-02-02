@@ -11,9 +11,10 @@ class StartupRepositoryImpl implements StartupRepository {
   Future<Either<Failure, void>> initialize() async {
     // ignore: avoid-ignoring-return-values
     await Future.delayed(const Duration(seconds: 3));
-    _isInited = true;
 
     // return const Left(Failure('Initialization error'));
+
+    _isInited = true;
 
     return const Right(null);
   }

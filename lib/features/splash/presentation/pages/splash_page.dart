@@ -1,23 +1,19 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_event.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_state.dart';
-import 'package:climbing_app/features/splash/presentation/widgets/initialization_indicator.dart';
+import 'package:climbing_app/features/splash/presentation/widgets/retry_button.dart';
 import 'package:flutter/material.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 class SplashPage extends StatelessWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  final void Function() onLoad;
 
-  void onInitialized(BuildContext _, SplashBlocSingleResult __) {
-    // ignore: avoid-ignoring-return-values
-    GetIt.I<AppRouter>().replace(const HomeRoute());
-  }
+  const SplashPage({Key? key, required this.onLoad}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +21,7 @@ class SplashPage extends StatelessWidget {
       create: (context) => GetIt.I()..add(const SplashBlocEventInit()),
       child: SingleResultBlocBuilder<SplashBloc, SplashBlocState,
           SplashBlocSingleResult>(
-        onSingleResult: onInitialized,
+        onSingleResult: (_, __) => onLoad(),
         builder: (context, state) {
           return SafeArea(
             child: Scaffold(
@@ -51,10 +47,22 @@ class SplashPage extends StatelessWidget {
                     Expanded(
                       child: FractionallySizedBox(
                         heightFactor: 0.3,
-                        child: InitializationIndicator(
-                          isFailure: state is SplashBlocStateFailure,
-                          callback: () => BlocProvider.of<SplashBloc>(context)
-                              .add(const SplashBlocEventInit()),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: state.when(
+                            normal: () => CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation(
+                                AppTheme.of(context)
+                                    .colorTheme
+                                    .onBackgroundVariant,
+                              ),
+                            ),
+                            failure: (_) => RetryButton(
+                              onPressed: () =>
+                                  BlocProvider.of<SplashBloc>(context)
+                                      .add(const SplashBlocEventInit()),
+                            ),
+                          ),
                         ),
                       ),
                     ),

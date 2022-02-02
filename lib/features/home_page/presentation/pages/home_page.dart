@@ -2,6 +2,7 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/features/home_page/presentation/widgets/year_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,6 +43,7 @@ class HomePage extends StatelessWidget {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           unselectedItemColor: AppTheme.of(context).colorTheme.unselectedAppBar,
+          onTap: bottomNavBarOnTap,
           items: const [
             BottomNavigationBarItem(label: "Главная", icon: Icon(Icons.home)),
             BottomNavigationBarItem(
@@ -52,5 +54,8 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void bottomNavBarOnTap(int index) {
   }
 }

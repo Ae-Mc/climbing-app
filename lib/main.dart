@@ -8,9 +8,11 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
 @InjectableInit(initializerName: r"$initGetIt")
+void configureDependencies() => $initGetIt(GetIt.I);
+
 void main() {
   // ignore: avoid-ignoring-return-values
-  $initGetIt(GetIt.I);
+  configureDependencies();
   runZonedGuarded(() => runApp(const App()), (error, stacktrace) async {
     GetIt.I.get<Logger>().e('Critical error: ', error, stacktrace);
   });
