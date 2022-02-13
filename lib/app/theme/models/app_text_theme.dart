@@ -12,7 +12,7 @@ class BaseTextTheme implements AppTextTheme {
   const BaseTextTheme();
 
   @override
-  String get fontFamily => 'Roboto';
+  String get fontFamily => 'Rubik';
 
   @override
   TextStyle get body1Regular => const TextStyle(
