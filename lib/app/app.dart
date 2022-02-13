@@ -24,7 +24,7 @@ class App extends StatelessWidget {
           return AppThemeProvider(
             theme: state,
             child: MaterialApp.router(
-              title: 'Скалолазание ИТМО',
+              title: "Скалолазание ИТМО",
               routeInformationParser: router.defaultRouteParser(),
               routerDelegate: router.delegate(),
               debugShowCheckedModeBanner: false,
@@ -36,7 +36,11 @@ class App extends StatelessWidget {
                   primary: state.colorTheme.primary,
                 ),
                 iconTheme: IconThemeData(color: state.colorTheme.primary),
-                textTheme: TextTheme(bodyText1: state.textTheme.body1Regular),
+                textTheme: TextTheme(
+                  bodyText1: state.textTheme.body1Regular,
+                  subtitle1: state.textTheme.subtitle1,
+                  subtitle2: state.textTheme.subtitle2,
+                ),
                 fontFamily: state.textTheme.fontFamily,
               ),
             ),
