@@ -3,8 +3,6 @@ import 'dart:math';
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -21,15 +19,19 @@ class _AuthPageState extends State<AuthPage>
 
   @override
   void initState() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) => update());
+    timer =
+        Timer.periodic(const Duration(milliseconds: 4), (timer) => update());
     super.initState();
   }
 
   void update() {
     if (!paused) {
       setState(() => []);
-      GetIt.I<Logger>().d("Updated");
     }
+  }
+
+  void onTap() {
+    paused = !paused;
   }
 
   @override
@@ -37,7 +39,7 @@ class _AuthPageState extends State<AuthPage>
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
-          onTap: () => paused = !paused,
+          onTap: onTap,
           child: Recursive(
             depth: 0,
             random: random,
