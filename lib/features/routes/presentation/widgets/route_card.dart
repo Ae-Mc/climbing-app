@@ -57,7 +57,7 @@ class RouteCard extends StatelessWidget {
                       style: AppTheme.of(context).textTheme.subtitle2,
                     ),
                     Text(
-                      'Автор: ${route.uploader.firstName} ${route.uploader.lastName}',
+                      'Автор: ${route.author.firstName} ${route.author.lastName}',
                       style: AppTheme.of(context).textTheme.subtitle2,
                     ),
                     const Spacer(),

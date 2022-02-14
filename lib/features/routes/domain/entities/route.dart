@@ -18,7 +18,7 @@ class Route with _$Route {
     required DateTime creationDate,
     required DateTime createdAt,
     required List<Image> images,
-    required User uploader,
+    required User author,
   }) = _;
 
   factory Route.fromJson(Map<String, dynamic> json) => _$RouteFromJson(json);
