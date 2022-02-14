@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
@@ -8,4 +9,7 @@ abstract class InfrastructureModule {
         level: Level.debug,
         printer: PrettyPrinter(),
       );
+
+  @singleton
+  Dio dio() => Dio();
 }

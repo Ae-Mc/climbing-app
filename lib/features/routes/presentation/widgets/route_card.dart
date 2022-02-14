@@ -1,11 +1,14 @@
-import 'dart:math';
-
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:climbing_app/app/theme/models/app_color_theme.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
+import 'package:climbing_app/features/routes/domain/entities/category.dart';
+import 'package:climbing_app/generated/assets.gen.dart';
+import 'package:flutter/material.dart' hide Route;
 
 class RouteCard extends StatelessWidget {
-  const RouteCard({Key? key}) : super(key: key);
+  final Route route;
+  const RouteCard({Key? key, required this.route}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +28,18 @@ class RouteCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16)),
-                child: Image.network(
-                  'https://picsum.photos/72',
-                  width: 72,
-                  height: 72,
-                  fit: BoxFit.cover,
-                ),
+                child: route.images.isNotEmpty
+                    ? Image.network(
+                        'http://192.168.1.56:8000/${route.images[0].url}',
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                      )
+                    : Assets.images.status404.image(
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                      ),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -40,20 +49,15 @@ class RouteCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      [
-                        'Овсянка, сэр',
-                        'Трава',
-                        '2007',
-                        'Ложка дёгтя в бочке дёгтя',
-                      ].elementAt(Random().nextInt(4)),
+                      route.name,
                       style: AppTheme.of(context).textTheme.subtitle1,
                     ),
                     Text(
-                      'Категория: 6c+',
+                      'Категория: ${route.category}',
                       style: AppTheme.of(context).textTheme.subtitle2,
                     ),
                     Text(
-                      'Автор: Саша Макурин',
+                      'Автор: ${route.uploader.firstName} ${route.uploader.lastName}',
                       style: AppTheme.of(context).textTheme.subtitle2,
                     ),
                     const Spacer(),
@@ -61,11 +65,7 @@ class RouteCard extends StatelessWidget {
                       height: 8,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: [
-                          colorTheme.routeEasy,
-                          colorTheme.routeMedium,
-                          colorTheme.routeHard,
-                        ][Random().nextInt(3)],
+                        color: getCategoryColor(colorTheme),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                       ),
@@ -78,5 +78,16 @@ class RouteCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color getCategoryColor(AppColorTheme colorTheme) {
+    if (route.category.index < Category('6c').index) {
+      return colorTheme.routeEasy;
+    }
+    if (route.category.index < Category('7a+').index) {
+      return colorTheme.routeMedium;
+    }
+
+    return colorTheme.routeHard;
   }
 }
