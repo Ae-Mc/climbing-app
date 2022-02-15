@@ -1,11 +1,10 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'failure.freezed.dart';
 
-class Failure extends Equatable {
-  final String? message;
-  const Failure(this.message);
-
-  @override
-  List<Object> get props => [];
-  @override
-  bool get stringify => true;
+@freezed
+class Failure with _$Failure {
+  const factory Failure.connectionFailure() = ConnectionFailure;
+  const factory Failure.serverFailure({required int statusCode}) =
+      ServerFailure;
+  const factory Failure.unknownFailure() = UnknownFailure;
 }

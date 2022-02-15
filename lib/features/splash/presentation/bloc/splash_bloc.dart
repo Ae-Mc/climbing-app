@@ -9,13 +9,13 @@ import 'package:injectable/injectable.dart';
 class SplashBloc extends SingleResultBloc<SplashBlocEvent, SplashBlocState,
     SplashBlocSingleResult> {
   final Initialize initialize;
-  SplashBloc(this.initialize) : super(const SplashBlocStateNormal()) {
+  SplashBloc(this.initialize) : super(const SplashBlocState.loading()) {
     on<SplashBlocEventInit>((event, emit) async {
-      emit(const SplashBlocStateNormal());
+      emit(const SplashBlocState.loading());
       final result = await initialize(null);
       result.fold(
         (l) => emit(
-          const SplashBlocStateFailure(Failure('Error in initialization')),
+          const SplashBlocStateFailure(UnknownFailure()),
         ),
         (r) => addSingleResult(const SplashBlocSingleResultLoadFinished()),
       );

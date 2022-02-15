@@ -50,7 +50,7 @@ class SplashPage extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: state.when(
-                            normal: () => CircularProgressIndicator.adaptive(
+                            loading: () => CircularProgressIndicator.adaptive(
                               valueColor: AlwaysStoppedAnimation(
                                 AppTheme.of(context)
                                     .colorTheme
