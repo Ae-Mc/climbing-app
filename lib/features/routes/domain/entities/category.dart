@@ -1,4 +1,4 @@
-class Category {
+class Category implements Comparable<Category> {
   final int index;
   static const categories = [
     '5a',
@@ -46,5 +46,10 @@ class Category {
   @override
   String toString() {
     return categories[index];
+  }
+
+  @override
+  int compareTo(Category other) {
+    return index.compareTo(other.index);
   }
 }

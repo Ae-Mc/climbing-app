@@ -5,6 +5,7 @@ import 'package:climbing_app/features/routes/domain/repositories/routes_reposito
 import 'package:climbing_app/features/routes/presentation/widgets/route_card.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 class RoutesPage extends StatelessWidget {
@@ -23,7 +24,44 @@ class RoutesPage extends StatelessWidget {
           ))(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final routes = snapshot.data ?? [];
+          var routes = snapshot.data ?? [];
+          routes.sort(
+            (left, right) {
+              final dateComparation =
+                  right.creationDate.compareTo(left.creationDate);
+              if (dateComparation != 0) {
+                return dateComparation;
+              }
+
+              return right.category.compareTo(left.category);
+            },
+          );
+          final quarters =
+              Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate)));
+          String previous = '';
+          List<Widget> elements = [];
+
+          for (int i = 0, routeIndex = 0;
+              i < routes.length + quarters.length;
+              i++) {
+            if (previous != getQuarter(routes[routeIndex].creationDate)) {
+              previous = getQuarter(routes[routeIndex].creationDate);
+
+              elements.add(Text(
+                previous,
+                style: AppTheme.of(context).textTheme.title,
+                textAlign: TextAlign.center,
+              ));
+            }
+            final current = routeIndex;
+            if (routeIndex < routes.length - 1) {
+              routeIndex++;
+            } else {
+              routeIndex = 0;
+            }
+
+            elements.add(RouteCard(route: routes[current]));
+          }
 
           return SafeArea(
             child: Center(
@@ -31,10 +69,8 @@ class RoutesPage extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: ListView.separated(
                   padding: const Pad(all: 16),
-                  itemCount: routes.length,
-                  itemBuilder: (context, index) {
-                    return RouteCard(route: routes[index]);
-                  },
+                  itemCount: routes.length + quarters.length,
+                  itemBuilder: (context, index) => elements[index],
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 16),
                 ),
@@ -53,4 +89,6 @@ class RoutesPage extends StatelessWidget {
       },
     );
   }
+
+  String getQuarter(DateTime date) => DateFormat("yyyy ''QQQ").format(date);
 }
