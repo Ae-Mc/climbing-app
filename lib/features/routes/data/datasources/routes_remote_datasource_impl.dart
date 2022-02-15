@@ -15,7 +15,25 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
 
   @override
   Future<Either<Failure, List<Route>>> allRoutes() async {
-    return Right(await api.routes());
+    try {
+      return Right(await api.routes());
+    } on DioError catch (error) {
+      if ([
+        DioErrorType.cancel,
+        DioErrorType.connectTimeout,
+        DioErrorType.receiveTimeout,
+        DioErrorType.sendTimeout,
+      ].contains(error.type)) {
+        return const Left(ConnectionFailure());
+      }
+
+      final statusCode = error.response?.statusCode;
+      if (statusCode != null) {
+        return Left(ServerFailure(statusCode: statusCode));
+      }
+
+      return const Left(UnknownFailure());
+    }
   }
 }
 
