@@ -10,8 +10,8 @@ class RootPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
       routes: const [
-        RoutesRoute(),
-        AuthRoute(),
+        RoutesRouter(),
+        AuthRouter(),
       ],
       bottomNavigationBuilder: (context, tabsRouter) {
         return Container(

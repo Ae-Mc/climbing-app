@@ -9,9 +9,10 @@ import 'package:get_it/get_it.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final router = GetIt.I.get<AppRouter>();
+    final router = GetIt.I<AppRouter>();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

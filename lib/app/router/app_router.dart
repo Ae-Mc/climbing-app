@@ -14,8 +14,20 @@ export 'app_router.gr.dart';
       page: RootPage,
       initial: true,
       children: [
-        AutoRoute(guards: [InitGuard], page: AuthPage),
-        AutoRoute(guards: [InitGuard], initial: true, page: RoutesPage),
+        AutoRoute(
+          page: EmptyRouterPage,
+          name: 'AuthRouter',
+          children: [
+            AutoRoute(page: AuthPage, initial: true),
+          ],
+        ),
+        AutoRoute(
+          page: EmptyRouterPage,
+          name: 'RoutesRouter',
+          children: [
+            AutoRoute(initial: true, page: RoutesPage),
+          ],
+        ),
       ],
     ),
     AutoRoute(page: SplashPage),
