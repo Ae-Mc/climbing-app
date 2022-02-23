@@ -36,6 +36,7 @@ dependencies:
 
   assorted_layout_widgets: ^5.5.0
   auto_route: ^3.2.2
+  carousel_slider: ^4.0.0
   dartz: ^0.10.1
   dio: ^4.0.4
   equatable: ^2.0.3
