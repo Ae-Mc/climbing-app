@@ -5,6 +5,7 @@ abstract class AppTextTheme {
   String get fontFamily;
 
   TextStyle get body1Regular;
+  TextStyle get button;
   TextStyle get subtitle1;
   TextStyle get subtitle2;
   TextStyle get title;
@@ -21,6 +22,13 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get body1Regular => const TextStyle(
         fontSize: 16,
         letterSpacing: 0.5,
+        overflow: TextOverflow.ellipsis,
+      );
+
+  @override
+  TextStyle get button => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
       );
 

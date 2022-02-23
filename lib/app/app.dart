@@ -1,3 +1,4 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/app_theme_provider.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
@@ -43,6 +44,22 @@ class App extends StatelessWidget {
                   subtitle2: state.textTheme.subtitle2,
                 ),
                 fontFamily: state.textTheme.fontFamily,
+                cardTheme: const CardTheme(elevation: 8),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(8),
+                    padding: MaterialStateProperty.all(const Pad(all: 16)),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                    ),
+                    textStyle:
+                        MaterialStateProperty.all(state.textTheme.button),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: MaterialStateProperty.all(Size.zero),
+                  ),
+                ),
               ),
             ),
           );
