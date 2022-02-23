@@ -1,94 +1,88 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
-import 'package:climbing_app/features/routes/domain/entities/route.dart';
-import 'package:climbing_app/features/routes/domain/repositories/routes_repository.dart';
-import 'package:climbing_app/features/routes/presentation/widgets/route_card.dart';
+import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_single_result.dart';
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_state.dart';
+import 'package:climbing_app/features/routes/presentation/widgets/failure_widget.dart';
+import 'package:climbing_app/features/routes/presentation/widgets/routes_list.dart';
 import 'package:flutter/material.dart' hide Route;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 
 class RoutesPage extends StatelessWidget {
   const RoutesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Route>>(
-      future: (() async =>
-          (await GetIt.I<RoutesRepository>().getAllRoutes()).getOrElse(
-            () {
-              GetIt.I<Logger>().e("Can't get routes");
-
-              return [];
-            },
-          ))(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var routes = snapshot.data ?? [];
-          routes.sort(
-            (left, right) {
-              final dateComparation =
-                  right.creationDate.compareTo(left.creationDate);
-              if (dateComparation != 0) {
-                return dateComparation;
-              }
-
-              return right.category.compareTo(left.category);
-            },
-          );
-          final quarters =
-              Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate)));
-          String previous = '';
-          List<Widget> elements = [];
-
-          for (int i = 0, routeIndex = 0;
-              i < routes.length + quarters.length;
-              i++) {
-            if (previous != getQuarter(routes[routeIndex].creationDate)) {
-              previous = getQuarter(routes[routeIndex].creationDate);
-
-              elements.add(Text(
-                previous,
-                style: AppTheme.of(context).textTheme.title,
-                textAlign: TextAlign.center,
-              ));
-            }
-            final current = routeIndex;
-            if (routeIndex < routes.length - 1) {
-              routeIndex++;
-            } else {
-              routeIndex = 0;
-            }
-
-            elements.add(RouteCard(route: routes[current]));
-          }
-
+    return BlocProvider(
+      create: (_) =>
+          GetIt.I<RoutesBloc>()..add(const RoutesBlocEvent.loadRoutes()),
+      child: SingleResultBlocBuilder<RoutesBloc, RoutesBlocState,
+          RoutesBlocSingleResult>(
+        onSingleResult: (context, result) => showFailureToast(context, result),
+        builder: (context, state) {
           return SafeArea(
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: ListView.separated(
-                  padding: const Pad(all: 16),
-                  itemCount: routes.length + quarters.length,
-                  itemBuilder: (context, index) => elements[index],
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
+              child: state.map<Widget>(
+                connectionFailure: (_) => const FailureWidget(
+                  title: 'Нет подключения к интернету',
+                  body: 'Посмотрите настройки интернета и попробуйте еще раз',
+                ),
+                loaded: (state) => RoutesList(routes: state.routes),
+                loading: (_) => const CircularProgressIndicator.adaptive(),
+                serverFailure: (state) => FailureWidget(
+                  title:
+                      'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+                ),
+                unknownFailure: (_) => const FailureWidget(
+                  title: 'Упс! Произошла неожиданная ошибка!',
+                  body: 'Пожалуйста, свяжитесь с разработчиком',
                 ),
               ),
             ),
           );
-        }
-
-        if (snapshot.hasError) {
-          GetIt.I<Logger>().e(snapshot.error);
-        }
-
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
-      },
+        },
+      ),
     );
   }
 
-  String getQuarter(DateTime date) => DateFormat("yyyy ''QQQ").format(date);
+  void showFailureToast(BuildContext context, RoutesBlocSingleResult result) {
+    void showToast(String text) {
+      GetIt.I<FToast>(param1: context).showToast(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+            color: AppTheme.of(context).colorTheme.error,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: AppTheme.of(context).colorTheme.onError,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                text,
+                style: AppTheme.of(context)
+                    .textTheme
+                    .body1Regular
+                    .copyWith(color: AppTheme.of(context).colorTheme.onError),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    result.when<void>(
+      connectionFailure: () => showToast('Ошибка соединения'),
+      serverFailure: (state) =>
+          showToast('Ошибка сервера: ${state.statusCode}'),
+      unknownFailure: () => showToast('Неизвестная ошибка'),
+    );
+  }
 }

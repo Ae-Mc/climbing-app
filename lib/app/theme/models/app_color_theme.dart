@@ -8,8 +8,10 @@ abstract class AppColorTheme {
   Color get background;
   Color get backgroundVariant;
   Color get button;
+  Color get error;
   Color get onBackground;
   Color get onBackgroundVariant;
+  Color get onError;
   Color get onPrimary;
   Color get primary;
   Color get routeEasy;
@@ -38,10 +40,16 @@ class LightColorTheme implements AppColorTheme {
   Color get button => AppPallete.darkbluegrey;
 
   @override
+  Color get error => AppPallete.red;
+
+  @override
   Color get onBackground => AppPallete.subBlack;
 
   @override
   Color get onBackgroundVariant => AppPallete.white;
+
+  @override
+  Color get onError => AppPallete.white;
 
   @override
   Color get onPrimary => AppPallete.white;
