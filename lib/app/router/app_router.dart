@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/guards/init_guard.dart';
 import 'package:climbing_app/features/routes/presentation/pages/route_details_page.dart';
+import 'package:climbing_app/features/routes/presentation/pages/route_images_page.dart';
 import 'package:climbing_app/features/user/presentation/pages/auth_page.dart';
 import 'package:climbing_app/features/root/presentation/pages/root_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/routes_page.dart';
@@ -32,6 +33,7 @@ export 'app_router.gr.dart';
         ),
       ],
     ),
+    AutoRoute(page: RouteImagesPage, guards: [InitGuard]),
     AutoRoute(page: SplashPage),
   ],
 )
