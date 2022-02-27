@@ -26,23 +26,7 @@ class RouteDetailsPage extends StatelessWidget {
                     padding: const Pad(all: 16),
                     child: Row(
                       children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              AppTheme.of(context).colorTheme.onBackground,
-                            ),
-                            foregroundColor: MaterialStateProperty.all(
-                              AppTheme.of(context).colorTheme.background,
-                            ),
-                            padding: MaterialStateProperty.all(Pad.zero),
-                          ),
-                          onPressed: () => AutoRouter.of(context).pop(),
-                          child: Icon(
-                            Icons.chevron_left_rounded,
-                            color: AppTheme.of(context).colorTheme.background,
-                            size: 32,
-                          ),
-                        ),
+                        const CustomBackButton(),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
