@@ -6,6 +6,7 @@ abstract class AppTextTheme {
 
   TextStyle get body1Regular;
   TextStyle get button;
+  TextStyle get chip;
   TextStyle get subtitle1;
   TextStyle get subtitle2;
   TextStyle get title;
@@ -29,6 +30,13 @@ class BaseTextTheme implements AppTextTheme {
   @override
   TextStyle get button => const TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+      );
+
+  @override
+  TextStyle get chip => const TextStyle(
+        fontSize: 12,
         fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
       );
