@@ -31,24 +31,25 @@ class App extends StatelessWidget {
               routerDelegate: router.delegate(),
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
+                cardTheme: const CardTheme(elevation: 8),
+                chipTheme: ChipThemeData(
+                  backgroundColor: state.colorTheme.onBackground,
+                  padding: const Pad(horizontal: 11, vertical: 0),
+                  labelPadding: Pad.zero,
+                  labelStyle: state.textTheme.chip,
+                ),
                 colorScheme: const ColorScheme.light().copyWith(
                   background: state.colorTheme.background,
                   brightness: state.colorTheme.brightness,
                   onPrimary: state.colorTheme.onPrimary,
                   primary: state.colorTheme.primary,
                 ),
-                iconTheme: IconThemeData(color: state.colorTheme.primary),
-                textTheme: TextTheme(
-                  bodyText1: state.textTheme.body1Regular,
-                  subtitle1: state.textTheme.subtitle1,
-                  subtitle2: state.textTheme.subtitle2,
-                ),
-                fontFamily: state.textTheme.fontFamily,
-                cardTheme: const CardTheme(elevation: 8),
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(8),
-                    padding: MaterialStateProperty.all(const Pad(all: 16)),
+                    padding: MaterialStateProperty.all(
+                      const Pad(horizontal: 64, vertical: 16),
+                    ),
                     shape: MaterialStateProperty.all(
                       const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -59,6 +60,13 @@ class App extends StatelessWidget {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     minimumSize: MaterialStateProperty.all(Size.zero),
                   ),
+                ),
+                fontFamily: state.textTheme.fontFamily,
+                iconTheme: IconThemeData(color: state.colorTheme.primary),
+                textTheme: TextTheme(
+                  bodyText1: state.textTheme.body1Regular,
+                  subtitle1: state.textTheme.subtitle1,
+                  subtitle2: state.textTheme.subtitle2,
                 ),
               ),
             ),
