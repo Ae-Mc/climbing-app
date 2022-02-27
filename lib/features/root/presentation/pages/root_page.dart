@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -14,18 +16,9 @@ class RootPage extends StatelessWidget {
         AuthRouter(),
       ],
       bottomNavigationBuilder: (context, tabsRouter) {
-        return Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 8,
-                color: AppTheme.of(context).colorTheme.onBackground,
-                spreadRadius: -2,
-              ),
-            ],
-            color: AppTheme.of(context).colorTheme.background,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          ),
+        return BottomAppBar(
+          elevation: 0,
+          color: Colors.transparent,
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
             currentIndex: tabsRouter.activeIndex,
@@ -48,6 +41,13 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => GetIt.I<Logger>().d('Add new route'),
+        child: const Icon(Icons.add),
+        foregroundColor: AppTheme.of(context).colorTheme.onPrimary,
+        backgroundColor: AppTheme.of(context).colorTheme.primary,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
