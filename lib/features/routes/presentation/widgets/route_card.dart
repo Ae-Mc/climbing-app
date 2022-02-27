@@ -2,9 +2,8 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
-import 'package:climbing_app/app/theme/models/app_color_theme.dart';
+import 'package:climbing_app/core/util/category_to_color.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
-import 'package:climbing_app/features/routes/domain/entities/category.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart' hide Route;
 
@@ -15,6 +14,7 @@ class RouteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = AppTheme.of(context).colorTheme;
+    final textTheme = AppTheme.of(context).textTheme;
 
     return Builder(
       builder: (context) {
@@ -56,22 +56,23 @@ class RouteCard extends StatelessWidget {
                         children: [
                           Text(
                             route.name,
-                            style: AppTheme.of(context).textTheme.subtitle1,
+                            style: textTheme.subtitle1,
                           ),
                           Text(
                             'Категория: ${route.category}',
-                            style: AppTheme.of(context).textTheme.subtitle2,
+                            style: textTheme.subtitle2,
                           ),
                           Text(
                             'Автор: ${route.author.firstName} ${route.author.lastName}',
-                            style: AppTheme.of(context).textTheme.subtitle2,
+                            style: textTheme.subtitle2,
                           ),
                           const Spacer(),
                           Container(
                             height: 8,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: getCategoryColor(colorTheme),
+                              color:
+                                  categoryToColor(route.category, colorTheme),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(8)),
                             ),
@@ -92,16 +93,5 @@ class RouteCard extends StatelessWidget {
   void openDetailsPage(BuildContext context) {
     // ignore: avoid-ignoring-return-values
     AutoRouter.of(context).push(RouteDetailsRoute(route: route));
-  }
-
-  Color getCategoryColor(AppColorTheme colorTheme) {
-    if (route.category.index < Category('6c').index) {
-      return colorTheme.routeEasy;
-    }
-    if (route.category.index < Category('7a+').index) {
-      return colorTheme.routeMedium;
-    }
-
-    return colorTheme.routeHard;
   }
 }
