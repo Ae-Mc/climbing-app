@@ -20,7 +20,8 @@ class BaseTextTheme implements AppTextTheme {
 
   @override
   TextStyle get body1Regular => const TextStyle(
-        fontSize: 16,
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
         letterSpacing: 0.5,
         overflow: TextOverflow.ellipsis,
       );
