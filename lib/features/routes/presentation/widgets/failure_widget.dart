@@ -1,3 +1,4 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +6,7 @@ class FailureWidget extends StatelessWidget {
   final String title;
   final String? body;
   final void Function()? onRetry;
+
   const FailureWidget({
     Key? key,
     required this.title,
@@ -37,15 +39,20 @@ class FailureWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         if (onRetry != null)
-          ElevatedButton(
-            onPressed: onRetry,
-            child: Text(
-              'Повторить попытку',
-              style: AppTheme.of(context).textTheme.body1Regular,
-            ),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                AppTheme.of(context).colorTheme.primary,
+          Center(
+            child: Padding(
+              padding: const Pad(top: 16),
+              child: ElevatedButton(
+                onPressed: onRetry,
+                child: Text(
+                  'Повторить попытку',
+                  style: AppTheme.of(context).textTheme.body1Regular,
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    AppTheme.of(context).colorTheme.primary,
+                  ),
+                ),
               ),
             ),
           ),

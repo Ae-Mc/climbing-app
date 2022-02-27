@@ -26,9 +26,11 @@ class RoutesPage extends StatelessWidget {
           return SafeArea(
             child: Center(
               child: state.map<Widget>(
-                connectionFailure: (_) => const FailureWidget(
+                connectionFailure: (_) => FailureWidget(
                   title: 'Нет подключения к интернету',
                   body: 'Посмотрите настройки интернета и попробуйте еще раз',
+                  onRetry: () => BlocProvider.of<RoutesBloc>(context)
+                      .add(const RoutesBlocEvent.loadRoutes()),
                 ),
                 loaded: (state) => RoutesList(routes: state.routes),
                 loading: (_) => const CircularProgressIndicator.adaptive(),
