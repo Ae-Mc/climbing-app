@@ -6,6 +6,7 @@ abstract class AppTextTheme {
 
   TextStyle get body1Regular;
   TextStyle get button;
+  TextStyle get caption;
   TextStyle get chip;
   TextStyle get subtitle1;
   TextStyle get subtitle2;
@@ -23,13 +24,20 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get body1Regular => const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.normal,
-        letterSpacing: 0.5,
+        height: 1.5,
         overflow: TextOverflow.ellipsis,
       );
 
   @override
   TextStyle get button => const TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+      );
+
+  @override
+  TextStyle get caption => const TextStyle(
+        fontSize: 14,
         fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
       );
@@ -45,6 +53,7 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get subtitle1 => const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
+        letterSpacing: -0.5,
         overflow: TextOverflow.ellipsis,
       );
 
@@ -52,6 +61,7 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get subtitle2 => const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
+        letterSpacing: -0.5,
         overflow: TextOverflow.ellipsis,
       );
 
@@ -59,6 +69,7 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get title => const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w500,
+        letterSpacing: -0.5,
         overflow: TextOverflow.ellipsis,
       );
 }
