@@ -92,8 +92,7 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                         count: widget.route.images.length,
                         effect: ExpandingDotsEffect(
                       activeDotColor: AppTheme.of(context).colorTheme.secondary,
-                          dotColor:
-                          AppTheme.of(context).colorTheme.unselectedNavBar,
+                      dotColor: AppTheme.of(context).colorTheme.unselected,
                           dotHeight: 6,
                           dotWidth: 6,
                         ),
