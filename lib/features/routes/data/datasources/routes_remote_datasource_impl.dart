@@ -1,4 +1,5 @@
 import 'package:climbing_app/core/failure.dart';
+import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
 import 'package:climbing_app/features/routes/data/datasources/routes_remote_datasource.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:dartz/dartz.dart';
@@ -18,21 +19,17 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
     try {
       return Right(await api.routes());
     } on DioError catch (error) {
-      if ([
-        DioErrorType.cancel,
-        DioErrorType.connectTimeout,
-        DioErrorType.receiveTimeout,
-        DioErrorType.sendTimeout,
-      ].contains(error.type)) {
-        return const Left(ConnectionFailure());
-      }
+      return Left(handleDioConnectionError(error).fold<Failure>(
+        (l) => l,
+        (error) {
+          final statusCode = error.response?.statusCode;
+          if (statusCode != null) {
+            return ServerFailure(statusCode: statusCode);
+          }
 
-      final statusCode = error.response?.statusCode;
-      if (statusCode != null) {
-        return Left(ServerFailure(statusCode: statusCode));
-      }
-
-      return const Left(UnknownFailure());
+          return const UnknownFailure();
+        },
+      ));
     }
   }
 }
