@@ -24,7 +24,7 @@ class FailureWidget extends StatelessWidget {
         Icon(
           Icons.wifi_off_rounded,
           size: 72,
-          color: AppTheme.of(context).colorTheme.unselectedAppBar,
+          color: AppTheme.of(context).colorTheme.primary,
         ),
         Text(
           title,

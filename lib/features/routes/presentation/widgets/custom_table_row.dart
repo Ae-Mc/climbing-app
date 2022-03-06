@@ -28,7 +28,7 @@ class CustomTableRow extends TableRow {
                   ),
                 ),
                 backgroundColor: chipBackgroundColor ??
-                    AppTheme.of(context).colorTheme.onBackground,
+                    AppTheme.of(context).colorTheme.secondary,
               ),
             ),
           ],

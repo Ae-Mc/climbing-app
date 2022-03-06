@@ -27,7 +27,7 @@ class RootPage extends StatelessWidget {
             onTap: tabsRouter.setActiveIndex,
             selectedItemColor: AppTheme.of(context).colorTheme.primary,
             unselectedItemColor:
-                AppTheme.of(context).colorTheme.unselectedAppBar,
+                  AppTheme.of(context).colorTheme.unselectedNavBar,
             items: const [
               BottomNavigationBarItem(
                 label: "Трассы",

@@ -22,27 +22,30 @@ class App extends StatelessWidget {
     return BlocProvider(
       create: (context) => AppThemeBloc(),
       child: BlocBuilder<AppThemeBloc, AppTheme>(
-        builder: (context, state) {
+        builder: (context, theme) {
           return AppThemeProvider(
-            theme: state,
+            theme: theme,
             child: MaterialApp.router(
               title: "Скалолазание ИТМО",
               routeInformationParser: router.defaultRouteParser(),
               routerDelegate: router.delegate(),
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                cardTheme: const CardTheme(elevation: 8),
+                cardTheme: CardTheme(
+                  elevation: 8,
+                  color: theme.colorTheme.surface,
+                ),
                 chipTheme: ChipThemeData(
-                  backgroundColor: state.colorTheme.onBackground,
+                  backgroundColor: theme.colorTheme.secondary,
                   padding: const Pad(horizontal: 11, vertical: 0),
                   labelPadding: Pad.zero,
-                  labelStyle: state.textTheme.chip,
+                  labelStyle: theme.textTheme.chip,
                 ),
                 colorScheme: const ColorScheme.light().copyWith(
-                  background: state.colorTheme.background,
-                  brightness: state.colorTheme.brightness,
-                  onPrimary: state.colorTheme.onPrimary,
-                  primary: state.colorTheme.primary,
+                  background: theme.colorTheme.background,
+                  brightness: theme.colorTheme.brightness,
+                  onPrimary: theme.colorTheme.onPrimary,
+                  primary: theme.colorTheme.primary,
                 ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ButtonStyle(
@@ -56,17 +59,17 @@ class App extends StatelessWidget {
                       ),
                     ),
                     textStyle:
-                        MaterialStateProperty.all(state.textTheme.button),
+                        MaterialStateProperty.all(theme.textTheme.button),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     minimumSize: MaterialStateProperty.all(Size.zero),
                   ),
                 ),
-                fontFamily: state.textTheme.fontFamily,
-                iconTheme: IconThemeData(color: state.colorTheme.primary),
+                fontFamily: theme.textTheme.fontFamily,
+                iconTheme: IconThemeData(color: theme.colorTheme.primary),
                 textTheme: TextTheme(
-                  bodyText1: state.textTheme.body1Regular,
-                  subtitle1: state.textTheme.subtitle1,
-                  subtitle2: state.textTheme.subtitle2,
+                  bodyText1: theme.textTheme.body1Regular,
+                  subtitle1: theme.textTheme.subtitle1,
+                  subtitle2: theme.textTheme.subtitle2,
                 ),
               ),
             ),

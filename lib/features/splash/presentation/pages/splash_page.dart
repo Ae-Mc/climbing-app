@@ -26,7 +26,7 @@ class SplashPage extends StatelessWidget {
           return SafeArea(
             child: Scaffold(
               body: Box(
-                color: AppTheme.of(context).colorTheme.backgroundVariant,
+                color: AppTheme.of(context).colorTheme.primary,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.max,
@@ -52,9 +52,7 @@ class SplashPage extends StatelessWidget {
                           child: state.when(
                             loading: () => CircularProgressIndicator.adaptive(
                               valueColor: AlwaysStoppedAnimation(
-                                AppTheme.of(context)
-                                    .colorTheme
-                                    .onBackgroundVariant,
+                                AppTheme.of(context).colorTheme.onPrimary,
                               ),
                             ),
                             failure: (_) => RetryButton(

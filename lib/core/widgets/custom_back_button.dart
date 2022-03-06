@@ -18,7 +18,7 @@ class CustomBackButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-          AppTheme.of(context).colorTheme.onBackground,
+          AppTheme.of(context).colorTheme.secondary,
         ),
         foregroundColor: MaterialStateProperty.all(
           AppTheme.of(context).colorTheme.background,

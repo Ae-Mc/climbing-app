@@ -22,7 +22,7 @@ class RouteImagesPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.of(context).colorTheme.onBackground,
+      backgroundColor: AppTheme.of(context).colorTheme.secondary,
       body: SafeArea(
         child: Stack(
           children: [
