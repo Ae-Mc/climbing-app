@@ -14,28 +14,30 @@ class RouteImagesPage extends StatelessWidget {
     final List<Widget> columnContent = [];
     for (int i = 0; i < images.length; i++) {
       columnContent.add(
-        Image.network(
-          'http://192.168.1.56:8000/${images.reversed.elementAt(i).url}',
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            final expectedBytes = loadingProgress.expectedTotalBytes;
-            if (expectedBytes == null) {
+        Center(
+          child: Image.network(
+            'http://192.168.1.56:8000/${images.reversed.elementAt(i).url}',
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              final expectedBytes = loadingProgress.expectedTotalBytes;
+              if (expectedBytes == null) {
+                return CircularProgressIndicator.adaptive(
+                  valueColor: AlwaysStoppedAnimation(
+                    AppTheme.of(context).colorTheme.onSecondary,
+                  ),
+                );
+              }
+
               return CircularProgressIndicator.adaptive(
+                value: loadingProgress.cumulativeBytesLoaded / expectedBytes,
                 valueColor: AlwaysStoppedAnimation(
                   AppTheme.of(context).colorTheme.onSecondary,
                 ),
               );
-            }
-
-            return CircularProgressIndicator.adaptive(
-              value: loadingProgress.cumulativeBytesLoaded / expectedBytes,
-              valueColor: AlwaysStoppedAnimation(
-                AppTheme.of(context).colorTheme.onSecondary,
-              ),
-            );
-          },
+            },
+          ),
         ),
       );
       if (i != images.length - 1) {
@@ -57,6 +59,7 @@ class RouteImagesPage extends StatelessWidget {
                     constraints:
                         constraints.copyWith(maxHeight: double.infinity),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
                       children: columnContent,
                     ),
