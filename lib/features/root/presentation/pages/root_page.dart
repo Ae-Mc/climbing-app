@@ -10,44 +10,51 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AutoTabsScaffold(
-      routes: const [
-        RoutesRouter(),
-        AuthRouter(),
-      ],
-      bottomNavigationBuilder: (context, tabsRouter) {
-        return BottomAppBar(
-          elevation: 0,
-          color: Colors.transparent,
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            currentIndex: tabsRouter.activeIndex,
+    return SafeArea(
+      child: AutoTabsScaffold(
+        routes: const [
+          RoutesRouter(),
+          AuthRouter(),
+        ],
+        bottomNavigationBuilder: (context, tabsRouter) {
+          return BottomAppBar(
+            color: AppTheme.of(context).colorTheme.primary,
             elevation: 0,
-            iconSize: 32,
-            onTap: tabsRouter.setActiveIndex,
-            selectedItemColor: AppTheme.of(context).colorTheme.primary,
-            unselectedItemColor:
+            shape: const CircularNotchedRectangle(),
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              currentIndex: tabsRouter.activeIndex,
+              elevation: 0,
+              iconSize: 32,
+              onTap: tabsRouter.setActiveIndex,
+              selectedItemColor: AppTheme.of(context).colorTheme.onPrimary,
+              unselectedItemColor:
                   AppTheme.of(context).colorTheme.unselectedNavBar,
-            items: const [
-              BottomNavigationBarItem(
-                label: "Трассы",
-                icon: Icon(Icons.ballot_outlined),
-              ),
-              BottomNavigationBarItem(
-                label: "Профиль",
-                icon: Icon(Icons.person),
-              ),
-            ],
-          ),
-        );
-      },
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => GetIt.I<Logger>().d('Add new route'),
-        child: const Icon(Icons.add),
-        foregroundColor: AppTheme.of(context).colorTheme.onPrimary,
-        backgroundColor: AppTheme.of(context).colorTheme.primary,
+              items: const [
+                BottomNavigationBarItem(
+                  label: "Трассы",
+                  icon: Icon(Icons.ballot_outlined),
+                ),
+                BottomNavigationBarItem(
+                  label: "Профиль",
+                  icon: Icon(Icons.person),
+                ),
+              ],
+            ),
+          );
+        },
+        builder: (context, child, animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        extendBody: true,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => GetIt.I<Logger>().d('Add new route'),
+          child: const Icon(Icons.add),
+          foregroundColor: AppTheme.of(context).colorTheme.onSecondary,
+          backgroundColor: AppTheme.of(context).colorTheme.secondary,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

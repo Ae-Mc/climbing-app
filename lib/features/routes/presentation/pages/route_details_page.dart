@@ -25,9 +25,7 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
+    return CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
               child: Column(
@@ -157,6 +155,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
+          child: Padding(
+            padding: const Pad(bottom: 80),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -168,9 +168,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                 ),
               ),
             ),
-          ],
         ),
-      ),
+          ],
     );
   }
 

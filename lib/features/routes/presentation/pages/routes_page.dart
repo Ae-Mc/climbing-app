@@ -22,8 +22,7 @@ class RoutesPage extends StatelessWidget {
           RoutesBlocSingleResult>(
         onSingleResult: (context, result) => showFailureToast(context, result),
         builder: (context, state) {
-          return SafeArea(
-            child: Center(
+          return Center(
               child: state.map<Widget>(
                 connectionFailure: (_) => FailureWidget(
                   title: 'Нет подключения к интернету',
