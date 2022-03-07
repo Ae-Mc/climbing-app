@@ -23,23 +23,26 @@ class RoutesPage extends StatelessWidget {
         onSingleResult: (context, result) => showFailureToast(context, result),
         builder: (context, state) {
           return Center(
-              child: state.map<Widget>(
-                connectionFailure: (_) => FailureWidget(
-                  title: 'Нет подключения к интернету',
-                  body: 'Посмотрите настройки интернета и попробуйте еще раз',
-                  onRetry: () => BlocProvider.of<RoutesBloc>(context)
-                      .add(const RoutesBlocEvent.loadRoutes()),
-                ),
-                loaded: (state) => RoutesList(routes: state.routes),
-                loading: (_) => const CircularProgressIndicator.adaptive(),
-                serverFailure: (state) => FailureWidget(
-                  title:
-                      'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
-                ),
-                unknownFailure: (_) => const FailureWidget(
-                  title: 'Упс! Произошла неожиданная ошибка!',
-                  body: 'Пожалуйста, свяжитесь с разработчиком',
-                ),
+            child: state.map<Widget>(
+              connectionFailure: (_) => FailureWidget(
+                title: 'Нет подключения к интернету',
+                body: 'Посмотрите настройки интернета и попробуйте еще раз',
+                onRetry: () => BlocProvider.of<RoutesBloc>(context)
+                    .add(const RoutesBlocEvent.loadRoutes()),
+              ),
+              loaded: (state) => RoutesList(routes: state.routes),
+              loading: (_) => const CircularProgressIndicator.adaptive(),
+              serverFailure: (state) => FailureWidget(
+                title:
+                    'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+                onRetry: () => BlocProvider.of<RoutesBloc>(context)
+                    .add(const RoutesBlocEvent.loadRoutes()),
+              ),
+              unknownFailure: (_) => FailureWidget(
+                title: 'Упс! Произошла неожиданная ошибка!',
+                body: 'Пожалуйста, свяжитесь с разработчиком',
+                onRetry: () => BlocProvider.of<RoutesBloc>(context)
+                    .add(const RoutesBlocEvent.loadRoutes()),
               ),
             ),
           );
