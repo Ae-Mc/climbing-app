@@ -26,150 +26,145 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const Pad(all: 16),
-                    child: Row(
-                      children: [
-                        const CustomBackButton(),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            widget.route.name,
-                            textAlign: TextAlign.center,
-                            style: AppTheme.of(context).textTheme.title,
-                            maxLines: 3,
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                      ],
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const Pad(all: 16),
+                child: Row(
+                  children: [
+                    const CustomBackButton(),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        widget.route.name,
+                        textAlign: TextAlign.center,
+                        style: AppTheme.of(context).textTheme.title,
+                        maxLines: 3,
+                      ),
                     ),
-                  ),
-                  if (widget.route.images.isNotEmpty) ...[
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SizedBox(
-                          height: constraints.maxWidth - 32,
-                          child: PageView.builder(
-                            controller: pageController,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const Pad(horizontal: 16),
-                              child: InkWell(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(16)),
-                                onTap: () => AutoRouter.of(context)
-                                    .topMostRouter()
-                                    .navigate(
-                                      RouteImagesRoute(
-                                        images: widget.route.images,
-                                      ),
-                                    ),
-                                child: RouteDetailsCarouselImage(
-                                  imageUrl: widget
-                                      .route
-                                      .images[
-                                          index % widget.route.images.length]
-                                      .url,
-                                ),
-                              ),
+                    const SizedBox(width: 40),
+                  ],
+                ),
+              ),
+              if (widget.route.images.isNotEmpty) ...[
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SizedBox(
+                      height: constraints.maxWidth - 32,
+                      child: PageView.builder(
+                        controller: pageController,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const Pad(horizontal: 16),
+                          child: InkWell(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(16)),
+                            onTap: () => AutoRouter.of(context).navigate(
+                              RouteImagesRoute(images: widget.route.images),
+                            ),
+                            child: RouteDetailsCarouselImage(
+                              imageUrl: widget
+                                  .route
+                                  .images[index % widget.route.images.length]
+                                  .url,
                             ),
                           ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Center(
-                      child: SmoothPageIndicator(
-                        controller: pageController,
-                        count: widget.route.images.length,
-                        effect: ExpandingDotsEffect(
-                      activeDotColor: AppTheme.of(context).colorTheme.secondary,
-                      dotColor: AppTheme.of(context).colorTheme.unselected,
-                          dotHeight: 6,
-                          dotWidth: 6,
                         ),
                       ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: SmoothPageIndicator(
+                    controller: pageController,
+                    count: widget.route.images.length,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor: AppTheme.of(context).colorTheme.secondary,
+                      dotColor: AppTheme.of(context).colorTheme.unselected,
+                      dotHeight: 6,
+                      dotWidth: 6,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+              Padding(
+                padding: const Pad(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Table(
+                      columnWidths: const {
+                        0: IntrinsicColumnWidth(),
+                        1: FixedColumnWidth(30),
+                        2: FlexColumnWidth(),
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        CustomTableRow(
+                          context: context,
+                          rowHeader: 'Цвет меток',
+                          rowValue: widget.route.markColor,
+                        ),
+                        CustomTableRow(
+                          context: context,
+                          rowHeader: 'Категория',
+                          rowValue: widget.route.category.toString(),
+                          chipBackgroundColor: categoryToColor(
+                            widget.route.category,
+                            AppTheme.of(context).colorTheme,
+                          ),
+                        ),
+                        CustomTableRow(
+                          context: context,
+                          rowHeader: 'Автор',
+                          rowValue:
+                              '${widget.route.author.lastName} ${widget.route.author.firstName}',
+                        ),
+                        CustomTableRow(
+                          context: context,
+                          rowHeader: 'Создано',
+                          rowValue: DateFormat.yMd('ru')
+                              .format(widget.route.creationDate),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      widget.route.description,
+                      style: AppTheme.of(context).textTheme.body1Regular,
+                      maxLines: 999,
                     ),
                     const SizedBox(height: 16),
                   ],
-                  Padding(
-                    padding: const Pad(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Table(
-                          columnWidths: const {
-                            0: IntrinsicColumnWidth(),
-                            1: FixedColumnWidth(30),
-                            2: FlexColumnWidth(),
-                          },
-                          defaultVerticalAlignment:
-                              TableCellVerticalAlignment.middle,
-                          children: [
-                            CustomTableRow(
-                              context: context,
-                              rowHeader: 'Цвет меток',
-                              rowValue: widget.route.markColor,
-                            ),
-                            CustomTableRow(
-                              context: context,
-                              rowHeader: 'Категория',
-                              rowValue: widget.route.category.toString(),
-                              chipBackgroundColor: categoryToColor(
-                                widget.route.category,
-                                AppTheme.of(context).colorTheme,
-                              ),
-                            ),
-                            CustomTableRow(
-                              context: context,
-                              rowHeader: 'Автор',
-                              rowValue:
-                                  '${widget.route.author.lastName} ${widget.route.author.firstName}',
-                            ),
-                            CustomTableRow(
-                              context: context,
-                              rowHeader: 'Создано',
-                              rowValue: DateFormat.yMd('ru')
-                                  .format(widget.route.creationDate),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          widget.route.description,
-                          style: AppTheme.of(context).textTheme.body1Regular,
-                          maxLines: 999,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
+            ],
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
           child: Padding(
             padding: const Pad(bottom: 80),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const Pad(vertical: 16),
-                  child: ElevatedButton(
-                    onPressed: routeCompleted,
-                    child: const Text('Я пролез трассу'),
-                  ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const Pad(vertical: 16),
+                child: ElevatedButton(
+                  onPressed: routeCompleted,
+                  child: const Text('Я пролез трассу'),
                 ),
               ),
             ),
+          ),
         ),
-          ],
+      ],
     );
   }
 
