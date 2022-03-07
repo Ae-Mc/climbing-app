@@ -66,6 +66,17 @@ class App extends StatelessWidget {
                 ),
                 fontFamily: theme.textTheme.fontFamily,
                 iconTheme: IconThemeData(color: theme.colorTheme.primary),
+                textButtonTheme: TextButtonThemeData(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(
+                      theme.colorTheme.secondaryVariant,
+                    ),
+                    padding: MaterialStateProperty.all(Pad.zero),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textStyle:
+                        MaterialStateProperty.all(theme.textTheme.caption),
+                  ),
+                ),
                 textTheme: TextTheme(
                   bodyText1: theme.textTheme.body1Regular,
                   subtitle1: theme.textTheme.subtitle1,
