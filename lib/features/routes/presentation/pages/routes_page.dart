@@ -1,4 +1,4 @@
-import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
@@ -8,7 +8,6 @@ import 'package:climbing_app/features/routes/presentation/widgets/failure_widget
 import 'package:climbing_app/features/routes/presentation/widgets/routes_list.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 class RoutesPage extends StatelessWidget {
@@ -51,40 +50,15 @@ class RoutesPage extends StatelessWidget {
   }
 
   void showFailureToast(BuildContext context, RoutesBlocSingleResult result) {
-    void showToast(String text) {
-      GetIt.I<FToast>(param1: context).showToast(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-            color: AppTheme.of(context).colorTheme.error,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.error_outline_rounded,
-                color: AppTheme.of(context).colorTheme.onError,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                text,
-                style: AppTheme.of(context)
-                    .textTheme
-                    .body1Regular
-                    .copyWith(color: AppTheme.of(context).colorTheme.onError),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    final customToast = GetIt.I<CustomToast>(param1: context);
 
     result.when<void>(
-      connectionFailure: () => showToast('Ошибка соединения'),
-      serverFailure: (state) =>
-          showToast('Ошибка сервера: ${state.statusCode}'),
-      unknownFailure: () => showToast('Неизвестная ошибка'),
+      connectionFailure: () =>
+          customToast.showTextFailureToast('Ошибка соединения'),
+      serverFailure: (state) => customToast
+          .showTextFailureToast('Ошибка сервера: ${state.statusCode}'),
+      unknownFailure: () =>
+          customToast.showTextFailureToast('Неизвестная ошибка'),
     );
   }
 }
