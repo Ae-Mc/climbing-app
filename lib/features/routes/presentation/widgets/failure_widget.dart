@@ -33,6 +33,7 @@ class FailureWidget extends StatelessWidget {
         ),
         if (body != null)
           Text(
+            // ignore: avoid-non-null-assertion
             body!,
             style: AppTheme.of(context).textTheme.body1Regular,
             maxLines: 10,
