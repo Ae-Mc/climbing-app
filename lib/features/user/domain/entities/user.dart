@@ -8,9 +8,10 @@ class User with _$User {
   @JsonSerializable()
   factory User({
     required String id,
-    required String username,
+    required String email,
     required String firstName,
     required String lastName,
+    required String username,
   }) = _;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
