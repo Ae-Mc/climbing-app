@@ -1,3 +1,4 @@
+import 'package:climbing_app/core/constants.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
 import 'package:climbing_app/features/routes/data/datasources/routes_remote_datasource.dart';
@@ -35,7 +36,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
 }
 
 @injectable
-@RestApi(baseUrl: 'http://192.168.1.56:8000/api/v1/')
+@RestApi(baseUrl: '$apiHostUrl/api/v1/')
 abstract class RoutesApi {
   @GET('/routes')
   Future<List<Route>> routes();
