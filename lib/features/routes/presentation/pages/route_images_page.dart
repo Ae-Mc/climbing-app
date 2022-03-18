@@ -16,7 +16,7 @@ class RouteImagesPage extends StatelessWidget {
       columnContent.add(
         Center(
           child: Image.network(
-            'http://192.168.1.56:8000/${images.reversed.elementAt(i).url}',
+            images.reversed.elementAt(i).url,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
                 return child;

@@ -36,7 +36,7 @@ class RouteCard extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(16)),
                       child: route.images.isNotEmpty
                           ? Image.network(
-                              'http://192.168.1.56:8000/${route.images[0].url}',
+                              route.images[0].url,
                               width: 72,
                               height: 72,
                               fit: BoxFit.cover,

@@ -24,9 +24,7 @@ class _RouteDetailsCarouselImageState extends State<RouteDetailsCarouselImage>
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           image: DecorationImage(
-            image: NetworkImage(
-              'http://192.168.1.56:8000/${widget.imageUrl}',
-            ),
+            image: NetworkImage(widget.imageUrl),
             fit: BoxFit.cover,
           ),
         ),
