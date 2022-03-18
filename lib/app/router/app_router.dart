@@ -13,7 +13,6 @@ export 'app_router.gr.dart';
   replaceInRouteName: "Page,Route",
   routes: [
     AutoRoute(
-      guards: [InitGuard],
       initial: true,
       page: RootPage,
       children: [
@@ -34,9 +33,8 @@ export 'app_router.gr.dart';
         ),
       ],
     ),
-    AutoRoute(guards: [InitGuard], page: RouteImagesPage),
-    AutoRoute(page: SplashPage),
-    AutoRoute(guards: [InitGuard], page: SignInPage),
+    AutoRoute(page: RouteImagesPage),
+    AutoRoute(page: SignInPage),
   ],
 )
 class $AppRouter {}

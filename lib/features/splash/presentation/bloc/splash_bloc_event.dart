@@ -5,9 +5,3 @@ part 'splash_bloc_event.freezed.dart';
 class SplashBlocEvent with _$SplashBlocEvent {
   const factory SplashBlocEvent.init() = SplashBlocEventInit;
 }
-
-@freezed
-class SplashBlocSingleResult with _$SplashBlocSingleResult {
-  const factory SplashBlocSingleResult.loadFinished() =
-      SplashBlocSingleResultLoadFinished;
-}

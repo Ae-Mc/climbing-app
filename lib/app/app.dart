@@ -2,6 +2,12 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme_bloc.dart';
+import 'package:climbing_app/features/splash/data/repositories/startup_repository_impl.dart';
+import 'package:climbing_app/features/splash/domain/usecases/initialize.dart';
+import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
+import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_state.dart';
+import 'package:climbing_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,20 +18,36 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = GetIt.I<AppRouter>();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
 
-    return BlocProvider(
-      create: (context) => AppThemeBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AppThemeBloc()),
+        BlocProvider(
+          create: (context) => SplashBloc(Initialize(StartupRepositoryImpl())),
+        ),
+        BlocProvider(create: (context) => GetIt.I<UserBloc>()),
+      ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
         builder: (context, theme) {
-          return MaterialApp.router(
+          return MaterialApp(
             title: "Скалолазание ИТМО",
-            routeInformationParser: router.defaultRouteParser(),
-            routerDelegate: router.delegate(),
+            home: BlocBuilder<SplashBloc, SplashBlocState>(
+              builder: (context, splashState) => splashState.maybeWhen(
+                loaded: () => Router(
+                  backButtonDispatcher: RootBackButtonDispatcher(),
+                  routerDelegate: GetIt.I<AppRouter>().delegate(),
+                  routeInformationParser:
+                      GetIt.I<AppRouter>().defaultRouteParser(),
+                  routeInformationProvider:
+                      GetIt.I<AppRouter>().routeInfoProvider(),
+                ),
+                orElse: () => const SplashPage(),
+              ),
+            ),
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               cardTheme: CardTheme(
