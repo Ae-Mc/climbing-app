@@ -13,6 +13,9 @@ import 'package:get_it/get_it.dart';
 class RoutesPage extends StatelessWidget {
   const RoutesPage({Key? key}) : super(key: key);
 
+  void loadRoutes(BuildContext context) => BlocProvider.of<RoutesBloc>(context)
+      .add(const RoutesBlocEvent.loadRoutes());
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -22,27 +25,27 @@ class RoutesPage extends StatelessWidget {
           RoutesBlocSingleResult>(
         onSingleResult: (context, result) => showFailureToast(context, result),
         builder: (context, state) {
-          return Center(
-            child: state.map<Widget>(
-              connectionFailure: (_) => FailureWidget(
-                title: 'Нет подключения к интернету',
-                body: 'Посмотрите настройки интернета и попробуйте еще раз',
-                onRetry: () => BlocProvider.of<RoutesBloc>(context)
-                    .add(const RoutesBlocEvent.loadRoutes()),
-              ),
-              loaded: (state) => RoutesList(routes: state.routes),
-              loading: (_) => const CircularProgressIndicator.adaptive(),
-              serverFailure: (state) => FailureWidget(
-                title:
-                    'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
-                onRetry: () => BlocProvider.of<RoutesBloc>(context)
-                    .add(const RoutesBlocEvent.loadRoutes()),
-              ),
-              unknownFailure: (_) => FailureWidget(
-                title: 'Упс! Произошла неожиданная ошибка!',
-                body: 'Пожалуйста, свяжитесь с разработчиком',
-                onRetry: () => BlocProvider.of<RoutesBloc>(context)
-                    .add(const RoutesBlocEvent.loadRoutes()),
+          return RefreshIndicator(
+            onRefresh: () async => loadRoutes(context),
+            child: Center(
+              child: state.map<Widget>(
+                connectionFailure: (_) => FailureWidget(
+                  title: 'Нет подключения к интернету',
+                  body: 'Посмотрите настройки интернета и попробуйте еще раз',
+                  onRetry: () => loadRoutes(context),
+                ),
+                loaded: (state) => RoutesList(routes: state.routes),
+                loading: (_) => const CircularProgressIndicator.adaptive(),
+                serverFailure: (state) => FailureWidget(
+                  title:
+                      'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+                  onRetry: () => loadRoutes(context),
+                ),
+                unknownFailure: (_) => FailureWidget(
+                  title: 'Упс! Произошла неожиданная ошибка!',
+                  body: 'Пожалуйста, свяжитесь с разработчиком',
+                  onRetry: () => loadRoutes(context),
+                ),
               ),
             ),
           );
