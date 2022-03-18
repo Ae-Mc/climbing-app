@@ -1,24 +1,28 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
+import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 class RootPage extends StatelessWidget {
+  static const routes = [
+    RoutesRouter(),
+    UserRouter(),
+  ];
   const RootPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = AppTheme.of(context).colorTheme;
+
     return SafeArea(
       child: AutoTabsScaffold(
-        routes: const [
-          RoutesRouter(),
-          AuthRouter(),
-        ],
+        routes: routes,
         bottomNavigationBuilder: (context, tabsRouter) {
           return BottomAppBar(
-            color: AppTheme.of(context).colorTheme.primary,
+            color: colorTheme.primary,
             elevation: 0,
             shape: const CircularNotchedRectangle(),
             child: BottomNavigationBar(
@@ -26,10 +30,9 @@ class RootPage extends StatelessWidget {
               currentIndex: tabsRouter.activeIndex,
               elevation: 0,
               iconSize: 32,
-              onTap: tabsRouter.setActiveIndex,
-              selectedItemColor: AppTheme.of(context).colorTheme.onPrimary,
-              unselectedItemColor:
-                  AppTheme.of(context).colorTheme.unselectedNavBar,
+              onTap: (index) => setActiveTab(context, index, tabsRouter),
+              selectedItemColor: colorTheme.onPrimary,
+              unselectedItemColor: colorTheme.unselectedNavBar,
               items: const [
                 BottomNavigationBarItem(
                   label: "Трассы",
@@ -50,11 +53,26 @@ class RootPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () => GetIt.I<Logger>().d('Add new route'),
           child: const Icon(Icons.add),
-          foregroundColor: AppTheme.of(context).colorTheme.onSecondary,
-          backgroundColor: AppTheme.of(context).colorTheme.secondary,
+          foregroundColor: colorTheme.onSecondary,
+          backgroundColor: colorTheme.secondary,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+
+  void setActiveTab(BuildContext context, int index, TabsRouter tabsRouter) {
+    if (routes[index] is UserRouter) {
+      if (GetIt.I<AuthGuard>().isAuthenticated()) {
+        tabsRouter.setActiveIndex(index);
+      } else {
+        // ignore: avoid-ignoring-return-values
+        AutoRouter.of(context).push(
+          SignInRoute(onSuccessLogin: () => tabsRouter.setActiveIndex(index)),
+        );
+      }
+    } else {
+      tabsRouter.setActiveIndex(index);
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:climbing_app/features/user/presentation/pages/auth_page.dart';
 import 'package:climbing_app/features/root/presentation/pages/root_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/routes_page.dart';
 import 'package:climbing_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:climbing_app/features/user/presentation/pages/sign_in_page.dart';
 export 'app_router.gr.dart';
 
 @AdaptiveAutoRouter(
@@ -17,7 +18,7 @@ export 'app_router.gr.dart';
       page: RootPage,
       children: [
         AutoRoute(
-          name: 'AuthRouter',
+          name: 'UserRouter',
           page: EmptyRouterPage,
           children: [
             AutoRoute(initial: true, page: AuthPage),
@@ -35,6 +36,7 @@ export 'app_router.gr.dart';
     ),
     AutoRoute(guards: [InitGuard], page: RouteImagesPage),
     AutoRoute(page: SplashPage),
+    AutoRoute(guards: [InitGuard], page: SignInPage),
   ],
 )
 class $AppRouter {}
