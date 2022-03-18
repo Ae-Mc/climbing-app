@@ -6,10 +6,10 @@ import 'package:dartz/dartz.dart';
 abstract class UserRepository {
   bool get isAuthenticated;
 
+  Future<Either<Failure, User>> getCurrentUser();
   Future<Either<Either<Failure, LoginFailure>, void>> login(
     String usernameOrEmail,
     String password,
   );
   Future<Either<Failure, void>> logout();
-  Future<Either<Failure, User>> getCurrentUser();
 }

@@ -24,84 +24,86 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.I<UserBloc>(),
-      child: Builder(builder: (context) {
-        return SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-          onSingleResult: onUserSingleResult,
-          builder: (context, state) {
-            return Scaffold(
-              body: SafeArea(
-                child: SizedBox.expand(
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const Pad(all: 16),
-                            child: Form(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Assets.icons.logo.svg(
-                                    color: AppTheme.of(context)
-                                        .colorTheme
-                                        .secondary,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Вход',
-                                    style: AppTheme.of(context).textTheme.title,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  StyledTextField(
-                                    controller: usernameOrEmailController,
-                                    hintText: 'Имя пользователя или email',
-                                    keyboardType: TextInputType.emailAddress,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  StyledPasswordField(
-                                    controller: passwordController,
-                                    hintText: 'Пароль',
-                                  ),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    onPressed: () =>
-                                        BlocProvider.of<UserBloc>(context).add(
-                                      UserEvent.login(
-                                        usernameOrEmailController.text,
-                                        passwordController.text,
-                                      ),
-                                    ),
-                                    child: const Text('Войти'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  TextButton(
-                                    onPressed: () => {},
-                                    child: const Text("Регистрация"),
-                                  ),
-                                ],
+    return SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
+      onSingleResult: onUserSingleResult,
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: SizedBox.expand(
+              child: Stack(
+                children: [
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const Pad(all: 16),
+                        child: Form(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Assets.icons.logo.svg(
+                                color:
+                                    AppTheme.of(context).colorTheme.secondary,
                               ),
-                            ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Вход',
+                                style: AppTheme.of(context).textTheme.title,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              StyledTextField(
+                                controller: usernameOrEmailController,
+                                hintText: 'Имя пользователя или email',
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              const SizedBox(height: 16),
+                              StyledPasswordField(
+                                controller: passwordController,
+                                hintText: 'Пароль',
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: state.maybeWhen(
+                                  loading: () => null,
+                                  orElse: () => () =>
+                                      BlocProvider.of<UserBloc>(context).add(
+                                        UserEvent.login(
+                                          usernameOrEmailController.text,
+                                          passwordController.text,
+                                        ),
+                                      ),
+                                ),
+                                child: state.when(
+                                  loading: () => const CircularProgressIndicator
+                                      .adaptive(),
+                                  notAuthorized: () => const Text('Войти'),
+                                  authorized: (_) => const SizedBox(),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton(
+                                onPressed: () => {},
+                                child: const Text("Регистрация"),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const Positioned(
-                        top: 16,
-                        left: 16,
-                        child: CustomBackButton(size: 48),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  const Positioned(
+                    top: 16,
+                    left: 16,
+                    child: CustomBackButton(size: 48),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         );
-      }),
+      },
     );
   }
 
@@ -109,18 +111,30 @@ class SignInPage extends StatelessWidget {
     final customToast = GetIt.I<CustomToast>(param1: context);
     // ignore: avoid-ignoring-return-values
     singleResult.when<void>(
-      badCredentialsFailure: () =>
-          customToast.showTextFailureToast("Неверный логин или пароль"),
-      connectionFailure: () =>
-          customToast.showTextFailureToast("Ошибка соединения"),
-      loginSucceed: () => AutoRouter.of(context).pop(),
-      userNotVerifiedFailure: () => customToast
-          .showTextFailureToast("Пользователь не прошёл верификацию"),
-      unknownFailure: () => customToast.showTextFailureToast(
-        'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
+      failure: (failure) => failure.when(
+        connectionFailure: () =>
+            customToast.showTextFailureToast("Ошибка соединения"),
+        serverFailure: (statusCode) => customToast.showTextFailureToast(
+          "Произошла ошибка на сервере. Код ошибки: $statusCode",
+        ),
+        unknownFailure: () => customToast.showTextFailureToast(
+          'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
+        ),
       ),
-      validationFailure: (text) =>
-          customToast.showTextFailureToast('Ошибка валидации: $text'),
+      loginFailure: (loginFailure) => loginFailure.when(
+        badCredentials: () =>
+            customToast.showTextFailureToast("Неверный логин или пароль"),
+        userNotVerified: () => customToast
+            .showTextFailureToast("Пользователь не прошёл верификацию"),
+        validationError: (text) =>
+            customToast.showTextFailureToast('Ошибка валидации: $text'),
+      ),
+      loginSucceed: () {
+        onSuccessLogin();
+        // ignore: avoid-ignoring-return-values
+        AutoRouter.of(context).pop();
+      },
+      logoutSucceed: () => {},
     );
   }
 }
