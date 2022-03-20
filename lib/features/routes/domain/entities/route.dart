@@ -9,7 +9,7 @@ part 'route.g.dart';
 @freezed
 class Route with _$Route {
   @JsonSerializable()
-  factory Route({
+  const factory Route({
     required String id,
     required String name,
     required Category category,
@@ -19,7 +19,7 @@ class Route with _$Route {
     required DateTime createdAt,
     required List<Image> images,
     required User author,
-  }) = _;
+  }) = _Route;
 
   factory Route.fromJson(Map<String, dynamic> json) => _$RouteFromJson(json);
 }

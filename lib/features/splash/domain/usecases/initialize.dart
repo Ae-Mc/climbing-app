@@ -9,7 +9,6 @@ class Initialize extends UseCase<void, void> {
   Initialize(this.repository);
 
   @override
-  Future<Either<Failure, void>> call(void params) async {
-    return repository.initialize();
-  }
+  Future<Either<Failure, void>> call(void params) async =>
+      repository.initialize();
 }

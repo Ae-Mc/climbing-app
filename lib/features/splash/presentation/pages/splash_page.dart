@@ -1,4 +1,3 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_event.dart';
@@ -26,49 +25,47 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<SplashBloc, SplashBlocState>(
       builder: (context, state) {
+        final colorTheme = AppTheme.of(context).colorTheme;
+
         return SafeArea(
           child: Scaffold(
-            body: Box(
-              color: AppTheme.of(context).colorTheme.primary,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const Spacer(),
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Spacer(),
-                        Expanded(flex: 10, child: Assets.icons.logo.svg()),
-                        const Spacer(),
-                      ],
-                    ),
+            backgroundColor: colorTheme.primary,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Spacer(),
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Spacer(),
+                      Expanded(flex: 10, child: Assets.icons.logo.svg()),
+                      const Spacer(),
+                    ],
                   ),
-                  Expanded(
-                    child: FractionallySizedBox(
-                      heightFactor: 0.3,
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: state.maybeWhen(
-                          orElse: () => CircularProgressIndicator.adaptive(
-                            valueColor: AlwaysStoppedAnimation(
-                              AppTheme.of(context).colorTheme.onPrimary,
-                            ),
-                          ),
-                          failure: (_) => RetryButton(
-                            onPressed: () =>
-                                BlocProvider.of<SplashBloc>(context)
-                                    .add(const SplashBlocEventInit()),
-                          ),
+                ),
+                Expanded(
+                  child: FractionallySizedBox(
+                    heightFactor: 0.3,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: state.maybeWhen(
+                        orElse: () => CircularProgressIndicator.adaptive(
+                          valueColor:
+                              AlwaysStoppedAnimation(colorTheme.onPrimary),
+                        ),
+                        failure: (_) => RetryButton(
+                          onPressed: () => BlocProvider.of<SplashBloc>(context)
+                              .add(const SplashBlocEventInit()),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

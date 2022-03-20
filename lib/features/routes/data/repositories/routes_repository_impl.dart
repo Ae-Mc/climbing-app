@@ -9,7 +9,7 @@ import 'package:injectable/injectable.dart';
 class RoutesRepositoryImpl implements RoutesRepository {
   final RoutesRemoteDatasource remoteDatasource;
 
-  RoutesRepositoryImpl({required this.remoteDatasource});
+  const RoutesRepositoryImpl({required this.remoteDatasource});
 
   @override
   Future<Either<Failure, List<Route>>> getAllRoutes() {

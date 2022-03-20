@@ -9,8 +9,7 @@ class SplashBloc extends Bloc<SplashBlocEvent, SplashBlocState> {
   SplashBloc(this.initialize) : super(const SplashBlocState.loading()) {
     on<SplashBlocEventInit>((event, emit) async {
       emit(const SplashBlocState.loading());
-      final result = await initialize(null);
-      result.fold(
+      (await initialize(null)).fold(
         (l) => emit(const SplashBlocState.failure(UnknownFailure())),
         (r) => emit(const SplashBlocState.loaded()),
       );

@@ -6,11 +6,11 @@ part 'image.g.dart';
 @freezed
 class Image with _$Image {
   @JsonSerializable()
-  factory Image({
+  const factory Image({
     required String id,
     required String url,
     required String createdAt,
-  }) = _;
+  }) = _Image;
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
 }

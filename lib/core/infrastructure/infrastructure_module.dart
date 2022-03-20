@@ -8,10 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 @module
 abstract class InfrastructureModule {
   @lazySingleton
-  Logger logger() => Logger(
-        level: Level.debug,
-        printer: PrettyPrinter(),
-      );
+  Logger logger() => Logger(level: Level.debug, printer: PrettyPrinter());
 
   @lazySingleton
   Dio dio() => Dio(BaseOptions(connectTimeout: 5000));

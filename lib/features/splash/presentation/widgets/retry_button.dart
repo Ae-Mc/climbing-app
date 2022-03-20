@@ -11,18 +11,16 @@ class RetryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = AppTheme.of(context).colorTheme;
+
     return FloatingActionButton(
       onPressed: onPressed,
-      backgroundColor: AppTheme.of(context).colorTheme.primary,
+      backgroundColor: colorTheme.primary,
       child: FractionallySizedBox(
         heightFactor: 0.6,
         widthFactor: 0.6,
-        child: FittedBox(
-          child: Icon(
-            Icons.replay,
-            color: AppTheme.of(context).colorTheme.onPrimary,
-          ),
-        ),
+        child:
+            FittedBox(child: Icon(Icons.replay, color: colorTheme.onPrimary)),
       ),
     );
   }

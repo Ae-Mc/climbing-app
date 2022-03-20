@@ -22,14 +22,15 @@ class StyledTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = AppTheme.of(context).colorTheme;
+    final textTheme = AppTheme.of(context).textTheme;
+
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          borderSide: BorderSide(
-            color: AppTheme.of(context).colorTheme.unselected,
-          ),
+          borderSide: BorderSide(color: colorTheme.unselected),
         ),
         contentPadding: const Pad(horizontal: 16, vertical: 14.5),
         suffixIcon: suffixIcon,
@@ -37,7 +38,7 @@ class StyledTextField extends StatelessWidget {
       ),
       keyboardType: keyboardType,
       maxLines: 1,
-      style: AppTheme.of(context).textTheme.body1Regular,
+      style: textTheme.body1Regular,
       textAlignVertical: TextAlignVertical.center,
       textInputAction: inputAction,
       obscureText: obscureText,
