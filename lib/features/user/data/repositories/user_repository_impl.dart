@@ -20,6 +20,7 @@ class UserRepositoryImpl implements UserRepository {
 
   UserRepositoryImpl(this.remoteDatasource, this.localDatasource, Dio dio) {
     dio.interceptors.add(AuthorizationInterceptor(() => accessToken));
+    accessToken = localDatasource.loadToken();
   }
 
   @override
@@ -46,6 +47,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       // TODO: implement token saving and loading from storage on app startup
       accessToken = await remoteDatasource.login(usernameOrEmail, password);
+      await localDatasource.saveToken(accessToken);
 
       return const Right(null);
     } on DioError catch (error) {
@@ -129,8 +131,10 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       await remoteDatasource.logout();
+      accessToken = null;
+      await localDatasource.saveToken(accessToken);
 
-      return Right(accessToken = null);
+      return const Right(null);
     } on DioError catch (error) {
       return Left(handleDioConnectionError(error).fold<Failure>(
         (l) => l,

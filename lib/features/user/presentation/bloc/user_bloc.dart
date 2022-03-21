@@ -19,9 +19,24 @@ class UserBloc
 
   Future<void> handleEvent(UserEvent event, UserEmitter emit) async {
     await event.map<Future<void>>(
+      initialize: (_) => initialize(emit),
       login: (event) => login(event, emit),
       logout: (_) => logout(emit),
     );
+  }
+
+  Future<void> initialize(UserEmitter emit) async {
+    if (repository.isAuthenticated) {
+      (await repository.getCurrentUser()).fold(
+        (failure) {
+          addSingleResult(UserSingleResult.failure(failure));
+        },
+        (user) {
+          emit(UserState.authorized(user));
+          addSingleResult(const UserSingleResult.loginSucceed());
+        },
+      );
+    }
   }
 
   Future<void> login(UserEventLogin event, UserEmitter emit) async {
