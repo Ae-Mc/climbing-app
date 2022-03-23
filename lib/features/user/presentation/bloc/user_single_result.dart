@@ -10,5 +10,6 @@ class UserSingleResult with _$UserSingleResult {
   const factory UserSingleResult.logoutSucceed() = _Logout;
   const factory UserSingleResult.loginFailure(LoginFailure loginFailure) =
       _LoginFailure;
-  const factory UserSingleResult.failure(Failure failure) = _Failure;
+  const factory UserSingleResult.failure(Failure failure) =
+      UserSingleResultFailure;
 }

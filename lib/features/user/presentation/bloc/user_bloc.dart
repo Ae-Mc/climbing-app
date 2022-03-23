@@ -26,9 +26,11 @@ class UserBloc
   }
 
   Future<void> initialize(UserEmitter emit) async {
+    emit(const UserState.loading());
     if (repository.isAuthenticated) {
       (await repository.getCurrentUser()).fold(
         (failure) {
+          emit(UserState.initializationFailure(failure));
           addSingleResult(UserSingleResult.failure(failure));
         },
         (user) {
@@ -36,6 +38,8 @@ class UserBloc
           addSingleResult(const UserSingleResult.loginSucceed());
         },
       );
+    } else {
+      emit(const UserState.notAuthorized());
     }
   }
 
@@ -66,8 +70,10 @@ class UserBloc
 
   Future<void> logout(UserEmitter emit) async {
     final previousState = state.when<UserState>(
-      loading: () => const UserState.loading(),
       authorized: (user) => UserState.authorized(user),
+      initializationFailure: (failure) =>
+          UserState.initializationFailure(failure),
+      loading: () => const UserState.loading(),
       notAuthorized: () => const UserState.notAuthorized(),
     );
     emit(const UserState.loading());
