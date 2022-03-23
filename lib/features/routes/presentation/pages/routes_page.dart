@@ -55,7 +55,7 @@ class RoutesPage extends StatelessWidget {
   }
 
   void showFailureToast(BuildContext context, RoutesBlocSingleResult result) {
-    final customToast = GetIt.I<CustomToast>(param1: context);
+    final customToast = CustomToast(context);
 
     result.when<void>(
       connectionFailure: () =>

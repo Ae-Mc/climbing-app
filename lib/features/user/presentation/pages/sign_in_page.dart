@@ -13,7 +13,6 @@ import 'package:climbing_app/features/user/presentation/widgets/styled_text_fiel
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();
@@ -108,7 +107,7 @@ class SignInPage extends StatelessWidget {
   }
 
   void onUserSingleResult(BuildContext context, UserSingleResult singleResult) {
-    final customToast = GetIt.I<CustomToast>(param1: context);
+    final customToast = CustomToast(context);
     // ignore: avoid-ignoring-return-values
     singleResult.when<void>(
       failure: (failure) => failure.when(

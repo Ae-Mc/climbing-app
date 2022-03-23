@@ -10,7 +10,6 @@ import 'package:climbing_app/features/user/presentation/bloc/user_single_result.
 import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -25,7 +24,7 @@ class ProfilePage extends StatelessWidget {
         logoutSucceed: () =>
             AutoTabsRouter.of(context).navigate(const RoutesRouter()),
         // TODO: add error handling with toasts
-        orElse: () => GetIt.I<CustomToast>(param1: context)
+        orElse: () => CustomToast(context)
             .showTextFailureToast('Unexpected error: $singleResult'),
       ),
       builder: (context, state) => state.maybeWhen(
