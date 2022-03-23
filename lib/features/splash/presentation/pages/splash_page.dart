@@ -1,10 +1,13 @@
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
+import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
-import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_event.dart';
-import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_state.dart';
-import 'package:climbing_app/features/splash/presentation/widgets/retry_button.dart';
+import 'package:climbing_app/features/splash/presentation/bloc/splash_event.dart';
+import 'package:climbing_app/features/splash/presentation/bloc/splash_state.dart';
+import 'package:climbing_app/features/splash/presentation/widgets/splash_failed.dart';
+import 'package:climbing_app/features/splash/presentation/widgets/splash_loading.dart';
 import 'package:flutter/material.dart';
-import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashPage extends StatefulWidget {
@@ -17,59 +20,59 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    BlocProvider.of<SplashBloc>(context).add(const SplashBlocEvent.init());
+    BlocProvider.of<SplashBloc>(context).add(const SplashEvent.init());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SplashBloc, SplashBlocState>(
+    return BlocBuilder<SplashBloc, SplashState>(
       builder: (context, state) {
         final colorTheme = AppTheme.of(context).colorTheme;
 
-        return SafeArea(
-          child: Scaffold(
-            backgroundColor: colorTheme.primary,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
+        return Scaffold(
+          backgroundColor: colorTheme.primary,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Spacer(),
                 Expanded(
                   flex: 3,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Spacer(),
-                      Expanded(flex: 10, child: Assets.icons.logo.svg()),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.3,
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: state.maybeWhen(
-                        orElse: () => CircularProgressIndicator.adaptive(
-                          valueColor:
-                              AlwaysStoppedAnimation(colorTheme.onPrimary),
-                        ),
-                        failure: (_) => RetryButton(
-                          onPressed: () => BlocProvider.of<SplashBloc>(context)
-                              .add(const SplashBlocEventInit()),
-                        ),
-                      ),
+                  child: SingleResultBlocBuilder<SplashBloc, SplashState,
+                      SplashSingleResult>(
+                    onSingleResult: onSingleResult,
+                    builder: (context, state) => state.when(
+                      loading: () => const SplashLoading(),
+                      failure: (_) => const SplashFailed(),
+                      loaded: () => const UnexpectedBehavior(),
                     ),
                   ),
                 ),
+                const Spacer(),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  void onSingleResult(BuildContext context, SplashSingleResult singleResult) {
+    final customToast = CustomToast(context);
+
+    // ignore: avoid-ignoring-return-values
+    singleResult.when<void>(
+      failure: (failure) => failure.when(
+        connectionFailure: () =>
+            customToast.showTextFailureToast("Ошибка соединения"),
+        serverFailure: (statusCode) => customToast.showTextFailureToast(
+          "Произошла ошибка на сервере. Код ошибки: $statusCode",
+        ),
+        unknownFailure: () => customToast.showTextFailureToast(
+          'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
+        ),
+      ),
     );
   }
 }

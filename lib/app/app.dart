@@ -3,9 +3,8 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme_bloc.dart';
 import 'package:climbing_app/features/splash/data/repositories/startup_repository_impl.dart';
-import 'package:climbing_app/features/splash/domain/usecases/initialize.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
-import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc_state.dart';
+import 'package:climbing_app/features/splash/presentation/bloc/splash_state.dart';
 import 'package:climbing_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -26,16 +25,16 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(
-          create: (context) => SplashBloc(Initialize(StartupRepositoryImpl())),
-        ),
         BlocProvider(create: (context) => GetIt.I<UserBloc>()),
+        BlocProvider(
+          create: (context) => SplashBloc(StartupRepositoryImpl(context)),
+        ),
       ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
         builder: (context, theme) {
           return MaterialApp(
             title: "Скалолазание ИТМО",
-            home: BlocBuilder<SplashBloc, SplashBlocState>(
+            home: BlocBuilder<SplashBloc, SplashState>(
               builder: (context, splashState) => splashState.maybeWhen(
                 loaded: () => Router(
                   backButtonDispatcher: RootBackButtonDispatcher(),
