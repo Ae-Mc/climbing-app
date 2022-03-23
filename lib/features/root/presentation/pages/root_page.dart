@@ -62,17 +62,14 @@ class RootPage extends StatelessWidget {
   }
 
   void setActiveTab(BuildContext context, int index, TabsRouter tabsRouter) {
-    if (routes[index] is UserRouter) {
-      if (GetIt.I<AuthGuard>().isAuthenticated()) {
-        tabsRouter.setActiveIndex(index);
-      } else {
-        // ignore: avoid-ignoring-return-values
-        AutoRouter.of(context).push(
-          SignInRoute(onSuccessLogin: () => tabsRouter.setActiveIndex(index)),
-        );
-      }
-    } else {
+    if (routes[index] is! UserRouter ||
+        GetIt.I<AuthGuard>().isAuthenticated()) {
       tabsRouter.setActiveIndex(index);
+    } else {
+      // ignore: avoid-ignoring-return-values
+      AutoRouter.of(context).push(
+        SignInRoute(onSuccessLogin: () => tabsRouter.setActiveIndex(index)),
+      );
     }
   }
 }
