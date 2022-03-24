@@ -4,6 +4,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
+import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
@@ -28,76 +29,80 @@ class SignInPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           body: SafeArea(
-            child: SizedBox.expand(
-              child: Stack(
-                children: [
-                  Center(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const Pad(all: 16),
-                        child: Form(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Assets.icons.logo.svg(
-                                color:
-                                    AppTheme.of(context).colorTheme.secondary,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Вход',
-                                style: AppTheme.of(context).textTheme.title,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              StyledTextField(
-                                controller: usernameOrEmailController,
-                                hintText: 'Имя пользователя или email',
-                                keyboardType: TextInputType.emailAddress,
-                              ),
-                              const SizedBox(height: 16),
-                              StyledPasswordField(
-                                controller: passwordController,
-                                hintText: 'Пароль',
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: state.maybeWhen(
-                                  loading: () => null,
-                                  orElse: () => () =>
-                                      BlocProvider.of<UserBloc>(context).add(
-                                        UserEvent.login(
-                                          usernameOrEmailController.text,
-                                          passwordController.text,
+            child: state.maybeWhen(
+              initializationFailure: (failure) => const UnexpectedBehavior(),
+              orElse: () => SizedBox.expand(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const Pad(all: 16),
+                          child: Form(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Assets.icons.logo.svg(
+                                  color:
+                                      AppTheme.of(context).colorTheme.secondary,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Вход',
+                                  style: AppTheme.of(context).textTheme.title,
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                StyledTextField(
+                                  controller: usernameOrEmailController,
+                                  hintText: 'Имя пользователя или email',
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+                                const SizedBox(height: 16),
+                                StyledPasswordField(
+                                  controller: passwordController,
+                                  hintText: 'Пароль',
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: state.maybeWhen(
+                                    loading: () => null,
+                                    orElse: () => () =>
+                                        BlocProvider.of<UserBloc>(context).add(
+                                          UserEvent.login(
+                                            usernameOrEmailController.text,
+                                            passwordController.text,
+                                          ),
                                         ),
-                                      ),
+                                  ),
+                                  child: state.maybeWhen(
+                                    loading: () =>
+                                        const CircularProgressIndicator
+                                            .adaptive(),
+                                    notAuthorized: () => const Text('Войти'),
+                                    orElse: () => const SizedBox(),
+                                  ),
                                 ),
-                                child: state.when(
-                                  loading: () => const CircularProgressIndicator
-                                      .adaptive(),
-                                  notAuthorized: () => const Text('Войти'),
-                                  authorized: (_) => const SizedBox(),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: () => {},
+                                  child: const Text("Регистрация"),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextButton(
-                                onPressed: () => {},
-                                child: const Text("Регистрация"),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const Positioned(
-                    top: 16,
-                    left: 16,
-                    child: CustomBackButton(size: 48),
-                  ),
-                ],
+                    const Positioned(
+                      top: 16,
+                      left: 16,
+                      child: CustomBackButton(size: 48),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
