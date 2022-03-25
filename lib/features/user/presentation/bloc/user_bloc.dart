@@ -54,10 +54,10 @@ class UserBloc
         .fold<Future<void>>(
       (failure) async {
         emit(const UserState.notAuthorized());
-        failure.fold(
-          (failure) => addSingleResult(UserSingleResult.failure(failure)),
+        addSingleResult(failure.fold(
+          (failure) => UserSingleResult.failure(failure),
           (loginFailure) => UserSingleResult.loginFailure(loginFailure),
-        );
+        ));
       },
       (_) async {
         final currentUser = await repository.getCurrentUser();
