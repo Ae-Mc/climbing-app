@@ -4,12 +4,15 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -23,9 +26,9 @@ class ProfilePage extends StatelessWidget {
       onSingleResult: (context, singleResult) => singleResult.maybeWhen(
         logoutSucceed: () =>
             AutoTabsRouter.of(context).navigate(const RoutesRouter()),
-        // TODO: add error handling with toasts
-        orElse: () => CustomToast(context)
-            .showTextFailureToast('Unexpected error: $singleResult'),
+        failure: (failure) =>
+            CustomToast(context).showTextFailureToast(failureToText(failure)),
+        orElse: () => GetIt.I<Logger>().d('Unexpected error: $singleResult'),
       ),
       builder: (context, state) => state.maybeWhen(
         orElse: () => const Center(child: CircularProgressIndicator.adaptive()),

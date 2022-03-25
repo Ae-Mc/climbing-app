@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
@@ -14,6 +15,8 @@ import 'package:climbing_app/features/user/presentation/widgets/styled_text_fiel
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();
@@ -114,31 +117,22 @@ class SignInPage extends StatelessWidget {
   void onUserSingleResult(BuildContext context, UserSingleResult singleResult) {
     final customToast = CustomToast(context);
     // ignore: avoid-ignoring-return-values
-    singleResult.when<void>(
-      failure: (failure) => failure.when(
-        connectionFailure: () =>
-            customToast.showTextFailureToast("Ошибка соединения"),
-        serverFailure: (statusCode) => customToast.showTextFailureToast(
-          "Произошла ошибка на сервере. Код ошибки: $statusCode",
-        ),
-        unknownFailure: () => customToast.showTextFailureToast(
-          'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
-        ),
-      ),
-      loginFailure: (loginFailure) => loginFailure.when(
-        badCredentials: () =>
-            customToast.showTextFailureToast("Неверный логин или пароль"),
-        userNotVerified: () => customToast
-            .showTextFailureToast("Пользователь не прошёл верификацию"),
-        validationError: (text) =>
-            customToast.showTextFailureToast('Ошибка валидации: $text'),
-      ),
+    singleResult.maybeWhen<void>(
+      failure: (failure) =>
+          customToast.showTextFailureToast(failureToText(failure)),
+      loginFailure: (loginFailure) =>
+          customToast.showTextFailureToast(loginFailure.when(
+        badCredentials: () => "Неверный логин или пароль",
+        userNotVerified: () => "Пользователь не прошёл верификацию",
+        validationError: (text) => text,
+      )),
       loginSucceed: () {
         onSuccessLogin();
         // ignore: avoid-ignoring-return-values
         AutoRouter.of(context).pop();
       },
-      logoutSucceed: () => {},
+      orElse: () =>
+          GetIt.I<Logger>().w('Unexpected user single result: $singleResult'),
     );
   }
 }

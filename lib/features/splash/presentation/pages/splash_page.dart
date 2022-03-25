@@ -1,6 +1,7 @@
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_event.dart';
@@ -63,16 +64,8 @@ class _SplashPageState extends State<SplashPage> {
 
     // ignore: avoid-ignoring-return-values
     singleResult.when<void>(
-      failure: (failure) => failure.when(
-        connectionFailure: () =>
-            customToast.showTextFailureToast("Ошибка соединения"),
-        serverFailure: (statusCode) => customToast.showTextFailureToast(
-          "Произошла ошибка на сервере. Код ошибки: $statusCode",
-        ),
-        unknownFailure: () => customToast.showTextFailureToast(
-          'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
-        ),
-      ),
+      failure: (failure) =>
+          customToast.showTextFailureToast(failureToText(failure)),
     );
   }
 }
