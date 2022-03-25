@@ -9,6 +9,7 @@ import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
+import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -21,6 +22,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = AppTheme.of(context).textTheme;
     final colorTheme = AppTheme.of(context).colorTheme;
+    const cardBorderRadius = BorderRadius.all(Radius.circular(16));
 
     return SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
       onSingleResult: (context, singleResult) => singleResult.maybeWhen(
@@ -32,39 +34,65 @@ class ProfilePage extends StatelessWidget {
       ),
       builder: (context, state) => state.maybeWhen(
         orElse: () => const Center(child: CircularProgressIndicator.adaptive()),
-        authorized: (user) => SingleChildScrollView(
+        authorized: (user) => ListView(
           padding: const Pad(all: 16),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    '${user.firstName} ${user.lastName}',
-                    style: textTheme.title,
+          children: [
+            Text(
+              'Профиль',
+              style: textTheme.title,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            Center(
+              child: Container(
+                width: 144,
+                height: 144,
+                decoration: ShapeDecoration(
+                  shape: CircleBorder(
+                    side: BorderSide(color: colorTheme.primary, width: 4),
                   ),
-                  Text('@${user.username}', style: textTheme.caption),
-                  Text('Email: ${user.email}', style: textTheme.subtitle1),
-                ],
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(72)),
+                  child: Assets.icons.climber.svg(fit: BoxFit.cover),
+                ),
               ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Ink(
-                  decoration: ShapeDecoration(
-                    shape: const CircleBorder(),
-                    color: colorTheme.secondary,
-                  ),
-                  child: IconButton(
-                    onPressed: () => BlocProvider.of<UserBloc>(context)
-                        .add(const UserEvent.logout()),
-                    icon: const Icon(Icons.logout),
-                    color: colorTheme.onSecondary,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '${user.firstName} ${user.lastName}',
+              style: textTheme.subtitle1,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: cardBorderRadius,
+              ),
+              child: InkWell(
+                // TODO: Go to completed routes page
+                onTap: () => GetIt.I<Logger>().d('Go to completed routes page'),
+                borderRadius: cardBorderRadius,
+                child: Padding(
+                  padding: const Pad(all: 24),
+                  child: Text(
+                    'Завершённые трассы',
+                    style: textTheme.title,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => BlocProvider.of<UserBloc>(context)
+                  .add(const UserEvent.logout()),
+              child: const Text(
+                'Выйти',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
       ),
     );
