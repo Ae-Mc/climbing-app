@@ -11,7 +11,8 @@ Either<Failure, DioError> handleDioConnectionError(DioError error) {
         DioErrorType.receiveTimeout,
         DioErrorType.sendTimeout,
       ].contains(error.type) ||
-      (error.error is SocketException)) {
+      error.error is SocketException ||
+      error.error is HttpException) {
     return const Left(ConnectionFailure());
   }
 
