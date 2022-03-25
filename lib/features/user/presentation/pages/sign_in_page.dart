@@ -1,5 +1,6 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
@@ -90,7 +91,15 @@ class SignInPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 TextButton(
-                                  onPressed: () => {},
+                                  onPressed: () =>
+                                      AutoRouter.of(context).replace(
+                                    SignUpRoute(
+                                      onSuccessRegister: () => {},
+                                      signInRoute: SignInRoute(
+                                        onSuccessLogin: onSuccessLogin,
+                                      ),
+                                    ),
+                                  ),
                                   child: const Text("Регистрация"),
                                 ),
                               ],
