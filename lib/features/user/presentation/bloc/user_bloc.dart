@@ -20,8 +20,9 @@ class UserBloc
   Future<void> handleEvent(UserEvent event, UserEmitter emit) async {
     await event.map<Future<void>>(
       initialize: (_) => initialize(emit),
-      login: (event) => login(event, emit),
       logout: (_) => logout(emit),
+      login: (event) => login(event, emit),
+      register: (event) => register(event, emit),
     );
   }
 
@@ -31,8 +32,8 @@ class UserBloc
       (await repository.getCurrentUser()).fold(
         (failure) {
           if (repository.isAuthenticated) {
-          emit(UserState.initializationFailure(failure));
-          addSingleResult(UserSingleResult.failure(failure));
+            emit(UserState.initializationFailure(failure));
+            addSingleResult(UserSingleResult.failure(failure));
           } else {
             emit(const UserState.notAuthorized());
           }
@@ -91,5 +92,19 @@ class UserBloc
         emit(const UserState.notAuthorized());
       },
     );
+  }
+
+  Future<void> register(UserEventRegister event, UserEmitter emit) async {
+    emit(const UserState.loading());
+    addSingleResult(
+      (await repository.register(event.userCreate)).fold<UserSingleResult>(
+        (failure) => failure.fold(
+          (l) => UserSingleResult.failure(l),
+          (r) => UserSingleResult.signUpFailure(r),
+        ),
+        (r) => const UserSingleResult.signUpSucceed(),
+      ),
+    );
+    emit(const UserState.notAuthorized());
   }
 }
