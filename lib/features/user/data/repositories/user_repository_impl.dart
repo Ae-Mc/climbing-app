@@ -2,6 +2,7 @@ import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
 import 'package:climbing_app/features/user/data/datasources/user_local_datasource.dart';
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
+import 'package:climbing_app/features/user/data/models/validation_error.dart';
 import 'package:climbing_app/features/user/domain/entities/login_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/core/failure.dart';
@@ -45,7 +46,6 @@ class UserRepositoryImpl implements UserRepository {
     String password,
   ) async {
     try {
-      // TODO: implement token saving and loading from storage on app startup
       accessToken = await remoteDatasource.login(usernameOrEmail, password);
       await localDatasource.saveToken(accessToken);
 
@@ -71,12 +71,10 @@ class UserRepositoryImpl implements UserRepository {
               return const Right(LoginFailure.userNotVerified());
             }
           } else if (statusCode == 422) {
-            final List? details = jsonResponse["detail"];
-            if (details != null) {
-              final parsingResult = parseValidationError(details);
-              if (parsingResult != null) {
-                return Right(parsingResult);
-              }
+            final validationError = ValidationError.fromJson(jsonResponse);
+            final errorText = parseValidationError(validationError);
+            if (errorText != null) {
+              return Right(LoginFailure.validationError(errorText));
             }
           } else if (statusCode >= 499 && statusCode < 600) {
             return Left(Failure.serverFailure(statusCode: statusCode));
@@ -87,43 +85,6 @@ class UserRepositoryImpl implements UserRepository {
           return const Left(UnknownFailure());
         }),
       );
-    }
-  }
-
-  LoginFailure? parseValidationError(final List details) {
-    if (details.isEmpty) {
-      return null;
-    }
-
-    GetIt.I<Logger>().d(details);
-    final detail = details.first;
-
-    if (detail["msg"] == null) {
-      return null;
-    }
-
-    if (detail["msg"] == "field required") {
-      final List? loc = detail["loc"];
-      if (loc == null) {
-        return null;
-      }
-
-      switch (loc.last) {
-        case "username":
-          return const LoginFailure.validationError(
-            'Поле имя не может быть пустым',
-          );
-        case "password":
-          return const LoginFailure.validationError(
-            'Поле пароль не может быть пустым',
-          );
-        default:
-          return LoginFailure.validationError(
-            "Поле не может быть пустым: ${detail['loc'][0]}",
-          );
-      }
-    } else {
-      return LoginFailure.validationError(detail["msg"]);
     }
   }
 
@@ -159,6 +120,50 @@ class UserRepositoryImpl implements UserRepository {
       ));
     }
   }
+
+  static String? parseValidationError(
+    ValidationError validationError, [
+    Map<String, String> remoteToLocalFieldNameDict = remoteToLocalFieldNameDict,
+  ]) {
+    for (final detail in validationError.detail) {
+      final numberRegex = RegExp(r'\d+');
+      final localFieldName = remoteToLocalFieldNameDict[detail.loc.last];
+      final fieldName = localFieldName ?? detail.loc.last;
+
+      switch (detail.type) {
+        case "value_error.missing":
+          return "Поле $fieldName не может быть пустым";
+        case "value_error.any_str.min_length":
+          final minCharacters = numberRegex.stringMatch(detail.msg);
+          if (minCharacters == null) {
+            throw Error();
+          }
+
+          return "Поле $fieldName не может быть короче $minCharacters символов";
+        case "value_error.any_str.max_length":
+          final maxCharacters = numberRegex.stringMatch(detail.msg);
+          if (maxCharacters == null) {
+            throw Error();
+          }
+
+          return "Поле $fieldName не может быть длиннее $maxCharacters символов";
+        case "value_error.email":
+          return "Поле $fieldName не соответствует формату Email";
+        default:
+          return detail.msg;
+      }
+    }
+
+    return null;
+  }
+
+  static const remoteToLocalFieldNameDict = {
+    "email": "email",
+    "first_name": "имя",
+    "last_name": "фамилия",
+    "password": "пароль",
+    "username": "имя пользователя",
+  };
 }
 
 class AuthorizationInterceptor extends Interceptor {
