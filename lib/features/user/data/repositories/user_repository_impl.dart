@@ -20,7 +20,25 @@ class UserRepositoryImpl implements UserRepository {
   AccessToken? accessToken;
 
   UserRepositoryImpl(this.remoteDatasource, this.localDatasource, Dio dio) {
-    dio.interceptors.add(AuthorizationInterceptor(() => accessToken));
+    dio.interceptors.add(AuthorizationInterceptor(
+      getAccessToken: () => accessToken,
+      on401Response: (error, handler) async {
+        accessToken = null;
+        await localDatasource.saveToken(accessToken);
+        if (error.requestOptions.headers['Authorization'] == null) {
+          handler.next(error);
+        } else {
+          final newRequestOptions = error.requestOptions.copyWith();
+          // ignore: avoid-ignoring-return-values
+          newRequestOptions.headers.remove('Authorization');
+          try {
+            handler.resolve(await dio.fetch(newRequestOptions));
+          } on DioError catch (error) {
+            handler.next(error);
+          }
+        }
+      },
+    ));
     accessToken = localDatasource.loadToken();
   }
 
@@ -168,14 +186,18 @@ class UserRepositoryImpl implements UserRepository {
 
 class AuthorizationInterceptor extends Interceptor {
   final AccessToken? Function() getAccessToken;
+  final Future<void> Function(DioError error, ErrorInterceptorHandler handler)?
+      on401Response;
 
-  AuthorizationInterceptor(this.getAccessToken);
+  AuthorizationInterceptor({
+    required this.getAccessToken,
+    this.on401Response,
+  });
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
-    final response = err.response;
-    if (response != null && response.statusCode == 499) {
-      // TODO: refresh token if expired
+  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
+    if (err.type == DioErrorType.response && err.response?.statusCode == 401) {
+      await on401Response?.call(err, handler);
     } else {
       handler.next(err);
     }

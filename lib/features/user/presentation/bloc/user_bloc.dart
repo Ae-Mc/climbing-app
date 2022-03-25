@@ -30,8 +30,12 @@ class UserBloc
     if (repository.isAuthenticated) {
       (await repository.getCurrentUser()).fold(
         (failure) {
+          if (repository.isAuthenticated) {
           emit(UserState.initializationFailure(failure));
           addSingleResult(UserSingleResult.failure(failure));
+          } else {
+            emit(const UserState.notAuthorized());
+          }
         },
         (user) {
           emit(UserState.authorized(user));
