@@ -3,8 +3,8 @@ import 'package:climbing_app/features/user/data/datasources/user_local_datasourc
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/data/models/validation_error.dart';
-import 'package:climbing_app/features/user/domain/entities/login_failure.dart';
-import 'package:climbing_app/features/user/domain/entities/sign_up_failure.dart';
+import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
+import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
@@ -61,19 +61,19 @@ class UserRepositoryImpl implements UserRepository {
   bool get isAuthenticated => accessToken != null;
 
   @override
-  Future<Either<Either<Failure, LoginFailure>, void>> login(
+  Future<Either<Either<Failure, SignInFailure>, void>> signIn(
     String usernameOrEmail,
     String password,
   ) async {
     try {
-      accessToken = await remoteDatasource.login(usernameOrEmail, password);
+      accessToken = await remoteDatasource.signIn(usernameOrEmail, password);
       await localDatasource.saveToken(accessToken);
 
       return const Right(null);
     } on DioError catch (error) {
       return Left(
         handleDioConnectionError(error)
-            .fold<Either<Failure, LoginFailure>>((l) => Left(l), (error) {
+            .fold<Either<Failure, SignInFailure>>((l) => Left(l), (error) {
           final statusCode = error.response?.statusCode;
           final Map<String, dynamic>? jsonResponse = error.response?.data;
 
@@ -85,16 +85,16 @@ class UserRepositoryImpl implements UserRepository {
 
           if (statusCode == 400) {
             if (jsonResponse["detail"] == "LOGIN_BAD_CREDENTIALS") {
-              return const Right(LoginFailure.badCredentials());
+              return const Right(SignInFailure.badCredentials());
             }
             if (jsonResponse["detail"] == "LOGIN_USER_NOT_VERIFIED") {
-              return const Right(LoginFailure.userNotVerified());
+              return const Right(SignInFailure.userNotVerified());
             }
           } else if (statusCode == 422) {
             final validationError = ValidationError.fromJson(jsonResponse);
             final errorText = parseValidationError(validationError);
             if (errorText != null) {
-              return Right(LoginFailure.validationError(errorText));
+              return Right(SignInFailure.validationError(errorText));
             }
           } else if (statusCode >= 499 && statusCode < 600) {
             return Left(Failure.serverFailure(statusCode: statusCode));
@@ -109,9 +109,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<Either<Failure, void>> signOut() async {
     try {
-      await remoteDatasource.logout();
+      await remoteDatasource.signOut();
       accessToken = null;
       await localDatasource.saveToken(accessToken);
 
@@ -142,7 +142,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Either<Failure, SignUpFailure>, void>> register(
+  Future<Either<Either<Failure, RegisterFailure>, void>> register(
     UserCreate userCreate,
   ) async {
     try {
@@ -152,7 +152,7 @@ class UserRepositoryImpl implements UserRepository {
       return const Right(null);
     } on DioError catch (error) {
       return Left(handleDioConnectionError(error)
-          .fold<Either<Failure, SignUpFailure>>((l) => Left(l), (r) {
+          .fold<Either<Failure, RegisterFailure>>((l) => Left(l), (r) {
         final response = r.response;
         final statusCode = response?.statusCode;
 
@@ -166,7 +166,7 @@ class UserRepositoryImpl implements UserRepository {
           final errorText = parseValidationError(validationError);
 
           if (errorText != null) {
-            return Right(SignUpFailure.validationError(errorText));
+            return Right(RegisterFailure.validationError(errorText));
           }
         } else if (statusCode == 400) {
           final result = response.data;
@@ -174,10 +174,10 @@ class UserRepositoryImpl implements UserRepository {
             if (result["detail"] is Map &&
                 result["detail"]["code"] == "REGISTER_INVALID_PASSWORD") {
               return Right(
-                SignUpFailure.invalidPassword(result["detail"]["reason"]),
+                RegisterFailure.invalidPassword(result["detail"]["reason"]),
               );
             } else if (result["detail"] == "REGISTER_USER_ALREADY_EXISTS") {
-              return const Right(SignUpFailure.userAlreadyExists());
+              return const Right(RegisterFailure.userAlreadyExists());
             }
           }
           GetIt.I<Logger>().e('Result: ${response.data}');

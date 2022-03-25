@@ -68,7 +68,7 @@ class RootPage extends StatelessWidget {
     } else {
       // ignore: avoid-ignoring-return-values
       AutoRouter.of(context).push(
-        SignInRoute(onSuccessLogin: () => tabsRouter.setActiveIndex(index)),
+        SignInRoute(onSuccessSignIn: () => tabsRouter.setActiveIndex(index)),
       );
     }
   }

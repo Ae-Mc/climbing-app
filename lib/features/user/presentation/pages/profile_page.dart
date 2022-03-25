@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
 
     return SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
       onSingleResult: (context, singleResult) => singleResult.maybeWhen(
-        logoutSucceed: () =>
+        signOutSucceed: () =>
             AutoTabsRouter.of(context).navigate(const RoutesRouter()),
         failure: (failure) =>
             CustomToast(context).showTextFailureToast(failureToText(failure)),
@@ -86,7 +86,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => BlocProvider.of<UserBloc>(context)
-                  .add(const UserEvent.logout()),
+                  .add(const UserEvent.signOut()),
               child: const Text(
                 'Выйти',
                 textAlign: TextAlign.center,

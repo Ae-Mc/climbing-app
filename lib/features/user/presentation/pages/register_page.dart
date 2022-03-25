@@ -20,7 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-class SignUpPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
   final emailController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -29,7 +29,7 @@ class SignUpPage extends StatelessWidget {
   final void Function() onSuccessRegister;
   final SignInRoute? signInRoute;
 
-  SignUpPage({Key? key, required this.onSuccessRegister, this.signInRoute})
+  RegisterPage({Key? key, required this.onSuccessRegister, this.signInRoute})
       : super(key: key);
 
   @override
@@ -98,7 +98,7 @@ class SignUpPage extends StatelessWidget {
                                   loading: () => null,
                                   orElse: () => () =>
                                       BlocProvider.of<UserBloc>(context).add(
-                                        UserEvent.signUp(
+                                        UserEvent.register(
                                           UserCreate(
                                             email: emailController.text,
                                             firstName: firstNameController.text,
@@ -123,7 +123,7 @@ class SignUpPage extends StatelessWidget {
                               TextButton(
                                 onPressed: () => AutoRouter.of(context).replace(
                                   signInRoute ??
-                                      SignInRoute(onSuccessLogin: () => {}),
+                                      SignInRoute(onSuccessSignIn: () => {}),
                                 ),
                                 child: const Text("Вход"),
                               ),
@@ -153,13 +153,13 @@ class SignUpPage extends StatelessWidget {
     singleResult.maybeWhen<void>(
       failure: (failure) =>
           customToast.showTextFailureToast(failureToText(failure)),
-      signUpSucceed: () {
+      registerSucceed: () {
         onSuccessRegister();
         // ignore: avoid-ignoring-return-values
         AutoRouter.of(context).pop();
       },
-      signUpFailure: (signUpFailure) =>
-          customToast.showTextFailureToast(signUpFailure.when(
+      registerFailure: (registerFailure) =>
+          customToast.showTextFailureToast(registerFailure.when(
         validationError: (text) => text,
         userAlreadyExists: () =>
             "Пользователь с таким именем пользователя или email'ом уже существует",

@@ -19,11 +19,11 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   Future<User> getCurrentUser() => authApi.getCurrentUser();
 
   @override
-  Future<AccessToken> login(String usernameOrEmail, String password) =>
-      authApi.login(usernameOrEmail, password);
+  Future<AccessToken> signIn(String usernameOrEmail, String password) =>
+      authApi.signIn(usernameOrEmail, password);
 
   @override
-  Future<void> logout() => authApi.logout();
+  Future<void> signOut() => authApi.signOut();
 
   @override
   Future<User> register(UserCreate userCreate) => authApi.register(userCreate);
@@ -40,10 +40,13 @@ abstract class AuthApi {
 
   @POST("auth/login")
   @FormUrlEncoded()
-  Future<AccessToken> login(@Field() String username, @Field() String password);
+  Future<AccessToken> signIn(
+    @Field() String username,
+    @Field() String password,
+  );
 
   @POST("auth/logout")
-  Future<void> logout();
+  Future<void> signOut();
 
   @POST("auth/register")
   // ignore: long-parameter-list

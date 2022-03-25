@@ -22,9 +22,9 @@ import 'package:logger/logger.dart';
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();
   final passwordController = TextEditingController();
-  final void Function() onSuccessLogin;
+  final void Function() onSuccessSignIn;
 
-  SignInPage({Key? key, required this.onSuccessLogin}) : super(key: key);
+  SignInPage({Key? key, required this.onSuccessSignIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class SignInPage extends StatelessWidget {
                                     loading: () => null,
                                     orElse: () => () =>
                                         BlocProvider.of<UserBloc>(context).add(
-                                          UserEvent.login(
+                                          UserEvent.signIn(
                                             usernameOrEmailController.text,
                                             passwordController.text,
                                           ),
@@ -93,10 +93,10 @@ class SignInPage extends StatelessWidget {
                                 TextButton(
                                   onPressed: () =>
                                       AutoRouter.of(context).replace(
-                                    SignUpRoute(
+                                    RegisterRoute(
                                       onSuccessRegister: () => {},
                                       signInRoute: SignInRoute(
-                                        onSuccessLogin: onSuccessLogin,
+                                        onSuccessSignIn: onSuccessSignIn,
                                       ),
                                     ),
                                   ),
@@ -129,14 +129,14 @@ class SignInPage extends StatelessWidget {
     singleResult.maybeWhen<void>(
       failure: (failure) =>
           customToast.showTextFailureToast(failureToText(failure)),
-      loginFailure: (loginFailure) =>
-          customToast.showTextFailureToast(loginFailure.when(
+      signInFailure: (signInFailure) =>
+          customToast.showTextFailureToast(signInFailure.when(
         badCredentials: () => "Неверный логин или пароль",
         userNotVerified: () => "Пользователь не прошёл верификацию",
         validationError: (text) => text,
       )),
-      loginSucceed: () {
-        onSuccessLogin();
+      signInSucceed: () {
+        onSuccessSignIn();
         // ignore: avoid-ignoring-return-values
         AutoRouter.of(context).pop();
       },

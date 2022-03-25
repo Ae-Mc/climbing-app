@@ -13,7 +13,7 @@ class AuthGuard extends AutoRouteGuard {
       resolver.next();
     } else {
       // ignore: avoid-ignoring-return-values
-      router.push(SignInRoute(onSuccessLogin: () => resolver.next()));
+      router.push(SignInRoute(onSuccessSignIn: () => resolver.next()));
     }
   }
 }
