@@ -4,8 +4,10 @@ import 'package:climbing_app/features/user/data/datasources/user_remote_datasour
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/data/models/validation_error.dart';
 import 'package:climbing_app/features/user/domain/entities/login_failure.dart';
+import 'package:climbing_app/features/user/domain/entities/sign_up_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/core/failure.dart';
+import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:climbing_app/features/user/domain/repositories/user_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -136,6 +138,55 @@ class UserRepositoryImpl implements UserRepository {
           return const Failure.unknownFailure();
         },
       ));
+    }
+  }
+
+  @override
+  Future<Either<Either<Failure, SignUpFailure>, void>> register(
+    UserCreate userCreate,
+  ) async {
+    try {
+      // ignore: avoid-ignoring-return-values
+      await remoteDatasource.register(userCreate);
+
+      return const Right(null);
+    } on DioError catch (error) {
+      return Left(handleDioConnectionError(error)
+          .fold<Either<Failure, SignUpFailure>>((l) => Left(l), (r) {
+        final response = r.response;
+        final statusCode = response?.statusCode;
+
+        if (response == null) {
+          return const Left(Failure.unknownFailure());
+        }
+
+        if (statusCode == 422) {
+          final validationError = ValidationError.fromJson(response.data);
+          GetIt.I<Logger>().e('Dio error: $validationError');
+          final errorText = parseValidationError(validationError);
+
+          if (errorText != null) {
+            return Right(SignUpFailure.validationError(errorText));
+          }
+        } else if (statusCode == 400) {
+          final result = response.data;
+          if (result["detail"] != null) {
+            if (result["detail"] is Map &&
+                result["detail"]["code"] == "REGISTER_INVALID_PASSWORD") {
+              return Right(
+                SignUpFailure.invalidPassword(result["detail"]["reason"]),
+              );
+            } else if (result["detail"] == "REGISTER_USER_ALREADY_EXISTS") {
+              return const Right(SignUpFailure.userAlreadyExists());
+            }
+          }
+          GetIt.I<Logger>().e('Result: ${response.data}');
+        }
+
+        GetIt.I<Logger>().e('Unexpected error: $response');
+
+        return const Left(Failure.unknownFailure());
+      }));
     }
   }
 
