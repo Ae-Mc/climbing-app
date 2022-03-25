@@ -2,6 +2,7 @@ import 'package:climbing_app/core/constants.dart';
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
+import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/http.dart';
@@ -23,6 +24,9 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
 
   @override
   Future<void> logout() => authApi.logout();
+
+  @override
+  Future<User> register(UserCreate userCreate) => authApi.register(userCreate);
 }
 
 @singleton
@@ -40,4 +44,8 @@ abstract class AuthApi {
 
   @POST("auth/logout")
   Future<void> logout();
+
+  @POST("auth/register")
+  // ignore: long-parameter-list
+  Future<User> register(@Body() UserCreate userCreate);
 }
