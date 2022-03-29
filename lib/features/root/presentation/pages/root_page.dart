@@ -4,7 +4,6 @@ import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 class RootPage extends StatelessWidget {
   static const routes = [
@@ -51,7 +50,8 @@ class RootPage extends StatelessWidget {
         },
         extendBody: true,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => GetIt.I<Logger>().d('Add new route'),
+          onPressed: () =>
+              AutoRouter.of(context).navigate(const AddRouteRootRoute()),
           child: const Icon(Icons.add),
           foregroundColor: colorTheme.onSecondary,
           backgroundColor: colorTheme.secondary,

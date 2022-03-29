@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 @module
 abstract class RouterModule {
   @singleton
-  AppRouter appRouter() => AppRouter();
+  AppRouter appRouter(AuthGuard authGuard) => AppRouter(authGuard: authGuard);
 
   @singleton
   AuthGuard authGuard(UserRepository userRepository) =>
