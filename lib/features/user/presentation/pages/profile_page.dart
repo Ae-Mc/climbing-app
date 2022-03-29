@@ -34,7 +34,7 @@ class ProfilePage extends StatelessWidget {
       ),
       builder: (context, state) => state.maybeWhen(
         orElse: () => const Center(child: CircularProgressIndicator.adaptive()),
-        authorized: (user) => ListView(
+        authorized: (activeUser, users) => ListView(
           padding: const Pad(all: 16),
           children: [
             Text(
@@ -60,7 +60,7 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '${user.firstName} ${user.lastName}',
+              '${activeUser.firstName} ${activeUser.lastName}',
               style: textTheme.subtitle1,
               textAlign: TextAlign.center,
             ),

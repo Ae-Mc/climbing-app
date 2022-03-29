@@ -1,4 +1,5 @@
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
+import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/user/domain/repositories/user_repository.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
@@ -29,8 +30,8 @@ class UserBloc
   Future<void> initialize(UserEmitter emit) async {
     emit(const UserState.loading());
     if (repository.isAuthenticated) {
-      (await repository.getCurrentUser()).fold(
-        (failure) {
+      await fetchUserData(
+        onFailure: (failure) async {
           if (repository.isAuthenticated) {
             emit(UserState.initializationFailure(failure));
             addSingleResult(UserSingleResult.failure(failure));
@@ -38,10 +39,7 @@ class UserBloc
             emit(const UserState.notAuthorized());
           }
         },
-        (user) {
-          emit(UserState.authorized(user));
-          addSingleResult(const UserSingleResult.signInSucceed());
-        },
+        emit: emit,
       );
     } else {
       emit(const UserState.notAuthorized());
@@ -60,22 +58,20 @@ class UserBloc
           (signInFailure) => UserSingleResult.signInFailure(signInFailure),
         ));
       },
-      (_) async {
-        final currentUser = await repository.getCurrentUser();
-        currentUser.fold(
-          (l) => emit(const UserState.notAuthorized()),
-          (r) {
-            emit(UserState.authorized(r));
-            addSingleResult(const UserSingleResult.signInSucceed());
-          },
-        );
-      },
+      (_) => fetchUserData(
+        onFailure: (failure) async {
+          emit(const UserState.notAuthorized());
+          addSingleResult(UserSingleResult.failure(failure));
+        },
+        emit: emit,
+      ),
     );
   }
 
   Future<void> signOut(UserEmitter emit) async {
     final previousState = state.when<UserState>(
-      authorized: (user) => UserState.authorized(user),
+      authorized: (user, allUsers) =>
+          UserState.authorized(activeUser: user, allUsers: allUsers),
       initializationFailure: (failure) =>
           UserState.initializationFailure(failure),
       loading: () => const UserState.loading(),
@@ -106,5 +102,26 @@ class UserBloc
       ),
     );
     emit(const UserState.notAuthorized());
+  }
+
+  Future<void> fetchUserData({
+    required Future<void> Function(Failure failure) onFailure,
+    required UserEmitter emit,
+  }) async {
+    await (await repository.getCurrentUser()).fold<Future<void>>(
+      onFailure,
+      (activeUser) async {
+        await (await repository.getAllUsers()).fold<Future<void>>(
+          onFailure,
+          (allUsers) async {
+            emit(UserState.authorized(
+              activeUser: activeUser,
+              allUsers: allUsers,
+            ));
+            addSingleResult(const UserSingleResult.signInSucceed());
+          },
+        );
+      },
+    );
   }
 }

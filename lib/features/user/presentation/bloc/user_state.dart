@@ -6,7 +6,10 @@ part 'user_state.freezed.dart';
 
 @freezed
 class UserState with _$UserState {
-  const factory UserState.authorized(User user) = UserStateAuthorized;
+  const factory UserState.authorized({
+    required User activeUser,
+    required List<User> allUsers,
+  }) = UserStateAuthorized;
   const factory UserState.initializationFailure(Failure failure) =
       UserStateInitializationFailure;
   const factory UserState.loading() = UserStateLoading;
