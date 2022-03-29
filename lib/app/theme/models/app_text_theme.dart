@@ -5,9 +5,10 @@ abstract class AppTextTheme {
   String get fontFamily;
 
   TextStyle get body1Regular;
+  TextStyle get body2Regular;
   TextStyle get button;
-  TextStyle get caption;
   TextStyle get chip;
+  TextStyle get headline2;
   TextStyle get subtitle1;
   TextStyle get subtitle2;
   TextStyle get title;
@@ -29,15 +30,15 @@ class BaseTextTheme implements AppTextTheme {
       );
 
   @override
-  TextStyle get button => const TextStyle(
+  TextStyle get body2Regular => const TextStyle(
         fontSize: 16,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.normal,
         overflow: TextOverflow.ellipsis,
       );
 
   @override
-  TextStyle get caption => const TextStyle(
-        fontSize: 14,
+  TextStyle get button => const TextStyle(
+        fontSize: 16,
         fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
       );
@@ -46,6 +47,13 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get chip => const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+      );
+
+  @override
+  TextStyle get headline2 => const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.normal,
         overflow: TextOverflow.ellipsis,
       );
 
@@ -61,7 +69,6 @@ class BaseTextTheme implements AppTextTheme {
   TextStyle get subtitle2 => const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
-        letterSpacing: -0.5,
         overflow: TextOverflow.ellipsis,
       );
 

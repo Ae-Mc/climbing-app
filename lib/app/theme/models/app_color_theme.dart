@@ -17,6 +17,7 @@ abstract class AppColorTheme {
   Color get secondaryVariant;
   Color get surface;
   Color get unselected;
+  Color get unselectedVariant;
   Color get unselectedNavBar;
 }
 
@@ -29,43 +30,32 @@ class LightColorTheme implements AppColorTheme {
 
   @override
   Color get background => AppPallete.white;
-
   @override
   Color get error => AppPallete.red;
-
   @override
   Color get onError => AppPallete.white;
-
   @override
   Color get onPrimary => AppPallete.white;
-
   @override
   Color get onSecondary => AppPallete.white;
-
   @override
   Color get primary => AppPallete.bluegrey;
-
   @override
   Color get routeEasy => AppPallete.green;
-
   @override
   Color get routeMedium => AppPallete.orange;
-
   @override
   Color get routeHard => AppPallete.red;
-
   @override
   Color get secondary => AppPallete.subBlack;
-
   @override
   Color get secondaryVariant => AppPallete.darkgrey;
-
   @override
   Color get surface => AppPallete.white;
-
   @override
   Color get unselected => AppPallete.grey;
-
+  @override
+  Color get unselectedVariant => AppPallete.greyVariant;
   @override
   Color get unselectedNavBar => AppPallete.white50;
 }

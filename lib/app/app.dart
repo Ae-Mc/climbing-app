@@ -52,6 +52,10 @@ class App extends StatelessWidget {
               cardTheme: CardTheme(
                 elevation: 8,
                 color: theme.colorTheme.surface,
+                margin: Pad.zero,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
               ),
               chipTheme: ChipThemeData(
                 backgroundColor: theme.colorTheme.secondary,
@@ -67,7 +71,13 @@ class App extends StatelessWidget {
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                    (states) => states.contains(MaterialState.disabled)
+                        ? theme.colorTheme.unselected
+                        : theme.colorTheme.primary,
+                  ),
                   elevation: MaterialStateProperty.all(8),
+                  minimumSize: MaterialStateProperty.all(Size.zero),
                   padding: MaterialStateProperty.all(
                     const Pad(horizontal: 64, vertical: 16),
                   ),
@@ -78,7 +88,6 @@ class App extends StatelessWidget {
                   ),
                   textStyle: MaterialStateProperty.all(theme.textTheme.button),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  minimumSize: MaterialStateProperty.all(Size.zero),
                 ),
               ),
               fontFamily: theme.textTheme.fontFamily,
@@ -90,7 +99,8 @@ class App extends StatelessWidget {
                   ),
                   padding: MaterialStateProperty.all(Pad.zero),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textStyle: MaterialStateProperty.all(theme.textTheme.caption),
+                  textStyle:
+                      MaterialStateProperty.all(theme.textTheme.subtitle2),
                 ),
               ),
               textTheme: TextTheme(
