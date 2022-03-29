@@ -1,4 +1,4 @@
-import 'package:climbing_app/features/user/presentation/widgets/styled_text_field.dart';
+import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:flutter/material.dart';
 
 class StyledPasswordField extends StatefulWidget {

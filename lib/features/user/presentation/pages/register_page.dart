@@ -12,8 +12,8 @@ import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
-import 'package:climbing_app/features/user/presentation/widgets/styled_password_field.dart';
-import 'package:climbing_app/features/user/presentation/widgets/styled_text_field.dart';
+import 'package:climbing_app/core/widgets/styled_password_field.dart';
+import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,7 +114,7 @@ class RegisterPage extends StatelessWidget {
                                       .adaptive(),
                                   notAuthorized: () =>
                                       const Text('Зарегестрироваться'),
-                                  authorized: (_) => const SizedBox(),
+                                  authorized: (_, __) => const SizedBox(),
                                   initializationFailure: (_) =>
                                       const UnexpectedBehavior(),
                                 ),
