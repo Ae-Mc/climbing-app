@@ -3,7 +3,7 @@ import 'package:climbing_app/features/routes/domain/entities/category.dart';
 import 'package:flutter/material.dart';
 
 Color categoryToColor(Category category, AppColorTheme colorTheme) {
-  if (category.index < Category('6c').index) {
+  if (category.index < Category('6a+').index) {
     return colorTheme.routeEasy;
   }
   if (category.index < Category('7a+').index) {
