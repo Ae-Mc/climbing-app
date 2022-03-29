@@ -35,21 +35,23 @@ class Category implements Comparable<Category> {
 
   Category(String categoryName) : index = categories.indexOf(categoryName);
 
-  factory Category.fromJson(String jsonValue) {
-    return Category(jsonValue);
-  }
+  factory Category.fromJson(String jsonValue) => Category(jsonValue);
 
-  String toJson() {
-    return categories[index];
-  }
+  String toJson() => categories[index];
 
   @override
-  String toString() {
-    return categories[index];
-  }
+  String toString() => categories[index];
 
   @override
-  int compareTo(Category other) {
-    return index.compareTo(other.index);
-  }
+  int compareTo(Category other) => index.compareTo(other.index);
+
+  @override
+  bool operator ==(Object? other) => other is Category && other.index == index;
+  bool operator <(Category other) => index < other.index;
+  bool operator >(Category other) => index > other.index;
+  bool operator <=(Category other) => index <= other.index;
+  bool operator >=(Category other) => index >= other.index;
+
+  @override
+  int get hashCode => index.hashCode;
 }
