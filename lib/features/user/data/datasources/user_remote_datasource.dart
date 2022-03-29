@@ -3,6 +3,7 @@ import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 
 abstract class UserRemoteDatasource {
+  Future<List<User>> getAllUsers();
   Future<User> getCurrentUser();
   Future<AccessToken> signIn(String usernameOrEmail, String password);
   Future<void> signOut();

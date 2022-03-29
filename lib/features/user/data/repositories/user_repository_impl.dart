@@ -45,6 +45,22 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<Failure, List<User>>> getAllUsers() async {
+    assert(isAuthenticated);
+
+    try {
+      return Right(await remoteDatasource.getAllUsers());
+    } on DioError catch (error) {
+      return Left(handleDioConnectionError(error).fold(
+        (l) => l,
+        (r) {
+          return const UnknownFailure();
+        },
+      ));
+    }
+  }
+
+  @override
   Future<Either<Failure, User>> getCurrentUser() async {
     assert(isAuthenticated);
 

@@ -8,6 +8,7 @@ import 'package:dartz/dartz.dart';
 abstract class UserRepository {
   bool get isAuthenticated;
 
+  Future<Either<Failure, List<User>>> getAllUsers();
   Future<Either<Failure, User>> getCurrentUser();
   Future<Either<Either<Failure, SignInFailure>, void>> signIn(
     String usernameOrEmail,

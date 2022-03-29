@@ -16,6 +16,9 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   UserRemoteDatasourceImpl(this.authApi);
 
   @override
+  Future<List<User>> getAllUsers() => authApi.getAllUsers();
+
+  @override
   Future<User> getCurrentUser() => authApi.getCurrentUser();
 
   @override
@@ -34,6 +37,9 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
 abstract class AuthApi {
   @factoryMethod
   factory AuthApi(Dio dio) => _AuthApi(dio);
+
+  @GET("users")
+  Future<List<User>> getAllUsers();
 
   @GET("users/me")
   Future<User> getCurrentUser();
