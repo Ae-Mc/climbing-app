@@ -38,6 +38,7 @@ dependencies:
   auto_route: ^3.2.2
   dartz: ^0.10.1
   dio: ^4.0.4
+  dotted_border: ^2.0.0+2
   equatable: ^2.0.3
   flutter_bloc: ^8.0.1
   flutter_svg: ^1.0.3
@@ -45,6 +46,7 @@ dependencies:
   freezed_annotation: ^1.1.0
   get_it: ^7.2.0
   json_annotation: ^4.4.0
+  image_picker: ^0.8.4+11
   injectable: ^1.5.3
   intl: ^0.17.0
   logger: ^1.1.0
