@@ -7,7 +7,10 @@ class StyledTextField extends StatelessWidget {
   final String hintText;
   final TextInputAction inputAction;
   final TextInputType keyboardType;
+  final int maxLines;
   final bool obscureText;
+  final void Function()? onTap;
+  final bool readOnly;
   final Widget? suffixIcon;
 
   const StyledTextField({
@@ -16,7 +19,10 @@ class StyledTextField extends StatelessWidget {
     this.controller,
     this.inputAction = TextInputAction.next,
     this.keyboardType = TextInputType.text,
+    this.maxLines = 1,
     this.obscureText = false,
+    this.onTap,
+    this.readOnly = false,
     this.suffixIcon,
   }) : super(key: key);
 
@@ -32,12 +38,15 @@ class StyledTextField extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           borderSide: BorderSide(color: colorTheme.unselected),
         ),
-        contentPadding: const Pad(horizontal: 16, vertical: 14.5),
+        contentPadding:
+            Pad(left: 16, right: suffixIcon == null ? 16 : 0, vertical: 14.5),
         suffixIcon: suffixIcon,
         hintText: hintText,
       ),
       keyboardType: keyboardType,
-      maxLines: 1,
+      maxLines: maxLines,
+      onTap: onTap,
+      readOnly: readOnly,
       style: textTheme.body1Regular,
       textAlignVertical: TextAlignVertical.center,
       textInputAction: inputAction,
