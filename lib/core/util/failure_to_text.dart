@@ -5,7 +5,8 @@ String failureToText(Failure failure) {
     connectionFailure: () => "Ошибка соединения",
     serverFailure: (statusCode) =>
         "Произошла ошибка на сервере. Код ошибки: $statusCode",
-    unknownFailure: () =>
-        'Произошла неизвестная ошибка. Свяжитесь с разработчиком',
+    unknownFailure: (error) => error == null
+        ? 'Произошла неизвестная ошибка. Свяжитесь с разработчиком'
+        : 'Произошла неизвестная ошибка ($error). Свяжитесь с разработчиком',
   );
 }
