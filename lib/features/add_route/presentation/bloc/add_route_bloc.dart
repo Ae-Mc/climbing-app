@@ -43,7 +43,7 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
       // ignore: avoid-non-null-assertion
       category: dataState.category!,
       // ignore: avoid-non-null-assertion
-      creationDate: DateFormat.yMd().format(dataState.date!),
+      creationDate: GetIt.I<DateFormat>().format(dataState.date!),
       // ignore: avoid-non-null-assertion
       description: dataState.description!,
       // ignore: avoid-non-null-assertion
