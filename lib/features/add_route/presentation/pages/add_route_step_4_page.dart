@@ -1,14 +1,21 @@
 import 'dart:typed_data';
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
+import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_single_result.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_state.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/header.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 part 'add_route_step_4_page.freezed.dart';
@@ -73,7 +80,7 @@ class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
                                       borderRadius: const BorderRadius.all(
                                         Radius.circular(16),
                                       ),
-                                      onTap: pickImage,
+                                      onTap: () => pickImage(context),
                                       child: DottedBorder(
                                         radius: const Radius.circular(16),
                                         dashPattern: const [6, 6],
@@ -132,9 +139,25 @@ class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
             padding: const Pad(bottom: 16, horizontal: 16),
             child: SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => GetIt.I<Logger>().d('Push route to server'),
-                child: const Text('Добавить трассу'),
+              child: SingleResultBlocBuilder<AddRouteBloc, AddRouteState,
+                  AddRouteSingleResult>(
+                onSingleResult: (context, singleResult) => singleResult.when(
+                  addedSuccessfully: () =>
+                      AutoRouter.of(context).popUntilRoot(),
+                  failure: (failure) => CustomToast(context)
+                      .showTextFailureToast(failureToText(failure)),
+                ),
+                builder: (context, state) => state.map(
+                  data: (_) => ElevatedButton(
+                    onPressed: () => BlocProvider.of<AddRouteBloc>(context)
+                        .add(const AddRouteEvent.uploadRoute()),
+                    child: const Text('Добавить трассу'),
+                  ),
+                  loading: (_) => const ElevatedButton(
+                    onPressed: null,
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                ),
               ),
             ),
           ),
@@ -143,12 +166,15 @@ class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
     );
   }
 
-  void pickImage() async {
+  void pickImage(BuildContext context) async {
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final imageBytes = await image.readAsBytes();
-      setState(() => images.add(UploadImageModel(image, imageBytes)));
+      images.add(UploadImageModel(image, imageBytes));
+      final bloc = BlocProvider.of<AddRouteBloc>(context);
+      bloc.add(AddRouteEvent.setImages(images.map((e) => e.file).toList()));
+      setState(() => {});
     }
   }
 }

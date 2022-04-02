@@ -3,11 +3,44 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
-class AddRouteStep1Page extends StatelessWidget {
+class AddRouteStep1Page extends StatefulWidget {
   const AddRouteStep1Page({Key? key}) : super(key: key);
+
+  @override
+  State<AddRouteStep1Page> createState() => _AddRouteStep1PageState();
+}
+
+class _AddRouteStep1PageState extends State<AddRouteStep1Page> {
+  final nameController = TextEditingController();
+  final colorController = TextEditingController();
+  final dateController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    nameController.addListener(() => setState(() => {}));
+    colorController.addListener(() => setState(() => {}));
+    dateController.addListener(() => setState(() => {}));
+    descriptionController.addListener(() => setState(() => {}));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    colorController.dispose();
+    dateController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +50,7 @@ class AddRouteStep1Page extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const Pad(all: 16),
+            padding: const Pad(all: 16, bottom: 32),
             child: Column(
               children: [
                 const Header(stepNum: 1),
@@ -29,6 +62,7 @@ class AddRouteStep1Page extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 StyledTextField(
+                  controller: nameController,
                   hintText: 'Название',
                   suffixIcon: Icon(
                     Icons.abc,
@@ -37,6 +71,7 @@ class AddRouteStep1Page extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 StyledTextField(
+                  controller: colorController,
                   hintText: 'Цвет меток',
                   suffixIcon: Icon(
                     Icons.color_lens_rounded,
@@ -45,11 +80,20 @@ class AddRouteStep1Page extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 StyledTextField(
+                  controller: dateController,
                   hintText: 'Дата постановки',
-                  suffixIcon: Icon(
-                    Icons.calendar_today,
-                    color: colorTheme.primary,
-                  ),
+                  onTap: () => pickDate(context),
+                  readOnly: true,
+                  suffixIcon:
+                      Icon(Icons.calendar_today, color: colorTheme.primary),
+                ),
+                const SizedBox(height: 16),
+                StyledTextField(
+                  controller: descriptionController,
+                  hintText: 'Описание',
+                  maxLines: 8,
+                  inputAction: TextInputAction.newline,
+                  keyboardType: TextInputType.multiline,
                 ),
               ],
             ),
@@ -63,8 +107,27 @@ class AddRouteStep1Page extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () =>
-                    AutoRouter.of(context).push(const AddRouteStep2Route()),
+                onPressed: (nameController.text.isEmpty ||
+                        colorController.text.isEmpty ||
+                        dateController.text.isEmpty)
+                    ? null
+                    : () {
+                        BlocProvider.of<AddRouteBloc>(context)
+                            .add(AddRouteEvent.setName(nameController.text));
+                        BlocProvider.of<AddRouteBloc>(context).add(
+                          AddRouteEvent.setMarksColor(colorController.text),
+                        );
+                        BlocProvider.of<AddRouteBloc>(context)
+                            .add(AddRouteEvent.setDate(
+                          GetIt.I<DateFormat>().parse(dateController.text),
+                        ));
+                        BlocProvider.of<AddRouteBloc>(context)
+                            .add(AddRouteEvent.setDescription(
+                          descriptionController.text,
+                        ));
+                        // ignore: avoid-ignoring-return-values
+                        AutoRouter.of(context).push(const AddRouteStep2Route());
+                      },
                 child: const Text('Вперёд'),
               ),
             ),
@@ -72,5 +135,19 @@ class AddRouteStep1Page extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void pickDate(BuildContext context) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: dateController.text == ''
+          ? DateTime.now()
+          : GetIt.I<DateFormat>().parse(dateController.text),
+      firstDate: DateTime(2021, 1, 1),
+      lastDate: DateTime(3000, 1, 1),
+    );
+    if (date != null) {
+      dateController.text = GetIt.I<DateFormat>().format(date);
+    }
   }
 }

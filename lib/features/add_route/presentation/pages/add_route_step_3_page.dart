@@ -3,10 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/util/category_to_color.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/category_card.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/header.dart';
 import 'package:climbing_app/features/routes/domain/entities/category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddRouteStep3Page extends StatefulWidget {
   const AddRouteStep3Page({Key? key}) : super(key: key);
@@ -109,8 +112,17 @@ class _AddRouteStep3PageState extends State<AddRouteStep3Page> {
                   child: ElevatedButton(
                     onPressed: selectedCategory == null
                         ? null
-                        : () => AutoRouter.of(context)
-                            .push(const AddRouteStep4Route()),
+                        : () {
+                            final category = selectedCategory;
+                            if (category == null) {
+                              throw UnimplementedError("Impossible state");
+                            }
+                            BlocProvider.of<AddRouteBloc>(context)
+                                .add(AddRouteEvent.setCategory(category));
+                            // ignore: avoid-ignoring-return-values
+                            AutoRouter.of(context)
+                                .push(const AddRouteStep4Route());
+                          },
                     child: const Text('Вперёд'),
                   ),
                 ),

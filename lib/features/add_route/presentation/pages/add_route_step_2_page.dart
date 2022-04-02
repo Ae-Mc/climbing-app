@@ -3,6 +3,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
+import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/header.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/user_card.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -77,8 +79,16 @@ class _AddRouteStep2PageState extends State<AddRouteStep2Page> {
               child: ElevatedButton(
                 onPressed: selectedUser == null
                     ? null
-                    : () =>
-                        AutoRouter.of(context).push(const AddRouteStep3Route()),
+                    : () {
+                        final author = selectedUser;
+                        if (author == null) {
+                          throw UnimplementedError("Impossible state");
+                        }
+                        BlocProvider.of<AddRouteBloc>(context)
+                            .add(AddRouteEvent.setAuthor(author));
+                        // ignore: avoid-ignoring-return-values
+                        AutoRouter.of(context).push(const AddRouteStep3Route());
+                      },
                 child: const Text('Вперёд'),
               ),
             ),
