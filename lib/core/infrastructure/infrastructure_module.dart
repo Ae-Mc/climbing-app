@@ -22,5 +22,5 @@ abstract class InfrastructureModule {
   FToast fToast(@factoryParam BuildContext context) => FToast().init(context);
 
   @lazySingleton
-  DateFormat dateFormat() => DateFormat('y-MM-d');
+  DateFormat dateFormat() => DateFormat('y-MM-dd');
 }
