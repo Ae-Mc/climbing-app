@@ -11,14 +11,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-class AddRouteStep1Page extends StatefulWidget {
-  const AddRouteStep1Page({Key? key}) : super(key: key);
+class AddRouteBasicsStepPage extends StatefulWidget {
+  const AddRouteBasicsStepPage({Key? key}) : super(key: key);
 
   @override
-  State<AddRouteStep1Page> createState() => _AddRouteStep1PageState();
+  State<AddRouteBasicsStepPage> createState() => _AddRouteBasicsStepPageState();
 }
 
-class _AddRouteStep1PageState extends State<AddRouteStep1Page> {
+class _AddRouteBasicsStepPageState extends State<AddRouteBasicsStepPage> {
   final nameController = TextEditingController();
   final colorController = TextEditingController();
   final dateController = TextEditingController();
@@ -126,7 +126,8 @@ class _AddRouteStep1PageState extends State<AddRouteStep1Page> {
                           descriptionController.text,
                         ));
                         // ignore: avoid-ignoring-return-values
-                        AutoRouter.of(context).push(const AddRouteStep2Route());
+                        AutoRouter.of(context)
+                            .push(const AddRouteCategoryStepRoute());
                       },
                 child: const Text('Вперёд'),
               ),

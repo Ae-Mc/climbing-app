@@ -9,14 +9,12 @@ class RouteCreate {
   final String name;
   final Category category;
   final String markColor;
-  final String author;
   final String description;
   final String creationDate;
   @JsonKey(ignore: true)
   final List<XFile> images;
 
   const RouteCreate({
-    required this.author,
     required this.category,
     required this.creationDate,
     required this.description,

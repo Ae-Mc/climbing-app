@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
@@ -18,16 +19,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-part 'add_route_step_4_page.freezed.dart';
+part 'add_route_images_step_page.freezed.dart';
 
-class AddRouteStep4Page extends StatefulWidget {
-  const AddRouteStep4Page({Key? key}) : super(key: key);
+class AddRouteImagesStepPage extends StatefulWidget {
+  const AddRouteImagesStepPage({Key? key}) : super(key: key);
 
   @override
-  State<AddRouteStep4Page> createState() => _AddRouteStep4PageState();
+  State<AddRouteImagesStepPage> createState() => _AddRouteImagesStepPageState();
 }
 
-class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
+class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
   final controller = PageController();
   final imagePicker = ImagePicker();
   List<UploadImageModel> images = [];
@@ -44,10 +45,10 @@ class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
             padding: const Pad(all: 16),
             child: Column(
               children: [
-                const Header(stepNum: 4),
+                const Header(stepNum: 3),
                 const SizedBox(height: 32),
                 Text(
-                  'ШАГ 4: Добавь фотографии\n\nДобавляй фотографии по очереди: от старта трассы к финишу',
+                  'ШАГ 3: Добавь фотографии\n\nДобавляй фотографии по очереди: от старта трассы к финишу',
                   style: textTheme.body2Regular,
                   maxLines: 20,
                 ),
@@ -142,8 +143,8 @@ class _AddRouteStep4PageState extends State<AddRouteStep4Page> {
               child: SingleResultBlocBuilder<AddRouteBloc, AddRouteState,
                   AddRouteSingleResult>(
                 onSingleResult: (context, singleResult) => singleResult.when(
-                  addedSuccessfully: () =>
-                      AutoRouter.of(context).popUntilRoot(),
+                  addedSuccessfully: () => AutoRouter.of(context)
+                      .popUntilRouteWithName(RootRoute.name),
                   failure: (failure) => CustomToast(context)
                       .showTextFailureToast(failureToText(failure)),
                 ),

@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_root_page.dart';
-import 'package:climbing_app/features/add_route/presentation/pages/add_route_step_1_page.dart';
-import 'package:climbing_app/features/add_route/presentation/pages/add_route_step_2_page.dart';
-import 'package:climbing_app/features/add_route/presentation/pages/add_route_step_3_page.dart';
-import 'package:climbing_app/features/add_route/presentation/pages/add_route_step_4_page.dart';
+import 'package:climbing_app/features/add_route/presentation/pages/add_route_basics_step_page.dart';
+import 'package:climbing_app/features/add_route/presentation/pages/add_route_category_step_page.dart';
+import 'package:climbing_app/features/add_route/presentation/pages/add_route_images_step_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/route_details_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/route_images_page.dart';
 import 'package:climbing_app/features/root/presentation/pages/root_page.dart';
@@ -45,10 +44,9 @@ export 'app_router.gr.dart';
       page: AddRouteRootPage,
       guards: [AuthGuard],
       children: [
-        AutoRoute(page: AddRouteStep1Page, initial: true),
-        AutoRoute(page: AddRouteStep2Page),
-        AutoRoute(page: AddRouteStep3Page),
-        AutoRoute(page: AddRouteStep4Page),
+        AutoRoute(page: AddRouteBasicsStepPage, initial: true),
+        AutoRoute(page: AddRouteCategoryStepPage),
+        AutoRoute(page: AddRouteImagesStepPage),
       ],
     ),
   ],

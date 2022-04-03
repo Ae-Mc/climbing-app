@@ -17,15 +17,14 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
   final AddRouteRepository repository;
 
   AddRouteBloc(this.repository) : super(const AddRouteState.data()) {
-    on<AddRouteEvent>((event, emit) {
-      state.map<void>(
-        data: (state) => event.when<void>(
+    on<AddRouteEvent>((event, emit) async {
+      await state.map<Future<void>>(
+        data: (state) async => event.when<void>(
           setName: (name) => emit(state.copyWith(name: name)),
           setMarksColor: (color) => emit(state.copyWith(color: color)),
           setDate: (date) => emit(state.copyWith(date: date)),
           setDescription: (description) =>
               emit(state.copyWith(description: description)),
-          setAuthor: (author) => emit(state.copyWith(author: author)),
           setCategory: (category) => emit(state.copyWith(category: category)),
           setImages: (images) => emit(state.copyWith(images: images)),
           uploadRoute: () => upload(state, emit),
@@ -35,11 +34,12 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
     });
   }
 
-  void upload(AddRouteStateData dataState, Emitter<AddRouteState> emit) {
+  Future<void> upload(
+    AddRouteStateData dataState,
+    Emitter<AddRouteState> emit,
+  ) async {
     emit(const AddRouteState.loading());
     final route = RouteCreate(
-      // ignore: avoid-non-null-assertion
-      author: '${dataState.author!.firstName} ${dataState.author!.lastName}',
       // ignore: avoid-non-null-assertion
       category: dataState.category!,
       // ignore: avoid-non-null-assertion
@@ -52,6 +52,16 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
       markColor: dataState.color!,
       // ignore: avoid-non-null-assertion
       name: dataState.name!,
+    );
+    (await repository.addRoute(route)).fold(
+      (l) {
+        addSingleResult(AddRouteSingleResult.failure(l));
+        emit(dataState);
+      },
+      (r) {
+        addSingleResult(const AddRouteSingleResult.addedSuccessfully());
+        emit(dataState);
+      },
     );
     GetIt.I<Logger>().d('Upload route: $route');
   }

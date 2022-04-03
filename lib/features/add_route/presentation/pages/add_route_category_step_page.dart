@@ -11,14 +11,15 @@ import 'package:climbing_app/features/routes/domain/entities/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddRouteStep3Page extends StatefulWidget {
-  const AddRouteStep3Page({Key? key}) : super(key: key);
+class AddRouteCategoryStepPage extends StatefulWidget {
+  const AddRouteCategoryStepPage({Key? key}) : super(key: key);
 
   @override
-  State<AddRouteStep3Page> createState() => _AddRouteStep3PageState();
+  State<AddRouteCategoryStepPage> createState() =>
+      _AddRouteCategoryStepPageState();
 }
 
-class _AddRouteStep3PageState extends State<AddRouteStep3Page> {
+class _AddRouteCategoryStepPageState extends State<AddRouteCategoryStepPage> {
   Category? selectedCategory;
 
   @override
@@ -33,10 +34,10 @@ class _AddRouteStep3PageState extends State<AddRouteStep3Page> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Header(stepNum: 3),
+                const Header(stepNum: 2),
                 const SizedBox(height: 32),
                 Text(
-                  'ШАГ 3: Выбери категорию',
+                  'ШАГ 2: Выбери категорию',
                   style: AppTheme.of(context).textTheme.body2Regular,
                   maxLines: 20,
                 ),
