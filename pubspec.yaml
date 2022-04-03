@@ -50,6 +50,7 @@ dependencies:
   injectable: ^1.5.3
   intl: ^0.17.0
   logger: ^1.1.0
+  mime: ^1.0.1
   retrofit: ^3.0.1
   shared_preferences: ^2.0.13
   smooth_page_indicator: ^1.0.0+2
