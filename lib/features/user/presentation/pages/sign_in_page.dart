@@ -6,6 +6,7 @@ import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
+import 'package:climbing_app/core/widgets/submit_button.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
@@ -70,24 +71,19 @@ class SignInPage extends StatelessWidget {
                                   hintText: 'Пароль',
                                 ),
                                 const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: state.maybeWhen(
-                                    loading: () => null,
-                                    orElse: () => () =>
-                                        BlocProvider.of<UserBloc>(context).add(
-                                          UserEvent.signIn(
-                                            usernameOrEmailController.text,
-                                            passwordController.text,
-                                          ),
-                                        ),
+                                SubmitButton(
+                                  isLoaded: state.maybeWhen(
+                                    loading: () => false,
+                                    orElse: () => true,
                                   ),
-                                  child: state.maybeWhen(
-                                    loading: () =>
-                                        const CircularProgressIndicator
-                                            .adaptive(),
-                                    notAuthorized: () => const Text('Войти'),
-                                    orElse: () => const SizedBox(),
+                                  onPressed: () =>
+                                      BlocProvider.of<UserBloc>(context).add(
+                                    UserEvent.signIn(
+                                      usernameOrEmailController.text,
+                                      passwordController.text,
+                                    ),
                                   ),
+                                  text: 'Войти',
                                 ),
                                 const SizedBox(height: 8),
                                 TextButton(

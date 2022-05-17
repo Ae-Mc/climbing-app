@@ -6,7 +6,7 @@ import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
-import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
+import 'package:climbing_app/core/widgets/submit_button.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
@@ -93,31 +93,24 @@ class RegisterPage extends StatelessWidget {
                                 hintText: 'Пароль',
                               ),
                               const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: state.maybeWhen(
-                                  loading: () => null,
-                                  orElse: () => () =>
-                                      BlocProvider.of<UserBloc>(context).add(
-                                        UserEvent.register(
-                                          UserCreate(
-                                            email: emailController.text,
-                                            firstName: firstNameController.text,
-                                            lastName: lastNameController.text,
-                                            password: passwordController.text,
-                                            username: usernameController.text,
-                                          ),
-                                        ),
-                                      ),
+                              SubmitButton(
+                                isLoaded: state.maybeWhen(
+                                  orElse: () => true,
+                                  loading: () => false,
                                 ),
-                                child: state.when(
-                                  loading: () => const CircularProgressIndicator
-                                      .adaptive(),
-                                  notAuthorized: () =>
-                                      const Text('Зарегестрироваться'),
-                                  authorized: (_, __) => const SizedBox(),
-                                  initializationFailure: (_) =>
-                                      const UnexpectedBehavior(),
+                                onPressed: () =>
+                                    BlocProvider.of<UserBloc>(context).add(
+                                  UserEvent.register(
+                                    UserCreate(
+                                      email: emailController.text,
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      password: passwordController.text,
+                                      username: usernameController.text,
+                                    ),
+                                  ),
                                 ),
+                                text: 'Зарегестрироваться',
                               ),
                               const SizedBox(height: 8),
                               TextButton(
