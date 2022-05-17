@@ -2,6 +2,7 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/core/util/pick_date.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
@@ -82,7 +83,7 @@ class _AddRouteBasicsStepPageState extends State<AddRouteBasicsStepPage> {
                 StyledTextField(
                   controller: dateController,
                   hintText: 'Дата постановки',
-                  onTap: () => pickDate(context),
+                  onTap: () => pickDate(context, dateController),
                   readOnly: true,
                   suffixIcon:
                       Icon(Icons.calendar_today, color: colorTheme.primary),
@@ -136,19 +137,5 @@ class _AddRouteBasicsStepPageState extends State<AddRouteBasicsStepPage> {
         ),
       ],
     );
-  }
-
-  void pickDate(BuildContext context) async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: dateController.text == ''
-          ? DateTime.now()
-          : GetIt.I<DateFormat>().parse(dateController.text),
-      firstDate: DateTime(2021, 1, 1),
-      lastDate: DateTime(3000, 1, 1),
-    );
-    if (date != null) {
-      dateController.text = GetIt.I<DateFormat>().format(date);
-    }
   }
 }
