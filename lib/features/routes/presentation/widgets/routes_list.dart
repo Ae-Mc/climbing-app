@@ -7,11 +7,12 @@ import 'package:intl/intl.dart';
 
 class RoutesList extends StatelessWidget {
   final List<Route> routes;
+  final Set<String> quarters;
 
-  const RoutesList({Key? key, required this.routes}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  RoutesList({Key? key, required this.routes})
+      : quarters =
+            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate))),
+        super(key: key) {
     routes.sort(
       (left, right) {
         final dateComparation = right.creationDate.compareTo(left.creationDate);
@@ -22,15 +23,16 @@ class RoutesList extends StatelessWidget {
         return right.category.compareTo(left.category);
       },
     );
-    final quarters = Set.unmodifiable(
-      routes.map((e) => getQuarter(e.creationDate)),
-    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     String previous = '';
     List<Widget> elements = [];
 
-    for (int i = 0, routeIndex = 0; i < routes.length + quarters.length; i++) {
-      if (previous != getQuarter(routes[routeIndex].creationDate)) {
-        previous = getQuarter(routes[routeIndex].creationDate);
+    for (int i = 0; i < routes.length; i++) {
+      if (previous != getQuarter(routes[i].creationDate)) {
+        previous = getQuarter(routes[i].creationDate);
 
         elements.add(Text(
           previous,
@@ -38,14 +40,7 @@ class RoutesList extends StatelessWidget {
           textAlign: TextAlign.center,
         ));
       }
-      final current = routeIndex;
-      if (routeIndex < routes.length - 1) {
-        routeIndex++;
-      } else {
-        routeIndex = 0;
-      }
-
-      elements.add(RouteCard(route: routes[current]));
+      elements.add(RouteCard(route: routes[i]));
     }
 
     return ListView.separated(
@@ -56,5 +51,6 @@ class RoutesList extends StatelessWidget {
     );
   }
 
-  String getQuarter(DateTime date) => DateFormat("yyyy ''QQQ").format(date);
+  static String getQuarter(DateTime date) =>
+      DateFormat("yyyy ''QQQ").format(date);
 }
