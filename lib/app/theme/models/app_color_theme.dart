@@ -9,12 +9,14 @@ abstract class AppColorTheme {
   Color get onError;
   Color get onPrimary;
   Color get onSecondary;
+  Color get onSuccess;
   Color get primary;
   Color get routeEasy;
   Color get routeMedium;
   Color get routeHard;
   Color get secondary;
   Color get secondaryVariant;
+  Color get success;
   Color get surface;
   Color get unselected;
   Color get unselectedVariant;
@@ -39,6 +41,8 @@ class LightColorTheme implements AppColorTheme {
   @override
   Color get onSecondary => AppPallete.white;
   @override
+  Color get onSuccess => AppPallete.black;
+  @override
   Color get primary => AppPallete.bluegrey;
   @override
   Color get routeEasy => AppPallete.green;
@@ -50,6 +54,8 @@ class LightColorTheme implements AppColorTheme {
   Color get secondary => AppPallete.subBlack;
   @override
   Color get secondaryVariant => AppPallete.darkgrey;
+  @override
+  Color get success => AppPallete.lightGreen;
   @override
   Color get surface => AppPallete.white;
   @override
