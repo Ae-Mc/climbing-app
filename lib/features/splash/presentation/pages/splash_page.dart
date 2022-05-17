@@ -6,8 +6,7 @@ import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_event.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_state.dart';
-import 'package:climbing_app/features/splash/presentation/widgets/splash_failed.dart';
-import 'package:climbing_app/features/splash/presentation/widgets/splash_loading.dart';
+import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,24 +33,43 @@ class _SplashPageState extends State<SplashPage> {
         return Scaffold(
           backgroundColor: colorTheme.primary,
           body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Spacer(),
-                Expanded(
-                  flex: 3,
-                  child: SingleResultBlocBuilder<SplashBloc, SplashState,
-                      SplashSingleResult>(
-                    onSingleResult: onSingleResult,
-                    builder: (context, state) => state.when(
-                      loading: () => const SplashLoading(),
-                      failure: (_) => const SplashFailed(),
+            child: SingleResultBlocBuilder<SplashBloc, SplashState,
+                SplashSingleResult>(
+              onSingleResult: onSingleResult,
+              builder: (context, state) => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Assets.icons.logo.svg(),
+                  Center(
+                    child: state.when<Widget>(
+                      loading: () => SizedBox(
+                        height: 48,
+                        width: 48,
+                        child: CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation(
+                            AppTheme.of(context).colorTheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      failure: (_) => SizedBox(
+                        height: 48,
+                        width: 48,
+                        child: FloatingActionButton.small(
+                          onPressed: () => BlocProvider.of<SplashBloc>(context)
+                              .add(const SplashEvent.retryInitialization()),
+                          child: const Icon(Icons.replay),
+                          backgroundColor:
+                              AppTheme.of(context).colorTheme.primary,
+                          foregroundColor:
+                              AppTheme.of(context).colorTheme.onPrimary,
+                        ),
+                      ),
                       loaded: () => const UnexpectedBehavior(),
                     ),
                   ),
-                ),
-                const Spacer(),
-              ],
+                ],
+              ),
             ),
           ),
         );
