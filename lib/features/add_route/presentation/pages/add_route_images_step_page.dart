@@ -6,6 +6,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/submit_button.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_event.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_single_result.dart';
@@ -148,16 +149,11 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
                   failure: (failure) => CustomToast(context)
                       .showTextFailureToast(failureToText(failure)),
                 ),
-                builder: (context, state) => state.map(
-                  data: (_) => ElevatedButton(
-                    onPressed: () => BlocProvider.of<AddRouteBloc>(context)
-                        .add(const AddRouteEvent.uploadRoute()),
-                    child: const Text('Добавить трассу'),
-                  ),
-                  loading: (_) => const ElevatedButton(
-                    onPressed: null,
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
+                builder: (context, state) => SubmitButton(
+                  onPressed: () => BlocProvider.of<AddRouteBloc>(context)
+                      .add(const AddRouteEvent.uploadRoute()),
+                  isLoaded: state.map(data: (_) => true, loading: (_) => false),
+                  text: 'Добавить трассу',
                 ),
               ),
             ),
