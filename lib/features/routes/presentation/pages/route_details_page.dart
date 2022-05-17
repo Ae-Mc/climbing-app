@@ -56,21 +56,23 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                   builder: (context, constraints) {
                     return SizedBox(
                       height: constraints.maxWidth - 32,
-                      child: PageView.builder(
-                        controller: pageController,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const Pad(horizontal: 16),
-                          child: InkWell(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(16)),
-                            onTap: () => AutoRouter.of(context).navigate(
-                              RouteImagesRoute(images: widget.route.images),
-                            ),
-                            child: RouteDetailsCarouselImage(
-                              imageUrl: widget
-                                  .route
-                                  .images[index % widget.route.images.length]
-                                  .url,
+                      child: Material(
+                        child: PageView.builder(
+                          controller: pageController,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const Pad(horizontal: 16),
+                            child: InkWell(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
+                              onTap: () => AutoRouter.of(context).navigate(
+                                RouteImagesRoute(images: widget.route.images),
+                              ),
+                              child: RouteDetailsCarouselImage(
+                                imageUrl: widget
+                                    .route
+                                    .images[index % widget.route.images.length]
+                                    .url,
+                              ),
                             ),
                           ),
                         ),
@@ -135,12 +137,14 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      widget.route.description,
-                      style: AppTheme.of(context).textTheme.body1Regular,
-                      maxLines: 999,
-                    ),
+                    if (widget.route.description.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        widget.route.description,
+                        style: AppTheme.of(context).textTheme.body1Regular,
+                        maxLines: 999,
+                      ),
+                    ],
                     const SizedBox(height: 16),
                   ],
                 ),

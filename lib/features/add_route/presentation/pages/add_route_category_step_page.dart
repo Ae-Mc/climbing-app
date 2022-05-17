@@ -122,7 +122,7 @@ class _AddRouteCategoryStepPageState extends State<AddRouteCategoryStepPage> {
                                 .add(AddRouteEvent.setCategory(category));
                             // ignore: avoid-ignoring-return-values
                             AutoRouter.of(context)
-                                .push(const AddRouteStep4Route());
+                                .push(const AddRouteImagesStepRoute());
                           },
                     child: const Text('Вперёд'),
                   ),

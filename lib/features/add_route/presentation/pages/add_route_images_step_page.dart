@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
@@ -144,7 +143,8 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
                   AddRouteSingleResult>(
                 onSingleResult: (context, singleResult) => singleResult.when(
                   addedSuccessfully: () => AutoRouter.of(context)
-                      .popUntilRouteWithName(RootRoute.name),
+                    ..popUntilRoot()
+                    ..pop(),
                   failure: (failure) => CustomToast(context)
                       .showTextFailureToast(failureToText(failure)),
                 ),

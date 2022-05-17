@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class RootPage extends StatelessWidget {
-  static const routes = [
-    RoutesRouter(),
-    UserRouter(),
-  ];
+  static const routes = [RoutesRouter(), UserRouter()];
   const RootPage({Key? key}) : super(key: key);
 
   @override

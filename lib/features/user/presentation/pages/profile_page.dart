@@ -71,12 +71,12 @@ class ProfilePage extends StatelessWidget {
               ),
               child: InkWell(
                 // TODO: Go to completed routes page
-                onTap: () => GetIt.I<Logger>().d('Go to completed routes page'),
+                onTap: () => GetIt.I<Logger>().d('Go to my routes page'),
                 borderRadius: cardBorderRadius,
                 child: Padding(
                   padding: const Pad(all: 24),
                   child: Text(
-                    'Завершённые трассы',
+                    'Загруженные трассы',
                     style: textTheme.title,
                     textAlign: TextAlign.center,
                   ),

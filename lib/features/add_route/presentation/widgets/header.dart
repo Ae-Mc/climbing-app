@@ -3,7 +3,7 @@ import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
-  static const stepCount = 4;
+  static const stepCount = 3;
   final int stepNum;
 
   const Header({Key? key, required this.stepNum}) : super(key: key);
