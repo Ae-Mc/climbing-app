@@ -15,7 +15,7 @@ class Header extends StatelessWidget {
 
     return Row(
       children: [
-        const CustomBackButton(size: 48),
+        const CustomBackButton(),
         const SizedBox(width: 16),
         Expanded(
           child: Text('Добавление трассы', style: textTheme.title, maxLines: 2),

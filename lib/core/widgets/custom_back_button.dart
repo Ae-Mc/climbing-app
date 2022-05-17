@@ -4,12 +4,10 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomBackButton extends StatelessWidget {
-  final double size;
   final void Function(BuildContext context) onPressed;
 
   const CustomBackButton({
     Key? key,
-    this.size = 32,
     this.onPressed = defaultOnPressed,
   }) : super(key: key);
 
@@ -25,7 +23,7 @@ class CustomBackButton extends StatelessWidget {
         shape: MaterialStateProperty.all(const CircleBorder()),
       ),
       onPressed: () => onPressed(context),
-      child: Icon(Icons.chevron_left, color: colorTheme.background, size: size),
+      child: Icon(Icons.chevron_left, color: colorTheme.background, size: 48),
     );
   }
 

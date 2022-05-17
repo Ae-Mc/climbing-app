@@ -70,9 +70,7 @@ class RouteImagesPage extends StatelessWidget {
             const Positioned(
               top: 16,
               left: 16,
-              child: CustomBackButton(
-                size: 48,
-              ),
+              child: CustomBackButton(),
             ),
           ],
         ),
