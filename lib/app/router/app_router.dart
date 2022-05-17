@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/guards/auth_guard.dart';
+import 'package:climbing_app/features/add_ascent/presentation/pages/add_ascent_page.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_root_page.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_basics_step_page.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_category_step_page.dart';
@@ -16,6 +17,7 @@ export 'app_router.gr.dart';
 @AdaptiveAutoRouter(
   replaceInRouteName: "Page,Route",
   routes: [
+    AutoRoute(page: AddAscentPage, guards: [AuthGuard]),
     AutoRoute(
       initial: true,
       page: RootPage,

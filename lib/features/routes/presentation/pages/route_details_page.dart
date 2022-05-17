@@ -161,7 +161,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
               child: Padding(
                 padding: const Pad(vertical: 16),
                 child: ElevatedButton(
-                  onPressed: routeCompleted,
+                  onPressed: () => AutoRouter.of(context)
+                      .push(AddAscentRoute(route: widget.route)),
                   child: const Text('Я пролез трассу'),
                 ),
               ),
@@ -176,9 +177,5 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
   void dispose() {
     pageController.dispose();
     super.dispose();
-  }
-
-  void routeCompleted() {
-    // TODO
   }
 }
