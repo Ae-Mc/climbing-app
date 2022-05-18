@@ -5,6 +5,7 @@ import 'package:climbing_app/features/add_route/presentation/pages/add_route_roo
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_basics_step_page.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_category_step_page.dart';
 import 'package:climbing_app/features/add_route/presentation/pages/add_route_images_step_page.dart';
+import 'package:climbing_app/features/rating/presentation/pages/rating_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/route_details_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/route_images_page.dart';
 import 'package:climbing_app/features/root/presentation/pages/root_page.dart';
@@ -23,6 +24,13 @@ export 'app_router.gr.dart';
       page: RootPage,
       children: [
         AutoRoute(
+          name: 'RatingRouter',
+          page: EmptyRouterPage,
+          children: [
+            AutoRoute(initial: true, page: RatingPage),
+          ],
+        ),
+        AutoRoute(
           name: 'UserRouter',
           page: EmptyRouterPage,
           children: [
@@ -32,6 +40,7 @@ export 'app_router.gr.dart';
         AutoRoute(
           name: 'RoutesRouter',
           page: EmptyRouterPage,
+          initial: true,
           children: [
             AutoRoute(initial: true, page: RoutesPage),
             AutoRoute(page: RouteDetailsPage),

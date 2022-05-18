@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class RootPage extends StatelessWidget {
-  static const routes = [RoutesRouter(), UserRouter()];
+  static const routes = [RatingRouter(), RoutesRouter(), UserRouter()];
   const RootPage({Key? key}) : super(key: key);
 
   @override
@@ -17,29 +17,28 @@ class RootPage extends StatelessWidget {
       child: AutoTabsScaffold(
         routes: routes,
         bottomNavigationBuilder: (context, tabsRouter) {
-          return BottomAppBar(
-            color: colorTheme.primary,
+          return BottomNavigationBar(
+            backgroundColor: colorTheme.primary,
+            currentIndex: tabsRouter.activeIndex,
             elevation: 0,
-            shape: const CircularNotchedRectangle(),
-            child: BottomNavigationBar(
-              backgroundColor: Colors.transparent,
-              currentIndex: tabsRouter.activeIndex,
-              elevation: 0,
-              iconSize: 32,
-              onTap: (index) => setActiveTab(context, index, tabsRouter),
-              selectedItemColor: colorTheme.onPrimary,
-              unselectedItemColor: colorTheme.unselectedNavBar,
-              items: const [
-                BottomNavigationBarItem(
-                  label: "Трассы",
-                  icon: Icon(Icons.ballot_outlined),
-                ),
-                BottomNavigationBarItem(
-                  label: "Профиль",
-                  icon: Icon(Icons.person),
-                ),
-              ],
-            ),
+            iconSize: 32,
+            onTap: (index) => setActiveTab(context, index, tabsRouter),
+            selectedItemColor: colorTheme.onPrimary,
+            unselectedItemColor: colorTheme.unselectedNavBar,
+            items: const [
+              BottomNavigationBarItem(
+                label: "Рейтинг",
+                icon: Icon(Icons.trending_up_rounded),
+              ),
+              BottomNavigationBarItem(
+                label: "Трассы",
+                icon: Icon(Icons.ballot_outlined),
+              ),
+              BottomNavigationBarItem(
+                label: "Профиль",
+                icon: Icon(Icons.person),
+              ),
+            ],
           );
         },
         builder: (context, child, animation) {
@@ -53,7 +52,7 @@ class RootPage extends StatelessWidget {
           foregroundColor: colorTheme.onSecondary,
           backgroundColor: colorTheme.secondary,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

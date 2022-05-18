@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 abstract class AppColorTheme {
   Brightness get brightness;
   Color get background;
+  Color get bronze;
   Color get error;
+  Color get gold;
   Color get onError;
   Color get onPrimary;
   Color get onSecondary;
@@ -16,6 +18,7 @@ abstract class AppColorTheme {
   Color get routeHard;
   Color get secondary;
   Color get secondaryVariant;
+  Color get silver;
   Color get success;
   Color get surface;
   Color get unselected;
@@ -33,7 +36,11 @@ class LightColorTheme implements AppColorTheme {
   @override
   Color get background => AppPallete.white;
   @override
+  Color get bronze => AppPallete.bronze;
+  @override
   Color get error => AppPallete.red;
+  @override
+  Color get gold => AppPallete.gold;
   @override
   Color get onError => AppPallete.white;
   @override
@@ -54,6 +61,8 @@ class LightColorTheme implements AppColorTheme {
   Color get secondary => AppPallete.subBlack;
   @override
   Color get secondaryVariant => AppPallete.darkgrey;
+  @override
+  Color get silver => AppPallete.silver;
   @override
   Color get success => AppPallete.lightGreen;
   @override
