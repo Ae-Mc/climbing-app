@@ -45,12 +45,12 @@ class FailureWidget extends StatelessWidget {
               padding: const Pad(top: 16),
               child: ElevatedButton(
                 onPressed: onRetry,
-                child: const Text('Повторить попытку'),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                     AppTheme.of(context).colorTheme.primary,
                   ),
                 ),
+                child: const Text('Повторить попытку'),
               ),
             ),
           ),

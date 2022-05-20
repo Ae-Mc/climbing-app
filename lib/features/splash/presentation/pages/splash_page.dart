@@ -58,11 +58,11 @@ class _SplashPageState extends State<SplashPage> {
                         child: FloatingActionButton.small(
                           onPressed: () => BlocProvider.of<SplashBloc>(context)
                               .add(const SplashEvent.retryInitialization()),
-                          child: const Icon(Icons.replay),
                           backgroundColor:
                               AppTheme.of(context).colorTheme.primary,
                           foregroundColor:
                               AppTheme.of(context).colorTheme.onPrimary,
+                          child: const Icon(Icons.replay),
                         ),
                       ),
                       loaded: () => const UnexpectedBehavior(),

@@ -22,6 +22,6 @@ extension AppPlatforms on AppPlatform {
     if (Platform.isLinux | Platform.isMacOS | Platform.isWindows) {
       return AppPlatform.desktop;
     }
-    throw UnsupportedError('Unsupported platform: ' + Platform.operatingSystem);
+    throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
 }

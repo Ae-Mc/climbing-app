@@ -81,7 +81,9 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
                                       borderRadius: const BorderRadius.all(
                                         Radius.circular(16),
                                       ),
-                                      onTap: () => pickImage(context),
+                                      onTap: () => pickImage(
+                                        BlocProvider.of<AddRouteBloc>(context),
+                                      ),
                                       child: DottedBorder(
                                         radius: const Radius.circular(16),
                                         dashPattern: const [6, 6],
@@ -163,13 +165,12 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
     );
   }
 
-  void pickImage(BuildContext context) async {
+  void pickImage(AddRouteBloc bloc) async {
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final imageBytes = await image.readAsBytes();
       images.add(UploadImageModel(image, imageBytes));
-      final bloc = BlocProvider.of<AddRouteBloc>(context);
       bloc.add(AddRouteEvent.setImages(images.map((e) => e.file).toList()));
       setState(() => {});
     }

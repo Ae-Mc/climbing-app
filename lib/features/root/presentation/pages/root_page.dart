@@ -48,9 +48,9 @@ class RootPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () =>
               AutoRouter.of(context).navigate(const AddRouteRootRoute()),
-          child: const Icon(Icons.add),
           foregroundColor: colorTheme.onSecondary,
           backgroundColor: colorTheme.secondary,
+          child: const Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
