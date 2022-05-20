@@ -1,3 +1,4 @@
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class SubmitButton extends StatelessWidget {
@@ -16,7 +17,7 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoaded ? onPressed : null,
-      child: isLoaded ? Text(text) : const CircularProgressIndicator.adaptive(),
+      child: isLoaded ? Text(text) : const CustomProgressIndicator(),
     );
   }
 }

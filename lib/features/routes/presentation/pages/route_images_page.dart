@@ -1,5 +1,6 @@
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/routes/domain/entities/image.dart'
     as entities;
 import 'package:flutter/material.dart';
@@ -23,18 +24,14 @@ class RouteImagesPage extends StatelessWidget {
               }
               final expectedBytes = loadingProgress.expectedTotalBytes;
               if (expectedBytes == null) {
-                return CircularProgressIndicator.adaptive(
-                  valueColor: AlwaysStoppedAnimation(
-                    AppTheme.of(context).colorTheme.onSecondary,
-                  ),
+                return CustomProgressIndicator(
+                  color: AppTheme.of(context).colorTheme.onSecondary,
                 );
               }
 
-              return CircularProgressIndicator.adaptive(
+              return CustomProgressIndicator(
                 value: loadingProgress.cumulativeBytesLoaded / expectedBytes,
-                valueColor: AlwaysStoppedAnimation(
-                  AppTheme.of(context).colorTheme.onSecondary,
-                ),
+                color: AppTheme.of(context).colorTheme.onSecondary,
               );
             },
           ),

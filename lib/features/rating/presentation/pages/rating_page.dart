@@ -3,6 +3,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/rating/presentation/bloc/rating_bloc.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/score_card.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
@@ -67,11 +68,7 @@ class RatingPage extends StatelessWidget {
                           const SizedBox(height: 16),
                     ),
                   ),
-                  loading: () => Center(
-                    child: CircularProgressIndicator.adaptive(
-                      valueColor: AlwaysStoppedAnimation(colorTheme.primary),
-                    ),
-                  ),
+                  loading: () => const Center(child: CustomProgressIndicator()),
                 ),
               );
             },

@@ -5,6 +5,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
@@ -33,7 +34,7 @@ class ProfilePage extends StatelessWidget {
         orElse: () => GetIt.I<Logger>().d('Unexpected error: $singleResult'),
       ),
       builder: (context, state) => state.maybeWhen(
-        orElse: () => const Center(child: CircularProgressIndicator.adaptive()),
+        orElse: () => const Center(child: CustomProgressIndicator()),
         authorized: (activeUser, users) => ListView(
           padding: const Pad(all: 16),
           children: [

@@ -1,5 +1,6 @@
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_single_result.dart';
@@ -35,7 +36,7 @@ class RoutesPage extends StatelessWidget {
                   onRetry: () => loadRoutes(context),
                 ),
                 loaded: (state) => RoutesList(routes: state.routes),
-                loading: (_) => const CircularProgressIndicator.adaptive(),
+                loading: (_) => const CustomProgressIndicator(),
                 serverFailure: (state) => FailureWidget(
                   title:
                       'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',

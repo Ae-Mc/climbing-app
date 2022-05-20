@@ -2,6 +2,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_event.dart';
@@ -46,10 +47,8 @@ class _SplashPageState extends State<SplashPage> {
                       loading: () => SizedBox(
                         height: 48,
                         width: 48,
-                        child: CircularProgressIndicator.adaptive(
-                          valueColor: AlwaysStoppedAnimation(
-                            AppTheme.of(context).colorTheme.onPrimary,
-                          ),
+                        child: CustomProgressIndicator(
+                          color: AppTheme.of(context).colorTheme.onPrimary,
                         ),
                       ),
                       failure: (_) => SizedBox(
