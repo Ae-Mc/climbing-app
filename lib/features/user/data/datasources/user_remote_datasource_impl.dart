@@ -1,4 +1,6 @@
 import 'package:climbing_app/core/constants.dart';
+import 'package:climbing_app/features/add_ascent/domain/entities/ascent.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -22,6 +24,13 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   Future<User> getCurrentUser() => authApi.getCurrentUser();
 
   @override
+  Future<List<Route>> getCurrentUserRoutes() => authApi.getCurrentUserRoutes();
+
+  @override
+  Future<List<Ascent>> getCurrentUserAscents() =>
+      authApi.getCurrentUserAscents();
+
+  @override
   Future<AccessToken> signIn(String usernameOrEmail, String password) =>
       authApi.signIn(usernameOrEmail, password);
 
@@ -43,6 +52,12 @@ abstract class AuthApi {
 
   @GET("users/me")
   Future<User> getCurrentUser();
+
+  @GET("users/me/routes")
+  Future<List<Route>> getCurrentUserRoutes();
+
+  @GET("users/me/ascents")
+  Future<List<Ascent>> getCurrentUserAscents();
 
   @POST("auth/login")
   @FormUrlEncoded()

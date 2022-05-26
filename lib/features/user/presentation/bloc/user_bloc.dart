@@ -1,4 +1,5 @@
 import 'package:climbing_app/core/failure.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -76,8 +77,11 @@ class UserBloc
 
   Future<void> signOut(UserEmitter emit) async {
     final previousState = state.when<UserState>(
-      authorized: (user, allUsers) =>
-          UserState.authorized(activeUser: user, allUsers: allUsers),
+      authorized: (user, allUsers, userRoutes) => UserState.authorized(
+        activeUser: user,
+        allUsers: allUsers,
+        userRoutes: userRoutes,
+      ),
       initializationFailure: (failure) =>
           UserState.initializationFailure(failure),
       loading: () => const UserState.loading(),
@@ -114,17 +118,27 @@ class UserBloc
     required Future<void> Function(Failure failure) onFailure,
     required UserEmitter emit,
   }) async {
-    await (await repository.getCurrentUser()).fold<Future<void>>(
+    final allUsersFuture = repository.getAllUsers();
+    final currentUserFuture = repository.getCurrentUser();
+    final currentUserRoutesFuture = repository.getCurrentUserRoutes();
+
+    await (await currentUserFuture).fold<Future<void>>(
       onFailure,
       (activeUser) async {
-        await (await repository.getAllUsers()).fold<Future<void>>(
+        await (await allUsersFuture).fold<Future<void>>(
           onFailure,
           (allUsers) async {
-            emit(UserState.authorized(
-              activeUser: activeUser,
-              allUsers: allUsers,
-            ));
-            addSingleResult(const UserSingleResult.signInSucceed());
+            await (await currentUserRoutesFuture).fold<Future<void>>(
+              onFailure,
+              (userRoutes) async {
+                emit(UserState.authorized(
+                  activeUser: activeUser,
+                  allUsers: allUsers,
+                  userRoutes: userRoutes,
+                ));
+                addSingleResult(const UserSingleResult.signInSucceed());
+              },
+            );
           },
         );
       },

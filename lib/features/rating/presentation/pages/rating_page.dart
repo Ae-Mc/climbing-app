@@ -51,7 +51,7 @@ class RatingPage extends StatelessWidget {
                             final score = scores[index - 1];
                             return ScoreCard(
                               isHighlighted: userState.maybeWhen(
-                                authorized: (activeUser, allUsers) =>
+                                authorized: (activeUser, allUsers, _) =>
                                     activeUser.id == score.user.id,
                                 orElse: () => false,
                               ),

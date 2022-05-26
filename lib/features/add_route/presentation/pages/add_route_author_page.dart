@@ -41,7 +41,7 @@ class _AddRouteAuthorPageState extends State<AddRouteAuthorPage> {
                 const SizedBox(height: 24),
                 BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) => state.maybeWhen(
-                    authorized: (_, allUsers) => Column(
+                    authorized: (_, allUsers, __) => Column(
                       children: allUsers
                           .map(
                             (user) => Padding(

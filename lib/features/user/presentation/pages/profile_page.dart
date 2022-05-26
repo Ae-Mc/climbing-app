@@ -32,7 +32,7 @@ class ProfilePage extends StatelessWidget {
       ),
       builder: (context, state) => state.maybeWhen(
         orElse: () => const Center(child: CustomProgressIndicator()),
-        authorized: (activeUser, users) => ListView(
+        authorized: (activeUser, users, _) => ListView(
           padding: const Pad(all: 16),
           children: [
             Text(

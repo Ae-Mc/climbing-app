@@ -1,4 +1,5 @@
 import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/data/datasources/user_local_datasource.dart';
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
@@ -249,6 +250,22 @@ class UserRepositoryImpl implements UserRepository {
     "password": "пароль",
     "username": "имя пользователя",
   };
+
+  @override
+  Future<Either<Failure, List<Route>>> getCurrentUserRoutes() async {
+    assert(isAuthenticated);
+
+    try {
+      return Right(await remoteDatasource.getCurrentUserRoutes());
+    } on DioError catch (error) {
+      return Left(handleDioConnectionError(error).fold(
+        (l) => l,
+        (r) {
+          return const UnknownFailure();
+        },
+      ));
+    }
+  }
 }
 
 class AuthorizationInterceptor extends Interceptor {
