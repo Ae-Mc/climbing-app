@@ -6,33 +6,34 @@ import 'package:flutter/material.dart' hide Route;
 import 'package:intl/intl.dart';
 
 class RoutesList extends StatelessWidget {
-  final List<Route> routes;
+  final List<Route> sortedRoutes;
   final Set<String> quarters;
 
-  RoutesList({Key? key, required this.routes})
-      : quarters =
-            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate))),
-        super(key: key) {
-    routes.sort(
-      (left, right) {
-        final dateComparation = right.creationDate.compareTo(left.creationDate);
-        if (dateComparation != 0) {
-          return dateComparation;
-        }
+  RoutesList({Key? key, required List<Route> routes})
+      : sortedRoutes = List.from(routes)
+          ..sort(
+            (left, right) {
+              final dateComparation =
+                  right.creationDate.compareTo(left.creationDate);
+              if (dateComparation != 0) {
+                return dateComparation;
+              }
 
-        return right.category.compareTo(left.category);
-      },
-    );
-  }
+              return right.category.compareTo(left.category);
+            },
+          ),
+        quarters =
+            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate))),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String previous = '';
     List<Widget> elements = [];
 
-    for (int i = 0; i < routes.length; i++) {
-      if (previous != getQuarter(routes[i].creationDate)) {
-        previous = getQuarter(routes[i].creationDate);
+    for (int i = 0; i < sortedRoutes.length; i++) {
+      if (previous != getQuarter(sortedRoutes[i].creationDate)) {
+        previous = getQuarter(sortedRoutes[i].creationDate);
 
         elements.add(Text(
           previous,
@@ -40,7 +41,7 @@ class RoutesList extends StatelessWidget {
           textAlign: TextAlign.center,
         ));
       }
-      elements.add(RouteCard(route: routes[i]));
+      elements.add(RouteCard(route: sortedRoutes[i]));
     }
 
     return ListView.separated(
