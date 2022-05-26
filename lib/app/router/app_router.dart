@@ -10,6 +10,7 @@ import 'package:climbing_app/features/routes/presentation/pages/route_details_pa
 import 'package:climbing_app/features/routes/presentation/pages/route_images_page.dart';
 import 'package:climbing_app/features/root/presentation/pages/root_page.dart';
 import 'package:climbing_app/features/routes/presentation/pages/routes_page.dart';
+import 'package:climbing_app/features/user/presentation/pages/my_routes_page.dart';
 import 'package:climbing_app/features/user/presentation/pages/sign_in_page.dart';
 import 'package:climbing_app/features/user/presentation/pages/profile_page.dart';
 import 'package:climbing_app/features/user/presentation/pages/register_page.dart';
@@ -35,6 +36,7 @@ export 'app_router.gr.dart';
           page: EmptyRouterPage,
           children: [
             AutoRoute(initial: true, page: ProfilePage),
+            AutoRoute(initial: true, page: MyRoutesPage),
           ],
         ),
         AutoRoute(

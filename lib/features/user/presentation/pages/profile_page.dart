@@ -68,8 +68,7 @@ class ProfilePage extends StatelessWidget {
                 borderRadius: cardBorderRadius,
               ),
               child: InkWell(
-                // TODO: Go to completed routes page
-                onTap: () => GetIt.I<Logger>().d('Go to my routes page'),
+                onTap: () => AutoRouter.of(context).push(const MyRoutesRoute()),
                 borderRadius: cardBorderRadius,
                 child: Padding(
                   padding: const Pad(all: 24),
