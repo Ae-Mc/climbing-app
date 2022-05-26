@@ -40,6 +40,7 @@ dependencies:
   dio: ^4.0.4
   dotted_border: ^2.0.0+2
   equatable: ^2.0.3
+  extended_image: ^6.2.1
   flutter_bloc: ^8.0.1
   flutter_svg: ^1.0.3
   fluttertoast: ^8.0.8
