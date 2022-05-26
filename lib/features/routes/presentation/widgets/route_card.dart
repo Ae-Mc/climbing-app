@@ -4,6 +4,7 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/util/category_to_color.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
+import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart' hide Route;
 
@@ -35,7 +36,7 @@ class RouteCard extends StatelessWidget {
                     ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(16)),
                       child: route.images.isNotEmpty
-                          ? Image.network(
+                          ? CustomNetworkImage(
                               route.images[0].url,
                               width: 72,
                               height: 72,

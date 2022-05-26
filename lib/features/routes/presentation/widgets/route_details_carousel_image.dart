@@ -1,3 +1,4 @@
+import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RouteDetailsCarouselImage extends StatefulWidget {
@@ -20,14 +21,10 @@ class _RouteDetailsCarouselImageState extends State<RouteDetailsCarouselImage>
 
     return AspectRatio(
       aspectRatio: 1,
-      child: Ink(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          image: DecorationImage(
-            image: NetworkImage(widget.imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
+      child: CustomNetworkImage(
+        widget.imageUrl,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        fit: BoxFit.cover,
       ),
     );
   }

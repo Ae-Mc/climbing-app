@@ -1,8 +1,8 @@
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
-import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/routes/domain/entities/image.dart'
     as entities;
+import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RouteImagesPage extends StatelessWidget {
@@ -16,24 +16,9 @@ class RouteImagesPage extends StatelessWidget {
     for (int i = 0; i < images.length; i++) {
       columnContent.add(
         Center(
-          child: Image.network(
+          child: CustomNetworkImage(
             images.reversed.elementAt(i).url,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              final expectedBytes = loadingProgress.expectedTotalBytes;
-              if (expectedBytes == null) {
-                return CustomProgressIndicator(
-                  color: AppTheme.of(context).colorTheme.onSecondary,
-                );
-              }
-
-              return CustomProgressIndicator(
-                value: loadingProgress.cumulativeBytesLoaded / expectedBytes,
-                color: AppTheme.of(context).colorTheme.onSecondary,
-              );
-            },
+            loadingColor: AppTheme.of(context).colorTheme.onSecondary,
           ),
         ),
       );
