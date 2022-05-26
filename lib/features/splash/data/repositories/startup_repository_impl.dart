@@ -3,8 +3,6 @@ import 'package:climbing_app/features/splash/data/models/initialization_status.d
 import 'package:climbing_app/features/splash/data/repositories/startup_repository_impl.config.dart';
 import 'package:climbing_app/features/splash/domain/repositories/startup_repository.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

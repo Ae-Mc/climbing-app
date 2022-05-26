@@ -1,9 +1,9 @@
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/features/rating/domain/repositories/rating_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 part 'rating_event.dart';
 part 'rating_single_result.dart';

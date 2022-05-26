@@ -1,10 +1,10 @@
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/splash/domain/repositories/startup_repository.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_event.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 class SplashBloc
     extends SingleResultBloc<SplashEvent, SplashState, SplashSingleResult> {

@@ -3,15 +3,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/submit_button.dart';
 import 'package:climbing_app/core/widgets/unexpected_behavior.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:climbing_app/core/widgets/styled_password_field.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
@@ -19,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();

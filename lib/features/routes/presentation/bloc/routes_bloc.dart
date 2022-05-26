@@ -1,10 +1,10 @@
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/routes/domain/repositories/routes_repository.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_single_result.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_state.dart';
 import 'package:injectable/injectable.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 @injectable
 class RoutesBloc extends SingleResultBloc<RoutesBlocEvent, RoutesBlocState,

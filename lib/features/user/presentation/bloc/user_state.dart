@@ -1,8 +1,4 @@
-import 'package:climbing_app/core/failure.dart';
-import 'package:climbing_app/features/user/domain/entities/user.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'user_state.freezed.dart';
+part of 'user_bloc.dart';
 
 @freezed
 class UserState with _$UserState {

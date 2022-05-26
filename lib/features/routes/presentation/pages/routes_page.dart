@@ -1,5 +1,4 @@
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc_builder.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
@@ -10,6 +9,7 @@ import 'package:climbing_app/features/routes/presentation/widgets/routes_list.da
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 class RoutesPage extends StatelessWidget {
   const RoutesPage({Key? key}) : super(key: key);

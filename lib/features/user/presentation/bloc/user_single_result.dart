@@ -1,9 +1,4 @@
-import 'package:climbing_app/core/failure.dart';
-import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
-import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'user_single_result.freezed.dart';
+part of 'user_bloc.dart';
 
 @freezed
 class UserSingleResult with _$UserSingleResult {

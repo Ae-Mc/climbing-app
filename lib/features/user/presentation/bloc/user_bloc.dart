@@ -1,11 +1,18 @@
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
 import 'package:climbing_app/core/failure.dart';
+import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
+import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
+import 'package:climbing_app/features/user/domain/entities/user.dart';
+import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:climbing_app/features/user/domain/repositories/user_repository.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_event.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_single_result.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
+
+part 'user_bloc.freezed.dart';
+part 'user_event.dart';
+part 'user_single_result.dart';
+part 'user_state.dart';
 
 typedef UserEmitter = Emitter<UserState>;
 
@@ -18,14 +25,13 @@ class UserBloc
     on<UserEvent>(handleEvent);
   }
 
-  Future<void> handleEvent(UserEvent event, UserEmitter emit) async {
-    await event.map<Future<void>>(
-      initialize: (_) => initialize(emit),
-      signOut: (_) => signOut(emit),
-      signIn: (event) => signIn(event, emit),
-      register: (event) => register(event, emit),
-    );
-  }
+  Future<void> handleEvent(UserEvent event, UserEmitter emit) =>
+      event.map<Future<void>>(
+        initialize: (_) => initialize(emit),
+        signOut: (_) => signOut(emit),
+        signIn: (event) => signIn(event, emit),
+        register: (event) => register(event, emit),
+      );
 
   Future<void> initialize(UserEmitter emit) async {
     emit(const UserState.loading());

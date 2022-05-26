@@ -1,4 +1,3 @@
-import 'package:climbing_app/arch/single_result_bloc/single_result_bloc.dart';
 import 'package:climbing_app/features/add_route/domain/entities/route_create.dart';
 import 'package:climbing_app/features/add_route/domain/repositories/add_route_repository.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_single_result.dart';
@@ -7,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
 import 'add_route_event.dart';
 import 'add_route_state.dart';

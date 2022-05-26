@@ -1,7 +1,4 @@
-import 'package:climbing_app/features/user/domain/entities/user_create.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'user_event.freezed.dart';
+part of 'user_bloc.dart';
 
 @freezed
 class UserEvent with _$UserEvent {

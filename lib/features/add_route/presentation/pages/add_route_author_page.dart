@@ -8,7 +8,6 @@ import 'package:climbing_app/features/add_route/presentation/widgets/header.dart
 import 'package:climbing_app/features/add_route/presentation/widgets/user_card.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
-import 'package:climbing_app/features/user/presentation/bloc/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
