@@ -3,6 +3,7 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_it/get_it.dart';
 
 class RootPage extends StatelessWidget {
@@ -45,12 +46,29 @@ class RootPage extends StatelessWidget {
           return FadeTransition(opacity: animation, child: child);
         },
         extendBody: true,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () =>
-              AutoRouter.of(context).navigate(const AddRouteRootRoute()),
-          foregroundColor: colorTheme.onSecondary,
+        floatingActionButton: SpeedDial(
           backgroundColor: colorTheme.secondary,
-          child: const Icon(Icons.add),
+          foregroundColor: colorTheme.onSecondary,
+          // ignore: no-equal-arguments
+          overlayColor: colorTheme.secondary,
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          spacing: 8,
+          overlayOpacity: 0.5,
+          children: [
+            SpeedDialChild(
+              label: "Добавление трассы",
+              child: const Icon(Icons.add),
+              onTap: () =>
+                  AutoRouter.of(context).push(const AddRouteRootRoute()),
+            ),
+            SpeedDialChild(
+              label: "Добавление соревнования",
+              child: const Icon(Icons.add),
+              onTap: () =>
+                  AutoRouter.of(context).push(const AddCompetitionRoute()),
+            ),
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
