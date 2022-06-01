@@ -20,9 +20,9 @@ class CompetitionCreate with _$CompetitionCreate {
 }
 
 String dateTimeToDate(DateTime dateTime) {
-  return DateFormat.yMd('ru_RU').format(dateTime);
+  return DateFormat('yyyy-MM-dd').format(dateTime);
 }
 
 DateTime dateToDateTime(String date) {
-  return DateFormat.yMd('ru_RU').parse(date);
+  return DateFormat('yyyy-MM-dd').parse(date);
 }

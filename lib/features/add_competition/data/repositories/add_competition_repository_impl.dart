@@ -5,7 +5,9 @@ import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/add_competition/domain/repositories/add_competition_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
 
 @Singleton(as: AddCompetitionRepository)
 class AddCompetitionRepositoryImpl implements AddCompetitionRepository {
@@ -20,8 +22,12 @@ class AddCompetitionRepositoryImpl implements AddCompetitionRepository {
     try {
       return Right(await remoteDatasource.addCompetition(competition));
     } on DioError catch (error) {
-      return Left(handleDioConnectionError(error)
-          .fold((l) => l, (r) => Failure.unknownFailure(r)));
+      return Left(handleDioConnectionError(error).fold((l) => l, (r) {
+        GetIt.I<Logger>().e(r.response?.data, r);
+        GetIt.I<Logger>().d(r.requestOptions.data);
+
+        return Failure.unknownFailure(r);
+      }));
     }
   }
 }

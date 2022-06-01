@@ -23,6 +23,5 @@ abstract class AddCompetitionApi {
   factory AddCompetitionApi(Dio dio) => _AddCompetitionApi(dio);
 
   @POST('/competitions')
-  @FormUrlEncoded()
   Future<void> addCompetition(@Body() CompetitionCreate competition);
 }
