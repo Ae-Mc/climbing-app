@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 class SubmitButton extends StatelessWidget {
   final String text;
+  final bool isActive;
   final bool isLoaded;
   final void Function() onPressed;
 
   const SubmitButton({
     Key? key,
     required this.text,
+    this.isActive = true,
     required this.isLoaded,
     required this.onPressed,
   }) : super(key: key);
@@ -16,7 +18,7 @@ class SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoaded ? onPressed : null,
+      onPressed: isLoaded && isActive ? onPressed : null,
       child: isLoaded ? Text(text) : const CustomProgressIndicator(),
     );
   }
