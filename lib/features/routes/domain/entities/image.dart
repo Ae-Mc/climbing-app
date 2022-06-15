@@ -9,7 +9,7 @@ class Image with _$Image {
   const factory Image({
     required String id,
     required String url,
-    required String createdAt,
+    required DateTime createdAt,
   }) = _Image;
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
