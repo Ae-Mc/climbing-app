@@ -38,8 +38,10 @@ class RouteImagesPage extends StatelessWidget {
                   constrained: false,
                   maxScale: 4,
                   child: ConstrainedBox(
-                    constraints:
-                        constraints.copyWith(maxHeight: double.infinity),
+                    constraints: constraints.copyWith(
+                      minHeight: constraints.maxHeight,
+                      maxHeight: double.infinity,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
