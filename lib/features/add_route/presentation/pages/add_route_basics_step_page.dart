@@ -2,6 +2,7 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/pick_date.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_bloc.dart';
@@ -115,6 +116,13 @@ class _AddRouteBasicsStepPageState extends State<AddRouteBasicsStepPage> {
                     : () {
                         BlocProvider.of<AddRouteBloc>(context)
                             .add(AddRouteEvent.setName(nameController.text));
+                        if (colorController.text.length < 4) {
+                          CustomToast(context).showTextFailureToast(
+                            'Название цвета должно быть минимум из 4 символов',
+                          );
+
+                          return;
+                        }
                         BlocProvider.of<AddRouteBloc>(context).add(
                           AddRouteEvent.setMarksColor(colorController.text),
                         );
