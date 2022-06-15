@@ -4,6 +4,7 @@ import 'package:climbing_app/features/user/data/datasources/user_local_datasourc
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/data/models/validation_error.dart';
+import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';
 import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -264,6 +265,19 @@ class UserRepositoryImpl implements UserRepository {
           return const UnknownFailure();
         },
       ));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ExpiringAscent>>>
+      getCurrentUserExpiringAscents() async {
+    assert(isAuthenticated);
+    try {
+      return Right(await remoteDatasource.getCurrentUserExpiringAscents());
+    } on DioError catch (error) {
+      return Left(handleDioConnectionError(error).fold((l) => l, (r) {
+        return UnknownFailure(r);
+      }));
     }
   }
 }

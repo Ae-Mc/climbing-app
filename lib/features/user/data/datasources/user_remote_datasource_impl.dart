@@ -3,6 +3,7 @@ import 'package:climbing_app/features/add_ascent/domain/entities/ascent.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
+import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:dio/dio.dart';
@@ -39,6 +40,10 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
 
   @override
   Future<User> register(UserCreate userCreate) => authApi.register(userCreate);
+
+  @override
+  Future<List<ExpiringAscent>> getCurrentUserExpiringAscents() =>
+      authApi.getCurrentUserExpiringAscents();
 }
 
 @singleton
@@ -58,6 +63,9 @@ abstract class AuthApi {
 
   @GET("users/me/ascents")
   Future<List<Ascent>> getCurrentUserAscents();
+
+  @GET("users/me/ascents/expiring")
+  Future<List<ExpiringAscent>> getCurrentUserExpiringAscents();
 
   @POST("auth/login")
   @FormUrlEncoded()

@@ -17,7 +17,7 @@ class RootPage extends StatelessWidget {
     final textTheme = AppTheme.of(context).textTheme;
 
     return AutoTabsScaffold(
-        routes: routes,
+      routes: routes,
       drawer: Drawer(
         child: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
@@ -66,12 +66,18 @@ class RootPage extends StatelessWidget {
                       AutoRouter.of(context).push(const MyRoutesRoute()),
                   title: const Text("Загруженные трассы"),
                 ),
+                ListTile(
+                  dense: true,
+                  onTap: () =>
+                      AutoRouter.of(context).push(const ExpiringAscentsRoute()),
+                  title: const Text("Истекающие пролазы"),
+                ),
               ],
             );
           },
         ),
       ),
-        bottomNavigationBuilder: (context, tabsRouter) {
+      bottomNavigationBuilder: (context, tabsRouter) {
         return BottomAppBar(
           shape: const CircularNotchedRectangle(),
           color: colorTheme.primary,
@@ -80,7 +86,7 @@ class RootPage extends StatelessWidget {
             currentIndex: tabsRouter.activeIndex,
             elevation: 0,
             iconSize: 32,
-            onTap: tabsRouter.setActiveIndex,
+            onTap: (index) => setActiveTab(context, index, tabsRouter),
             selectedItemColor: colorTheme.onPrimary,
             unselectedItemColor: colorTheme.unselectedNavBar,
             items: const [
@@ -93,39 +99,43 @@ class RootPage extends StatelessWidget {
                 icon: Icon(Icons.ballot_outlined),
               ),
             ],
-              ),
-          );
-        },
-        builder: (context, child, animation) {
+          ),
+        );
+      },
+      builder: (context, child, animation) {
         return SafeArea(
           child: FadeTransition(opacity: animation, child: child),
         );
-        },
-        extendBody: true,
-        floatingActionButton: SpeedDial(
-          backgroundColor: colorTheme.secondary,
-          foregroundColor: colorTheme.onSecondary,
-          // ignore: no-equal-arguments
-          overlayColor: colorTheme.secondary,
-          icon: Icons.add,
-          activeIcon: Icons.close,
-          spacing: 8,
-          overlayOpacity: 0.5,
-          children: [
-            SpeedDialChild(
+      },
+      extendBody: true,
+      floatingActionButton: SpeedDial(
+        backgroundColor: colorTheme.secondary,
+        foregroundColor: colorTheme.onSecondary,
+        // ignore: no-equal-arguments
+        overlayColor: colorTheme.secondary,
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 8,
+        overlayOpacity: 0.5,
+        children: [
+          SpeedDialChild(
             label: "Трасса",
-              child: const Icon(Icons.add),
+            child: const Icon(Icons.add),
             onTap: () => AutoRouter.of(context).push(const AddRouteRootRoute()),
-            ),
-            SpeedDialChild(
+          ),
+          SpeedDialChild(
             label: "Соревнование",
-              child: const Icon(Icons.add),
-              onTap: () =>
-                  AutoRouter.of(context).push(const AddCompetitionRoute()),
-            ),
-          ],
-        ),
+            child: const Icon(Icons.add),
+            onTap: () =>
+                AutoRouter.of(context).push(const AddCompetitionRoute()),
+          ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  void setActiveTab(BuildContext _, int index, TabsRouter tabsRouter) {
+    tabsRouter.setActiveIndex(index);
   }
 }
