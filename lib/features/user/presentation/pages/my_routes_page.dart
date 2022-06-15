@@ -11,21 +11,25 @@ class MyRoutesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-      onSingleResult: (context, singleResult) => singleResult.whenOrNull(
-        failure: (failure) =>
-            CustomToast(context).showTextFailureToast(failureToText(failure)),
+    return Scaffold(
+      body: SafeArea(
+        child: SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
+          onSingleResult: (context, singleResult) => singleResult.whenOrNull(
+            failure: (failure) => CustomToast(context)
+                .showTextFailureToast(failureToText(failure)),
+          ),
+          builder: (context, state) {
+            return state.when(
+              authorized: (activeUser, allUsers, userRoutes) =>
+                  RoutesList(routes: userRoutes),
+              initializationFailure: (_) =>
+                  throw UnimplementedError('Impossible state'),
+              loading: () => const Center(child: CustomProgressIndicator()),
+              notAuthorized: () => throw UnimplementedError('Impossible state'),
+            );
+          },
+        ),
       ),
-      builder: (context, state) {
-        return state.when(
-          authorized: (activeUser, allUsers, userRoutes) =>
-              RoutesList(routes: userRoutes),
-          initializationFailure: (_) =>
-              throw UnimplementedError('Impossible state'),
-          loading: () => const Center(child: CustomProgressIndicator()),
-          notAuthorized: () => throw UnimplementedError('Impossible state'),
-        );
-      },
     );
   }
 }

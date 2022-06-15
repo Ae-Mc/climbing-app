@@ -154,17 +154,14 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
         ),
         SliverFillRemaining(
           hasScrollBody: false,
-          child: Padding(
-            padding: const Pad(bottom: 80),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const Pad(vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () => AutoRouter.of(context)
-                      .push(AddAscentRoute(route: widget.route)),
-                  child: const Text('Я пролез трассу'),
-                ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const Pad(top: 16, bottom: 32),
+              child: ElevatedButton(
+                onPressed: () => AutoRouter.of(context)
+                    .push(AddAscentRoute(route: widget.route)),
+                child: const Text('Я пролез трассу'),
               ),
             ),
           ),

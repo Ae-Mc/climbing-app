@@ -23,6 +23,18 @@ export 'app_router.gr.dart';
     AutoRoute(page: AddAscentPage, guards: [AuthGuard]),
     AutoRoute(page: AddCompetitionPage, guards: [AuthGuard]),
     AutoRoute(
+      page: AddRouteRootPage,
+      guards: [AuthGuard],
+      children: [
+        AutoRoute(page: AddRouteBasicsStepPage, initial: true),
+        AutoRoute(page: AddRouteCategoryStepPage),
+        AutoRoute(page: AddRouteImagesStepPage),
+      ],
+    ),
+    AutoRoute(page: MyRoutesPage, guards: [AuthGuard]),
+    AutoRoute(page: ProfilePage, guards: [AuthGuard]),
+    AutoRoute(page: RegisterPage),
+    AutoRoute(
       initial: true,
       page: RootPage,
       children: [
@@ -31,14 +43,6 @@ export 'app_router.gr.dart';
           page: EmptyRouterPage,
           children: [
             AutoRoute(initial: true, page: RatingPage),
-          ],
-        ),
-        AutoRoute(
-          name: 'UserRouter',
-          page: EmptyRouterPage,
-          children: [
-            AutoRoute(initial: true, page: ProfilePage),
-            AutoRoute(initial: true, page: MyRoutesPage),
           ],
         ),
         AutoRoute(
@@ -54,16 +58,6 @@ export 'app_router.gr.dart';
     ),
     AutoRoute(page: RouteImagesPage),
     AutoRoute(page: SignInPage),
-    AutoRoute(page: RegisterPage),
-    AutoRoute(
-      page: AddRouteRootPage,
-      guards: [AuthGuard],
-      children: [
-        AutoRoute(page: AddRouteBasicsStepPage, initial: true),
-        AutoRoute(page: AddRouteCategoryStepPage),
-        AutoRoute(page: AddRouteImagesStepPage),
-      ],
-    ),
   ],
 )
 class $AppRouter {}

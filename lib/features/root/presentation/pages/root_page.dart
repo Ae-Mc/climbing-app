@@ -1,29 +1,86 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
-import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:get_it/get_it.dart';
 
 class RootPage extends StatelessWidget {
-  static const routes = [RatingRouter(), RoutesRouter(), UserRouter()];
+  static const routes = [RatingRouter(), RoutesRouter()];
   const RootPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = AppTheme.of(context).colorTheme;
+    final textTheme = AppTheme.of(context).textTheme;
 
-    return SafeArea(
-      child: AutoTabsScaffold(
+    return AutoTabsScaffold(
         routes: routes,
+      drawer: Drawer(
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            return ListView(
+              shrinkWrap: true,
+              children: [
+                ...state.maybeMap(
+                  authorized: (value) => [
+                    DrawerHeader(
+                      decoration: BoxDecoration(color: colorTheme.primary),
+                      padding: Pad.zero,
+                      child: Material(
+                        color: colorTheme.primary,
+                        child: InkWell(
+                          onTap: () =>
+                              AutoRouter.of(context).push(const ProfileRoute()),
+                          child: Padding(
+                            padding: const Pad(all: 16, bottom: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  '${value.activeUser.firstName} ${value.activeUser.lastName}',
+                                  style: textTheme.title
+                                      .copyWith(color: colorTheme.onPrimary),
+                                ),
+                                Text(
+                                  '@${value.activeUser.username}',
+                                  style: textTheme.subtitle2.copyWith(
+                                    color:
+                                        colorTheme.onPrimary.withOpacity(0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  orElse: () => [],
+                ),
+                ListTile(
+                  dense: true,
+                  onTap: () =>
+                      AutoRouter.of(context).push(const MyRoutesRoute()),
+                  title: const Text("Загруженные трассы"),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
         bottomNavigationBuilder: (context, tabsRouter) {
-          return BottomNavigationBar(
-            backgroundColor: colorTheme.primary,
+        return BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          color: colorTheme.primary,
+          child: BottomNavigationBar(
+            backgroundColor: Colors.transparent,
             currentIndex: tabsRouter.activeIndex,
             elevation: 0,
             iconSize: 32,
-            onTap: (index) => setActiveTab(context, index, tabsRouter),
+            onTap: tabsRouter.setActiveIndex,
             selectedItemColor: colorTheme.onPrimary,
             unselectedItemColor: colorTheme.unselectedNavBar,
             items: const [
@@ -35,15 +92,14 @@ class RootPage extends StatelessWidget {
                 label: "Трассы",
                 icon: Icon(Icons.ballot_outlined),
               ),
-              BottomNavigationBarItem(
-                label: "Профиль",
-                icon: Icon(Icons.person),
-              ),
             ],
+              ),
           );
         },
         builder: (context, child, animation) {
-          return FadeTransition(opacity: animation, child: child);
+        return SafeArea(
+          child: FadeTransition(opacity: animation, child: child),
+        );
         },
         extendBody: true,
         floatingActionButton: SpeedDial(
@@ -57,33 +113,19 @@ class RootPage extends StatelessWidget {
           overlayOpacity: 0.5,
           children: [
             SpeedDialChild(
-              label: "Добавление трассы",
+            label: "Трасса",
               child: const Icon(Icons.add),
-              onTap: () =>
-                  AutoRouter.of(context).push(const AddRouteRootRoute()),
+            onTap: () => AutoRouter.of(context).push(const AddRouteRootRoute()),
             ),
             SpeedDialChild(
-              label: "Добавление соревнования",
+            label: "Соревнование",
               child: const Icon(Icons.add),
               onTap: () =>
                   AutoRouter.of(context).push(const AddCompetitionRoute()),
             ),
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-  }
-
-  void setActiveTab(BuildContext context, int index, TabsRouter tabsRouter) {
-    if (routes[index] is! UserRouter ||
-        GetIt.I<AuthGuard>().isAuthenticated()) {
-      tabsRouter.setActiveIndex(index);
-    } else {
-      // ignore: avoid-ignoring-return-values
-      AutoRouter.of(context).push(
-        SignInRoute(onSuccessSignIn: () => tabsRouter.setActiveIndex(index)),
-      );
-    }
   }
 }
