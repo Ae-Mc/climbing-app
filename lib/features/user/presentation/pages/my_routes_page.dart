@@ -1,6 +1,8 @@
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
+import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/routes/presentation/widgets/routes_list.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,18 @@ class MyRoutesPage extends StatelessWidget {
           builder: (context, state) {
             return state.when(
               authorized: (activeUser, allUsers, userRoutes) =>
-                  RoutesList(routes: userRoutes),
+                  NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (_, __) => [
+                  CustomSliverAppBar(
+                    leadingBuilder: (context) => const Center(
+                      child: CustomBackButton(),
+                    ),
+                    text: 'Загруженные трассы',
+                  ),
+                ],
+                body: RoutesList(routes: userRoutes),
+              ),
               initializationFailure: (_) =>
                   throw UnimplementedError('Impossible state'),
               loading: () => const Center(child: CustomProgressIndicator()),
