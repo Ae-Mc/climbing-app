@@ -52,7 +52,6 @@ dart_code_metrics:
   rules:
     - avoid-ignoring-return-values
     - avoid-late-keyword # Not sure if it's good with Flutter's StatefulWidget
-    - avoid-non-null-assertion
     - avoid-unused-parameters
     - binary-expression-operand-order
     - double-literal-format
