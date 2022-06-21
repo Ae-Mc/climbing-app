@@ -45,7 +45,7 @@ class RoutesList extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: const Pad(all: 16, bottom: 80),
+      padding: const Pad(all: 16),
       itemCount: elements.length,
       itemBuilder: (context, index) => elements[index],
       separatorBuilder: (context, index) => const SizedBox(height: 16),

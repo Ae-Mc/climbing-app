@@ -1,5 +1,6 @@
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
+import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_single_result.dart';
@@ -26,27 +27,32 @@ class RoutesPage extends StatelessWidget {
           RoutesBlocSingleResult>(
         onSingleResult: (context, result) => showFailureToast(context, result),
         builder: (context, state) {
-          return RefreshIndicator(
-            onRefresh: () async => loadRoutes(context),
-            child: Center(
-              child: state.map<Widget>(
-                connectionFailure: (_) => FailureWidget(
-                  title: 'Нет подключения к интернету',
-                  body: 'Посмотрите настройки интернета и попробуйте еще раз',
-                  onRetry: () => loadRoutes(context),
+          return Center(
+            child: state.map<Widget>(
+              connectionFailure: (_) => FailureWidget(
+                title: 'Нет подключения к интернету',
+                body: 'Посмотрите настройки интернета и попробуйте еще раз',
+                onRetry: () => loadRoutes(context),
+              ),
+              loaded: (state) => NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) =>
+                    [const CustomSliverAppBar(text: "Трассы")],
+                body: RefreshIndicator(
+                  onRefresh: () async => loadRoutes(context),
+                  child: RoutesList(routes: state.routes),
                 ),
-                loaded: (state) => RoutesList(routes: state.routes),
-                loading: (_) => const CustomProgressIndicator(),
-                serverFailure: (state) => FailureWidget(
-                  title:
-                      'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
-                  onRetry: () => loadRoutes(context),
-                ),
-                unknownFailure: (_) => FailureWidget(
-                  title: 'Упс! Произошла неожиданная ошибка!',
-                  body: 'Пожалуйста, свяжитесь с разработчиком',
-                  onRetry: () => loadRoutes(context),
-                ),
+              ),
+              loading: (_) => const CustomProgressIndicator(),
+              serverFailure: (state) => FailureWidget(
+                title:
+                    'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+                onRetry: () => loadRoutes(context),
+              ),
+              unknownFailure: (_) => FailureWidget(
+                title: 'Упс! Произошла неожиданная ошибка!',
+                body: 'Пожалуйста, свяжитесь с разработчиком',
+                onRetry: () => loadRoutes(context),
               ),
             ),
           );

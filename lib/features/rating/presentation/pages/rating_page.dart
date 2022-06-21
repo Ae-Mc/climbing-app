@@ -1,8 +1,8 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
+import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/rating/presentation/bloc/rating_bloc.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/score_card.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
@@ -16,8 +16,6 @@ class RatingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = AppTheme.of(context).textTheme;
-
     return BlocProvider(
       create: (context) =>
           GetIt.I<RatingBloc>()..add(const RatingEvent.refresh()),
@@ -34,36 +32,34 @@ class RatingPage extends StatelessWidget {
                 buildWhen: (oldState, newState) =>
                     newState.map(loaded: (_) => true, loading: (_) => false),
                 builder: (context, state) => state.when(
-                  loaded: (scores) => RefreshIndicator(
-                    onRefresh: () async => await onRefresh(context),
-                    child: ListView.separated(
-                      padding: const Pad(all: 16),
-                      itemCount: scores.length + 1,
-                      itemBuilder: (context, index) {
-                        switch (index) {
-                          case 0:
-                            return Text(
-                              'Рейтинг',
-                              style: textTheme.title,
-                              textAlign: TextAlign.center,
-                            );
-                          default:
-                            final score = scores[index - 1];
-                            return ScoreCard(
-                              isHighlighted: userState.maybeWhen(
-                                authorized: (activeUser, allUsers, _) =>
-                                    activeUser.id == score.user.id,
-                                orElse: () => false,
-                              ),
-                              place: index,
-                              score: score.score,
-                              user:
-                                  '${score.user.lastName} ${score.user.firstName}',
-                            );
-                        }
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 16),
+                  loaded: (scores) => NestedScrollView(
+                    floatHeaderSlivers: true,
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      const CustomSliverAppBar(text: 'Рейтинг'),
+                    ],
+                    body: RefreshIndicator(
+                      onRefresh: () async => await onRefresh(context),
+                      child: ListView.separated(
+                        padding: const Pad(all: 16),
+                        itemCount: scores.length,
+                        itemBuilder: (context, index) {
+                          final score = scores[index];
+
+                          return ScoreCard(
+                            isHighlighted: userState.maybeWhen(
+                              authorized: (activeUser, allUsers, _) =>
+                                  activeUser.id == score.user.id,
+                              orElse: () => false,
+                            ),
+                            place: index + 1,
+                            score: score.score,
+                            user:
+                                '${score.user.lastName} ${score.user.firstName}',
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 16),
+                      ),
                     ),
                   ),
                   loading: () => const Center(child: CustomProgressIndicator()),
