@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 class RoutesList extends StatelessWidget {
   final List<Route> sortedRoutes;
   final Set<String> quarters;
+  final Widget Function(BuildContext context)? headerSliverBuilder;
 
-  RoutesList({Key? key, required List<Route> routes})
+  RoutesList({Key? key, required List<Route> routes, this.headerSliverBuilder})
       : sortedRoutes = List.from(routes)
           ..sort(
             (left, right) {
@@ -28,9 +29,9 @@ class RoutesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String previous = '';
     List<Widget> elements = [];
 
+    String previous = '';
     for (int i = 0; i < sortedRoutes.length; i++) {
       if (previous != getQuarter(sortedRoutes[i].creationDate)) {
         previous = getQuarter(sortedRoutes[i].creationDate);
@@ -40,15 +41,25 @@ class RoutesList extends StatelessWidget {
           style: AppTheme.of(context).textTheme.title,
           textAlign: TextAlign.center,
         ));
+        elements.add(const SizedBox(height: 16));
       }
       elements.add(RouteCard(route: sortedRoutes[i]));
+      elements.add(const SizedBox(height: 16));
     }
 
-    return ListView.separated(
-      padding: const Pad(all: 16, bottom: 80),
-      itemCount: elements.length,
-      itemBuilder: (context, index) => elements[index],
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
+    return CustomScrollView(
+      slivers: [
+        if (headerSliverBuilder != null) headerSliverBuilder!(context),
+        SliverPadding(
+          padding: const Pad(all: 16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: elements.length,
+              (context, index) => elements[index],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

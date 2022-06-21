@@ -3,6 +3,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
+import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/rating/presentation/bloc/rating_bloc.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/score_card.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
@@ -21,55 +22,55 @@ class RatingPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           GetIt.I<RatingBloc>()..add(const RatingEvent.refresh()),
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (context, userState) {
-              return SingleResultBlocBuilder<RatingBloc, RatingState,
-                  RatingSingleResult>(
-                onSingleResult: (context, singleResult) => singleResult.when(
-                  failure: (failure) => CustomToast(context)
-                      .showTextFailureToast(failureToText(failure)),
-                ),
-                buildWhen: (oldState, newState) =>
-                    newState.map(loaded: (_) => true, loading: (_) => false),
-                builder: (context, state) => state.when(
-                  loaded: (scores) => RefreshIndicator(
-                    onRefresh: () async => await onRefresh(context),
-                    child: ListView.separated(
+      child: SafeArea(
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, userState) => SingleResultBlocBuilder<RatingBloc,
+              RatingState, RatingSingleResult>(
+            onSingleResult: (context, singleResult) => singleResult.when(
+              failure: (failure) => CustomToast(context)
+                  .showTextFailureToast(failureToText(failure)),
+            ),
+            buildWhen: (oldState, newState) =>
+                newState.map(loaded: (_) => true, loading: (_) => false),
+            builder: (context, state) => state.when(
+              loaded: (scores) => RefreshIndicator(
+                onRefresh: () async => await onRefresh(context),
+                child: CustomScrollView(
+                  slivers: [
+                    const CustomSliverAppBar(text: 'Рейтинг'),
+                    SliverPadding(
                       padding: const Pad(all: 16),
-                      itemCount: scores.length + 1,
-                      itemBuilder: (context, index) {
-                        switch (index) {
-                          case 0:
-                            return Text(
-                              'Рейтинг',
-                              style: textTheme.title,
-                              textAlign: TextAlign.center,
-                            );
-                          default:
-                            final score = scores[index - 1];
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index % 2 == 1) {
+                              return const SizedBox(height: 16);
+                            }
+
+                            final realIndex = index ~/ 2;
+                            final score = scores[realIndex];
+
                             return ScoreCard(
                               isHighlighted: userState.maybeWhen(
                                 authorized: (activeUser, allUsers, _) =>
                                     activeUser.id == score.user.id,
                                 orElse: () => false,
                               ),
-                              place: index,
+                              place: realIndex,
                               score: score.score,
                               user:
                                   '${score.user.lastName} ${score.user.firstName}',
                             );
-                        }
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 16),
+                          },
+                          childCount: scores.length * 2,
+                        ),
+                      ),
                     ),
-                  ),
-                  loading: () => const Center(child: CustomProgressIndicator()),
+                  ],
                 ),
-              );
-            },
+              ),
+              loading: () => const Center(child: CustomProgressIndicator()),
+            ),
           ),
         ),
       ),

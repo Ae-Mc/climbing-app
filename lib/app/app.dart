@@ -95,6 +95,7 @@ class App extends StatelessWidget {
             ),
             fontFamily: theme.textTheme.fontFamily,
             iconTheme: IconThemeData(color: theme.colorTheme.primary),
+            scaffoldBackgroundColor: theme.colorTheme.background,
             textButtonTheme: TextButtonThemeData(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all(

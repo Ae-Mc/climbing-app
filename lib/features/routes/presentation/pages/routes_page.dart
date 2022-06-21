@@ -1,5 +1,7 @@
+import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
+import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_event.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc_single_result.dart';
@@ -35,7 +37,11 @@ class RoutesPage extends StatelessWidget {
                   body: 'Посмотрите настройки интернета и попробуйте еще раз',
                   onRetry: () => loadRoutes(context),
                 ),
-                loaded: (state) => RoutesList(routes: state.routes),
+                loaded: (state) => RoutesList(
+                  routes: state.routes,
+                  headerSliverBuilder: (context) =>
+                      const CustomSliverAppBar(text: "Трассы"),
+                ),
                 loading: (_) => const CustomProgressIndicator(),
                 serverFailure: (state) => FailureWidget(
                   title:
