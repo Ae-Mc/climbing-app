@@ -1,7 +1,6 @@
 import 'package:climbing_app/core/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:injectable/injectable.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
 part 'universal_bloc.freezed.dart';
@@ -9,7 +8,6 @@ part 'universal_bloc_event.dart';
 part 'universal_bloc_single_result.dart';
 part 'universal_bloc_state.dart';
 
-@injectable
 class UniversalBloc<T> extends SingleResultBloc<UniversalBlocEvent,
     UniversalBlocState<T>, UniversalBlocSingleResult<T>> {
   UniversalBloc(Future<Either<Failure, T>> Function() futureGenerator)
