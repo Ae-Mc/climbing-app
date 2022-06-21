@@ -69,8 +69,13 @@ class App extends StatelessWidget {
             colorScheme: const ColorScheme.light().copyWith(
               background: theme.colorTheme.background,
               brightness: theme.colorTheme.brightness,
+              error: theme.colorTheme.error,
+              onError: theme.colorTheme.onError,
+              onBackground: theme.colorTheme.onBackground,
               onPrimary: theme.colorTheme.onPrimary,
               primary: theme.colorTheme.primary,
+              secondary: theme.colorTheme.secondary,
+              surface: theme.colorTheme.surface,
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(

@@ -14,6 +14,7 @@ class AppPallete {
   static const Color red = Color(0xFFEB5757);
   static const Color silver = Color(0xFFC0C0C0);
   static const Color subBlack = Color(0xFF3C3A36);
+  static const Color subBlack2 = Color(0xFF222222);
   static const Color white = Color(0xFFFFFFFF);
   static const Color white50 = Color(0x7FFFFFFF);
 }
