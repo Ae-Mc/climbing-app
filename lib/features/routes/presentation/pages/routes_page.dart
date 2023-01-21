@@ -1,4 +1,3 @@
-import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
@@ -64,13 +63,10 @@ class RoutesPage extends StatelessWidget {
   void showFailureToast(BuildContext context, RoutesBlocSingleResult result) {
     final customToast = CustomToast(context);
 
-    result.when<void>(
-      connectionFailure: () =>
-          customToast.showTextFailureToast('Ошибка соединения'),
-      serverFailure: (state) => customToast
-          .showTextFailureToast('Ошибка сервера: ${state.statusCode}'),
-      unknownFailure: () =>
-          customToast.showTextFailureToast('Неизвестная ошибка'),
-    );
+    customToast.showTextFailureToast(result.when<String>(
+      connectionFailure: () => 'Ошибка соединения',
+      serverFailure: (state) => 'Ошибка сервера: ${state.statusCode}',
+      unknownFailure: () => 'Неизвестная ошибка',
+    ));
   }
 }
