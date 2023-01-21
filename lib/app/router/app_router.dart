@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/empty_router_widgets.dart';
 import 'package:climbing_app/app/router/guards/auth_guard.dart';
 import 'package:climbing_app/features/add_ascent/presentation/pages/add_ascent_page.dart';
 import 'package:climbing_app/features/add_competition/presentation/pages/add_competition_page.dart';
