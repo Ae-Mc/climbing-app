@@ -1,5 +1,4 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
@@ -17,8 +16,6 @@ class RatingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = AppTheme.of(context).textTheme;
-
     return BlocProvider(
       create: (context) =>
           GetIt.I<RatingBloc>()..add(const RatingEvent.refresh()),
@@ -56,7 +53,7 @@ class RatingPage extends StatelessWidget {
                                     activeUser.id == score.user.id,
                                 orElse: () => false,
                               ),
-                              place: realIndex,
+                              place: score.place,
                               score: score.score,
                               user:
                                   '${score.user.lastName} ${score.user.firstName}',
