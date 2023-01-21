@@ -78,7 +78,7 @@ class StartupRepositoryImpl implements StartupRepository {
   Future<Either<Failure, void>> intializeGetIt() async {
     try {
       // ignore: avoid-ignoring-return-values
-      await configureDependencies(GetIt.I);
+      await GetIt.I.configureDependencies();
 
       return const Right(null);
     } catch (e) {
