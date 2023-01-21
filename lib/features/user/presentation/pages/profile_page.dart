@@ -26,8 +26,7 @@ class ProfilePage extends StatelessWidget {
       body: SafeArea(
         child: SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
           onSingleResult: (context, singleResult) => singleResult.maybeWhen(
-            signOutSucceed: () =>
-                AutoTabsRouter.of(context).navigate(const RoutesRouter()),
+            signOutSucceed: () => AutoRouter.of(context).popUntilRoot(),
             failure: (failure) => CustomToast(context)
                 .showTextFailureToast(failureToText(failure)),
             orElse: () =>
