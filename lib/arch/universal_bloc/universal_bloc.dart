@@ -16,7 +16,7 @@ class UniversalBloc<T> extends SingleResultBloc<UniversalBlocEvent,
       (event, emit) async => await event.when<Future<void>>(
         refresh: () async {
           final UniversalBlocState<T>? previousState = state.maybeMap(
-            loaded: (value) => value.copyWith() as UniversalBlocState<T>,
+            loaded: (value) => value.copyWith(),
             orElse: () => null,
           );
           emit(const UniversalBlocState.loading());
