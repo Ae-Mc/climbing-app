@@ -9,9 +9,14 @@ class RoutesList extends StatelessWidget {
   final List<Route> sortedRoutes;
   final Set<String> quarters;
   final Widget Function(BuildContext context)? headerSliverBuilder;
+  final String placeholderText;
 
-  RoutesList({Key? key, required List<Route> routes, this.headerSliverBuilder})
-      : sortedRoutes = List.from(routes)
+  RoutesList({
+    Key? key,
+    required List<Route> routes,
+    this.headerSliverBuilder,
+    this.placeholderText = "Нет трасс",
+  })  : sortedRoutes = List.from(routes)
           ..sort(
             (left, right) {
               final dateComparation =
@@ -29,6 +34,7 @@ class RoutesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = AppTheme.of(context).textTheme;
     List<Widget> elements = [];
 
     String previous = '';
@@ -49,15 +55,25 @@ class RoutesList extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        if (headerSliverBuilder != null) headerSliverBuilder!(context),
+        if (headerSliverBuilder != null)
+          // ignore: avoid-non-null-assertion
+          headerSliverBuilder!(context),
         SliverPadding(
           padding: const Pad(all: 16),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: elements.length,
-              (context, index) => elements[index],
-            ),
-          ),
+          sliver: (elements.isEmpty)
+              ? SliverToBoxAdapter(
+                  child: Text(
+                    placeholderText,
+                    style: textTheme.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: elements.length,
+                    (context, index) => elements[index],
+                  ),
+                ),
         ),
       ],
     );

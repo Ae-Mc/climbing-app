@@ -51,7 +51,7 @@ class ExpiringAscentsPage extends StatelessWidget {
                   ),
                   loaded: (ascents) => ListView.separated(
                     padding: const Pad(all: 16),
-                    itemCount: ascents.length + 1,
+                    itemCount: ascents.isEmpty ? 2 : (ascents.length + 1),
                     itemBuilder: (context, index) => [
                       Row(
                         children: [
@@ -66,7 +66,15 @@ class ExpiringAscentsPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      ...(ascents as List<ExpiringAscent>)
+                      if (ascents.isEmpty)
+                        Center(
+                          child: Text(
+                            "Нет трасс, которые скоро обесценятся",
+                            style: textTheme.subtitle1,
+                            maxLines: 2,
+                          ),
+                        ),
+                      ...(ascents)
                           .map((e) => ExpiringAscentCard(expiringAscent: e))
                           .toList(),
                     ][index],
