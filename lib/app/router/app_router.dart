@@ -54,11 +54,11 @@ export 'app_router.gr.dart';
           initial: true,
           children: [
             AutoRoute(initial: true, page: RoutesPage),
-            AutoRoute(page: RouteDetailsPage),
           ],
         ),
       ],
     ),
+    AutoRoute(page: RouteDetailsPage),
     AutoRoute(page: RouteImagesPage),
     AutoRoute(page: SignInPage),
   ],
