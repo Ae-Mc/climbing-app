@@ -9,6 +9,7 @@ class Score with _$Score {
   const factory Score({
     required double ascentsScore,
     required double score,
+    required int place,
     required User user,
   }) = _;
 

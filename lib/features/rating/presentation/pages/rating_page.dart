@@ -51,7 +51,7 @@ class RatingPage extends StatelessWidget {
                                   activeUser.id == score.user.id,
                               orElse: () => false,
                             ),
-                            place: index + 1,
+                            place: score.place,
                             score: score.score,
                             user:
                                 '${score.user.lastName} ${score.user.firstName}',
