@@ -33,6 +33,25 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
       ));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> removeRoute(String id) async {
+    try {
+      return Right(await api.removeRoute(id));
+    } on DioError catch (error) {
+      return Left(handleDioConnectionError(error).fold<Failure>(
+        (l) => l,
+        (error) {
+          final statusCode = error.response?.statusCode;
+          if (statusCode != null) {
+            return ServerFailure(statusCode: statusCode);
+          }
+
+          return const UnknownFailure();
+        },
+      ));
+    }
+  }
 }
 
 @injectable
@@ -40,6 +59,9 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
 abstract class RoutesApi {
   @GET('/routes')
   Future<List<Route>> routes();
+
+  @DELETE('/routes/{id}')
+  Future<void> removeRoute(@Path() String id);
 
   @factoryMethod
   factory RoutesApi(Dio dio) => _RoutesApi(dio);

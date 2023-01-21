@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
+
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
@@ -29,6 +31,10 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => GetIt.I<UserBloc>()),
         BlocProvider(
           create: (context) => SplashBloc(StartupRepositoryImpl(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              GetIt.I<RoutesBloc>()..add(const RoutesBlocEvent.loadRoutes()),
         ),
       ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
