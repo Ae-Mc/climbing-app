@@ -4,6 +4,7 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
@@ -37,10 +38,19 @@ class ProfilePage extends StatelessWidget {
             authorized: (activeUser, users, _) => ListView(
               padding: const Pad(all: 16),
               children: [
-                Text(
-                  'Профиль',
-                  style: textTheme.title,
-                  textAlign: TextAlign.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CustomBackButton(),
+                    Expanded(
+                      child: Text(
+                        'Профиль',
+                        style: textTheme.title,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
                 const SizedBox(height: 40),
                 Center(
