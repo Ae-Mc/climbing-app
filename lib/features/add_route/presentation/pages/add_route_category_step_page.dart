@@ -11,6 +11,7 @@ import 'package:climbing_app/features/routes/domain/entities/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+@RoutePage()
 class AddRouteCategoryStepPage extends StatefulWidget {
   const AddRouteCategoryStepPage({Key? key}) : super(key: key);
 

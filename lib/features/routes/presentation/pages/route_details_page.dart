@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+@RoutePage()
 class RouteDetailsPage extends StatefulWidget {
   final Route route;
 
@@ -236,6 +237,7 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
       failure: (failure) => toast.showTextFailureToast(failureToText(failure)),
       removeRouteSuccess: () {
         toast.showTextSuccessToast("Трасса успешно удалена!");
+        BlocProvider.of<UserBloc>(context).add(const UserEvent.fetch());
         AutoRouter.of(context).pop(); // ignore: avoid-ignoring-return-values
       },
     );

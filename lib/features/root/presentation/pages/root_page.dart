@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+@RoutePage()
 class RootPage extends StatelessWidget {
-  static const routes = [RatingRouter(), RoutesRouter()];
+  static const routes = [RatingRouterRoute(), RoutesRouterRoute()];
   const RootPage({Key? key}) : super(key: key);
 
   @override
@@ -102,11 +103,12 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
-      builder: (context, child, animation) {
-        return SafeArea(
-          child: FadeTransition(opacity: animation, child: child),
-        );
-      },
+      // FIXME: builder is deprecated. How should it be implemented now?
+      // builder: (context, child, animation) {
+      //   return SafeArea(
+      //     child: FadeTransition(opacity: animation, child: child),
+      //   );
+      // },
       extendBody: true,
       floatingActionButton: SpeedDial(
         backgroundColor: colorTheme.secondary,
@@ -117,6 +119,7 @@ class RootPage extends StatelessWidget {
         activeIcon: Icons.close,
         spacing: 8,
         overlayOpacity: 0.5,
+        renderOverlay: false,
         children: [
           SpeedDialChild(
             label: "Трасса",

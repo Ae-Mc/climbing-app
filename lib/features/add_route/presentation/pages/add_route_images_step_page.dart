@@ -21,6 +21,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 part 'add_route_images_step_page.freezed.dart';
 
+@RoutePage()
 class AddRouteImagesStepPage extends StatefulWidget {
   const AddRouteImagesStepPage({Key? key}) : super(key: key);
 

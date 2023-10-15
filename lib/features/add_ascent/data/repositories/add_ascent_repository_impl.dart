@@ -20,7 +20,7 @@ class AddAscentRepositoryImpl implements AddAscentRepository {
       await remoteDatasource.addAscent(ascent);
 
       return const Right(null);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error)
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }

@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 

@@ -37,7 +37,7 @@ class UserRepositoryImpl implements UserRepository {
           newRequestOptions.headers.remove('Authorization');
           try {
             handler.resolve(await dio.fetch(newRequestOptions));
-          } on DioError catch (error) {
+          } on DioException catch (error) {
             handler.next(error);
           }
         }
@@ -52,7 +52,7 @@ class UserRepositoryImpl implements UserRepository {
 
     try {
       return Right(await remoteDatasource.getAllUsers());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold(
         (l) => l,
         (r) {
@@ -68,9 +68,9 @@ class UserRepositoryImpl implements UserRepository {
 
     try {
       return Right(await remoteDatasource.getCurrentUser());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold((l) => l, (r) {
-        return const UnknownFailure();
+        return const UnknownFailure("Can't log in");
       }));
     }
   }
@@ -88,41 +88,43 @@ class UserRepositoryImpl implements UserRepository {
       await localDatasource.saveToken(accessToken);
 
       return const Right(null);
-    } on DioError catch (error) {
-      return Left(
-        handleDioConnectionError(error)
-            .fold<Either<Failure, SignInFailure>>((l) => Left(l), (error) {
-          final statusCode = error.response?.statusCode;
-          final Map<String, dynamic>? jsonResponse = error.response?.data;
+    } on DioException catch (error) {
+      return Left(handleDioConnectionError(error)
+          .fold<Either<Failure, SignInFailure>>((l) => Left(l), (error) {
+        final response = error.response;
+        final statusCode = response?.statusCode;
 
-          if (statusCode == null || jsonResponse == null) {
-            GetIt.I<Logger>().e('Unknown error: ', error);
+        if (response == null || statusCode == null) {
+          GetIt.I<Logger>().e('Unknown error: ', error: error);
 
-            return const Left(UnknownFailure());
+          return Left(UnknownFailure(error));
+        }
+
+        if (statusCode >= 499 && statusCode < 600) {
+          return Left(Failure.serverFailure(statusCode: statusCode));
+        }
+
+        final Map<String, dynamic> jsonResponse = response.data;
+
+        if (statusCode == 400) {
+          if (jsonResponse["detail"] == "LOGIN_BAD_CREDENTIALS") {
+            return const Right(SignInFailure.badCredentials());
           }
-
-          if (statusCode == 400) {
-            if (jsonResponse["detail"] == "LOGIN_BAD_CREDENTIALS") {
-              return const Right(SignInFailure.badCredentials());
-            }
-            if (jsonResponse["detail"] == "LOGIN_USER_NOT_VERIFIED") {
-              return const Right(SignInFailure.userNotVerified());
-            }
-          } else if (statusCode == 422) {
-            final validationError = ValidationError.fromJson(jsonResponse);
-            final errorText = parseValidationError(validationError);
-            if (errorText != null) {
-              return Right(SignInFailure.validationError(errorText));
-            }
-          } else if (statusCode >= 499 && statusCode < 600) {
-            return Left(Failure.serverFailure(statusCode: statusCode));
+          if (jsonResponse["detail"] == "LOGIN_USER_NOT_VERIFIED") {
+            return const Right(SignInFailure.userNotVerified());
           }
+        } else if (statusCode == 422) {
+          final validationError = ValidationError.fromJson(jsonResponse);
+          final errorText = parseValidationError(validationError);
+          if (errorText != null) {
+            return Right(SignInFailure.validationError(errorText));
+          }
+        }
 
-          GetIt.I<Logger>().e('Unknown error: ', error);
+        GetIt.I<Logger>().e('Unknown error: ', error: error);
 
-          return const Left(UnknownFailure());
-        }),
-      );
+        return Left(UnknownFailure(error));
+      }));
     }
   }
 
@@ -134,7 +136,7 @@ class UserRepositoryImpl implements UserRepository {
       await localDatasource.saveToken(accessToken);
 
       return const Right(null);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold<Failure>(
         (l) => l,
         (r) {
@@ -168,7 +170,7 @@ class UserRepositoryImpl implements UserRepository {
       await remoteDatasource.register(userCreate);
 
       return const Right(null);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error)
           .fold<Either<Failure, RegisterFailure>>((l) => Left(l), (r) {
         final response = r.response;
@@ -258,7 +260,7 @@ class UserRepositoryImpl implements UserRepository {
 
     try {
       return Right(await remoteDatasource.getCurrentUserRoutes());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold(
         (l) => l,
         (r) {
@@ -274,7 +276,7 @@ class UserRepositoryImpl implements UserRepository {
     assert(isAuthenticated);
     try {
       return Right(await remoteDatasource.getCurrentUserExpiringAscents());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold((l) => l, (r) {
         return UnknownFailure(r);
       }));
@@ -284,8 +286,8 @@ class UserRepositoryImpl implements UserRepository {
 
 class AuthorizationInterceptor extends Interceptor {
   final AccessToken? Function() getAccessToken;
-  final Future<void> Function(DioError error, ErrorInterceptorHandler handler)?
-      on401Response;
+  final Future<void> Function(
+      DioException error, ErrorInterceptorHandler handler)? on401Response;
 
   AuthorizationInterceptor({
     required this.getAccessToken,
@@ -293,8 +295,10 @@ class AuthorizationInterceptor extends Interceptor {
   });
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.type == DioErrorType.response && err.response?.statusCode == 401) {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
+    if (err.type == DioExceptionType.badResponse &&
+        err.response?.statusCode == 401) {
       await on401Response?.call(err, handler);
     } else {
       handler.next(err);

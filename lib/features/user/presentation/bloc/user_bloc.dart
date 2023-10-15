@@ -28,7 +28,8 @@ class UserBloc
 
   Future<void> handleEvent(UserEvent event, UserEmitter emit) =>
       event.map<Future<void>>(
-        initialize: (_) => initialize(emit),
+        fetch: (_) => fetchUserData(onFailure: (_) async => 0, emit: emit),
+        initialize: (_) => initialize(emit), // ignore: no-equal-arguments
         signOut: (_) => signOut(emit),
         signIn: (event) => signIn(event, emit),
         register: (event) => register(event, emit),

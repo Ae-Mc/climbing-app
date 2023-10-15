@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+@RoutePage()
 class AddRouteBasicsStepPage extends StatefulWidget {
   const AddRouteBasicsStepPage({Key? key}) : super(key: key);
 

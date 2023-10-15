@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class RoutesPage extends StatelessWidget {
   const RoutesPage({Key? key}) : super(key: key);
 

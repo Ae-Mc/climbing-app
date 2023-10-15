@@ -19,7 +19,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
   Future<Either<Failure, List<Route>>> allRoutes() async {
     try {
       return Right(await api.routes());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold<Failure>(
         (l) => l,
         (error) {
@@ -38,7 +38,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
   Future<Either<Failure, void>> removeRoute(String id) async {
     try {
       return Right(await api.removeRoute(id));
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold<Failure>(
         (l) => l,
         (error) {

@@ -20,7 +20,7 @@ class AddRouteRepositoryImpl implements AddRouteRepository {
       await remoteDatasource.addRoute(route);
 
       return const Right(null);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error).fold((l) => l, (r) {
         return Failure.unknownFailure(error);
       }));

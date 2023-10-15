@@ -32,15 +32,16 @@ class AddRouteRemoteDatasourceImpl implements AddRouteRemoteDatasource {
     final response = await dio.post<Map<String, dynamic>>(
       '$apiHostUrl/api/v1/routes',
       data: formData,
-      options:
-          Options(receiveTimeout: 5000, contentType: 'multipart/form-data'),
+      options: Options(
+          receiveTimeout: const Duration(seconds: 5),
+          contentType: 'multipart/form-data'),
     );
     final responseRoute = response.data;
     if (responseRoute == null) {
-      throw DioError(
+      throw DioException(
         requestOptions: response.requestOptions,
         response: response,
-        type: DioErrorType.other,
+        type: DioExceptionType.unknown,
         error: UnimplementedError("Impossible state"),
       );
     }

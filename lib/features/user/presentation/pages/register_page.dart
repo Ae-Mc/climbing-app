@@ -17,6 +17,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class RegisterPage extends StatelessWidget {
   final emailController = TextEditingController();
   final firstNameController = TextEditingController();
@@ -52,8 +53,12 @@ class RegisterPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Assets.icons.logo
-                                  .svg(color: colorTheme.secondary),
+                              Assets.icons.logo.svg(
+                                colorFilter: ColorFilter.mode(
+                                  colorTheme.secondary,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
                               const SizedBox(height: 16),
                               Text(
                                 'Регистрация',

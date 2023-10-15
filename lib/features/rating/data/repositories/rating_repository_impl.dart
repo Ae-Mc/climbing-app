@@ -17,7 +17,7 @@ class RatingRepositoryImpl implements RatingRepository {
   Future<Either<Failure, List<Score>>> getRating() async {
     try {
       return Right(await remoteDatasource.getRating());
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       return Left(handleDioConnectionError(error)
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }

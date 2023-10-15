@@ -1,4 +1,5 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/universal_bloc/universal_bloc.dart';
@@ -11,8 +12,9 @@ import 'package:climbing_app/features/user/presentation/widgets/expiring_ascent_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:single_result_bloc/single_result_bloc_builder.dart';
+import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class ExpiringAscentsPage extends StatelessWidget {
   const ExpiringAscentsPage({Key? key}) : super(key: key);
 

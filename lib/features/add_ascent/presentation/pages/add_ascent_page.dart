@@ -16,6 +16,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class AddAscentPage extends StatefulWidget {
   final Route route;
 

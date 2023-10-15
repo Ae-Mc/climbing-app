@@ -17,6 +17,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -47,8 +48,10 @@ class SignInPage extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Assets.icons.logo.svg(
-                                  color:
-                                      AppTheme.of(context).colorTheme.secondary,
+                                  colorFilter: ColorFilter.mode(
+                                    AppTheme.of(context).colorTheme.secondary,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(

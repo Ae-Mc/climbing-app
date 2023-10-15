@@ -113,9 +113,9 @@ class App extends StatelessWidget {
               ),
             ),
             textTheme: TextTheme(
-              bodyText1: theme.textTheme.body1Regular,
-              subtitle1: theme.textTheme.subtitle1,
-              subtitle2: theme.textTheme.subtitle2,
+              bodyLarge: theme.textTheme.body1Regular,
+              titleMedium: theme.textTheme.subtitle1,
+              titleSmall: theme.textTheme.subtitle2,
             ),
           ),
         ),

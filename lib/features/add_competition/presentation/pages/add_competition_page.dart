@@ -19,6 +19,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class AddCompetitionPage extends StatefulWidget {
   const AddCompetitionPage({Key? key}) : super(key: key);
 

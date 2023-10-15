@@ -82,7 +82,7 @@ class StartupRepositoryImpl implements StartupRepository {
 
       return const Right(null);
     } catch (e) {
-      Logger().e('Error occured initializing GetIt', e);
+      Logger().e('Error occured initializing GetIt', error: e);
 
       return const Left(Failure.unknownFailure());
     }
