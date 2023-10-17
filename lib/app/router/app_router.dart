@@ -37,6 +37,7 @@ class AppRouter extends $AppRouter {
               page: RatingRouterRoute.page,
               children: [
                 AutoRoute(initial: true, page: RatingRoute.page),
+                AutoRoute(page: UserRatingRoute.page),
               ],
             ),
             AutoRoute(

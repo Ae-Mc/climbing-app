@@ -91,7 +91,7 @@ class SignInPage extends StatelessWidget {
                                       AutoRouter.of(context).replace(
                                     RegisterRoute(
                                       onSuccessRegister: () => {},
-                                      signInRoute: SignInRoute(
+                                      nextRoute: SignInRoute(
                                         onSuccessSignIn: onSuccessSignIn,
                                       ),
                                     ),

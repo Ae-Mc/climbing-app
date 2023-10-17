@@ -18,7 +18,7 @@ class RatingRepositoryImpl implements RatingRepository {
     try {
       return Right(await remoteDatasource.getRating());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error)
+      return Left(handleDioException(error)
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }
   }

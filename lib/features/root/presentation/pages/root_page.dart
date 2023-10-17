@@ -103,12 +103,11 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
-      // FIXME: builder is deprecated. How should it be implemented now?
-      // builder: (context, child, animation) {
-      //   return SafeArea(
-      //     child: FadeTransition(opacity: animation, child: child),
-      //   );
-      // },
+      transitionBuilder: (context, child, animation) {
+        return SafeArea(
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
       extendBody: true,
       floatingActionButton: SpeedDial(
         backgroundColor: colorTheme.secondary,

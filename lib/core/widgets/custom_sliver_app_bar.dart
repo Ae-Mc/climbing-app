@@ -19,7 +19,7 @@ class CustomSliverAppBar extends StatelessWidget {
       forceElevated: true,
       foregroundColor: AppTheme.of(context).colorTheme.secondary,
       floating: true,
-      leading: leadingBuilder(context),
+      leading: Center(child: leadingBuilder(context)),
       title: Text(text),
     );
   }

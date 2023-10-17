@@ -45,14 +45,8 @@ class App extends StatelessWidget {
           ),
           home: BlocBuilder<SplashBloc, SplashState>(
             builder: (context, splashState) => splashState.maybeWhen(
-              loaded: () => Router(
-                backButtonDispatcher: RootBackButtonDispatcher(),
-                routerDelegate: GetIt.I<AppRouter>().delegate(),
-                routeInformationParser:
-                    GetIt.I<AppRouter>().defaultRouteParser(),
-                routeInformationProvider:
-                    GetIt.I<AppRouter>().routeInfoProvider(),
-              ),
+              loaded: () =>
+                  Router.withConfig(config: GetIt.I<AppRouter>().config()),
               orElse: () => const SplashPage(),
             ),
           ),

@@ -1,18 +1,17 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/core/widgets/ink_well_card.dart';
+import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:flutter/material.dart';
 
 class ScoreCard extends StatelessWidget {
   final bool isHighlighted;
-  final int place;
-  final double score;
-  final String user;
+  final Score score;
 
   const ScoreCard({
     Key? key,
-    required this.place,
     required this.score,
-    required this.user,
     this.isHighlighted = false,
   }) : super(key: key);
 
@@ -20,56 +19,49 @@ class ScoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorTheme = AppTheme.of(context).colorTheme;
     final textTheme = AppTheme.of(context).textTheme;
-    Color borderColor;
+    final Color placeCircleColor = [
+          colorTheme.gold,
+          colorTheme.silver,
+          colorTheme.bronze
+        ].elementAtOrNull(score.place - 1) ??
+        colorTheme.secondaryVariant;
 
-    switch (place) {
-      case 1:
-        borderColor = colorTheme.gold;
-        break;
-      case 2:
-        borderColor = colorTheme.silver;
-        break;
-      case 3:
-        borderColor = colorTheme.bronze;
-        break;
-      default:
-        borderColor = colorTheme.secondaryVariant;
-    }
-
-    return Card(
-      shape: isHighlighted
-          ? (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-              .copyWith(
-              side: BorderSide(color: colorTheme.primary, width: 2),
-            )
+    return InkWellCard(
+      onTap: () => context.pushRoute(UserRatingRoute(score: score)),
+      shapeModifier: isHighlighted
+          ? (shape) {
+              if (shape is OutlinedBorder) {
+                return shape.copyWith(
+                    side: BorderSide(color: colorTheme.primary, width: 2));
+              }
+              return shape;
+            }
           : null,
-      child: Padding(
-        padding: const Pad(vertical: 8, horizontal: 16),
-        child: Row(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: borderColor, width: 5),
-              ),
-              width: 72,
-              height: 72,
-              child: Text(
-                place.toString(),
-                style: textTheme.title,
-              ),
+      child: Row(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: placeCircleColor, width: 5),
             ),
-            const SizedBox(width: 16),
-            Text(user, style: textTheme.subtitle1, maxLines: 3),
-            const SizedBox(width: 16),
-            const Spacer(),
-            Text(
-              trimRight(trimRight(score.toStringAsFixed(1), '0'), '.'),
+            width: 72,
+            height: 72,
+            child: Text(
+              score.place.toString(),
               style: textTheme.title,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 16),
+          Text('${score.user.lastName} ${score.user.firstName}',
+              style: textTheme.subtitle1, maxLines: 3),
+          const SizedBox(width: 16),
+          const Spacer(),
+          Text(
+            trimRight(trimRight(score.score.toStringAsFixed(1), '0'), '.'),
+            style: textTheme.title,
+          ),
+        ],
       ),
     );
   }

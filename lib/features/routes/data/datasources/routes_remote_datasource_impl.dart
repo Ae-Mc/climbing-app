@@ -20,7 +20,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
     try {
       return Right(await api.routes());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold<Failure>(
+      return Left(handleDioException(error).fold<Failure>(
         (l) => l,
         (error) {
           final statusCode = error.response?.statusCode;
@@ -39,7 +39,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
     try {
       return Right(await api.removeRoute(id));
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold<Failure>(
+      return Left(handleDioException(error).fold<Failure>(
         (l) => l,
         (error) {
           final statusCode = error.response?.statusCode;

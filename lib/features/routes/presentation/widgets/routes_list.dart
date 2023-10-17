@@ -35,6 +35,7 @@ class RoutesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = AppTheme.of(context).textTheme;
+    final headerSliverBuilder = this.headerSliverBuilder;
     List<Widget> elements = [];
 
     String previous = '';
@@ -55,9 +56,7 @@ class RoutesList extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        if (headerSliverBuilder != null)
-          // ignore: avoid-non-null-assertion
-          headerSliverBuilder!(context),
+        if (headerSliverBuilder != null) headerSliverBuilder(context),
         SliverPadding(
           padding: const Pad(all: 16),
           sliver: (elements.isEmpty)

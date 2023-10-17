@@ -21,7 +21,7 @@ class AddAscentRepositoryImpl implements AddAscentRepository {
 
       return const Right(null);
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error)
+      return Left(handleDioException(error)
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }
   }

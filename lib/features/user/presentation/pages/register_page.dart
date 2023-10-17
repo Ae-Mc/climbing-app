@@ -25,9 +25,9 @@ class RegisterPage extends StatelessWidget {
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
   final void Function() onSuccessRegister;
-  final SignInRoute? signInRoute;
+  final PageRouteInfo? nextRoute;
 
-  RegisterPage({Key? key, required this.onSuccessRegister, this.signInRoute})
+  RegisterPage({Key? key, required this.onSuccessRegister, this.nextRoute})
       : super(key: key);
 
   @override
@@ -117,7 +117,7 @@ class RegisterPage extends StatelessWidget {
                               const SizedBox(height: 8),
                               TextButton(
                                 onPressed: () => AutoRouter.of(context).replace(
-                                  signInRoute ??
+                                  nextRoute ??
                                       SignInRoute(onSuccessSignIn: () => {}),
                                 ),
                                 child: const Text("Вход"),

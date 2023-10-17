@@ -53,7 +53,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await remoteDatasource.getAllUsers());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold(
+      return Left(handleDioException(error).fold(
         (l) => l,
         (r) {
           return const UnknownFailure();
@@ -69,7 +69,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await remoteDatasource.getCurrentUser());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold((l) => l, (r) {
+      return Left(handleDioException(error).fold((l) => l, (r) {
         return const UnknownFailure("Can't log in");
       }));
     }
@@ -89,7 +89,7 @@ class UserRepositoryImpl implements UserRepository {
 
       return const Right(null);
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error)
+      return Left(handleDioException(error)
           .fold<Either<Failure, SignInFailure>>((l) => Left(l), (error) {
         final response = error.response;
         final statusCode = response?.statusCode;
@@ -137,7 +137,7 @@ class UserRepositoryImpl implements UserRepository {
 
       return const Right(null);
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold<Failure>(
+      return Left(handleDioException(error).fold<Failure>(
         (l) => l,
         (r) {
           final response = r.response;
@@ -171,7 +171,7 @@ class UserRepositoryImpl implements UserRepository {
 
       return const Right(null);
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error)
+      return Left(handleDioException(error)
           .fold<Either<Failure, RegisterFailure>>((l) => Left(l), (r) {
         final response = r.response;
         final statusCode = response?.statusCode;
@@ -261,7 +261,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await remoteDatasource.getCurrentUserRoutes());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold(
+      return Left(handleDioException(error).fold(
         (l) => l,
         (r) {
           return const UnknownFailure();
@@ -277,7 +277,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await remoteDatasource.getCurrentUserExpiringAscents());
     } on DioException catch (error) {
-      return Left(handleDioConnectionError(error).fold((l) => l, (r) {
+      return Left(handleDioException(error).fold((l) => l, (r) {
         return UnknownFailure(r);
       }));
     }

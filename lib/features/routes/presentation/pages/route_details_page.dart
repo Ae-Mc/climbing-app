@@ -62,8 +62,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                           ),
                           BlocBuilder<UserBloc, UserState>(
                             builder: (context, state) => SizedBox(
-                              width: 48,
-                              height: 48,
+                              width: CustomBackButton.iconSize,
+                              height: CustomBackButton.iconSize,
                               child: state.whenOrNull(
                                 authorized: (activeUser, _, __) => (activeUser
                                             .id ==
@@ -81,7 +81,7 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                                         icon: const Icon(
                                           Icons.delete_forever_rounded,
                                         ),
-                                        iconSize: 48,
+                                        iconSize: CustomBackButton.iconSize,
                                       )
                                     : null,
                               ),
