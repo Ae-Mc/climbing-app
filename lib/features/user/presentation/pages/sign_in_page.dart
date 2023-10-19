@@ -23,7 +23,7 @@ class SignInPage extends StatelessWidget {
   final passwordController = TextEditingController();
   final void Function() onSuccessSignIn;
 
-  SignInPage({Key? key, required this.onSuccessSignIn}) : super(key: key);
+  SignInPage({super.key, required this.onSuccessSignIn});
 
   @override
   Widget build(BuildContext context) {

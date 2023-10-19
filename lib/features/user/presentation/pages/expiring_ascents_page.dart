@@ -16,7 +16,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class ExpiringAscentsPage extends StatelessWidget {
-  const ExpiringAscentsPage({Key? key}) : super(key: key);
+  const ExpiringAscentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +77,7 @@ class ExpiringAscentsPage extends StatelessWidget {
                           ),
                         ),
                       ...(ascents)
-                          .map((e) => ExpiringAscentCard(expiringAscent: e))
-                          .toList(),
+                          .map((e) => ExpiringAscentCard(expiringAscent: e)),
                     ][index],
                     separatorBuilder: (_, __) => const SizedBox(height: 16),
                   ),

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class RouteDetailsCarouselImage extends StatefulWidget {
   final String imageUrl;
 
-  const RouteDetailsCarouselImage({Key? key, required this.imageUrl})
-      : super(key: key);
+  const RouteDetailsCarouselImage({super.key, required this.imageUrl});
 
   @override
   State<RouteDetailsCarouselImage> createState() =>

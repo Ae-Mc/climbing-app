@@ -10,11 +10,11 @@ class CategoryCard extends StatelessWidget {
   final void Function() onTap;
 
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.category,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

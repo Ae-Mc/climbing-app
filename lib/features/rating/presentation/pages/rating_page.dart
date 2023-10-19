@@ -14,7 +14,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class RatingPage extends StatelessWidget {
-  const RatingPage({Key? key}) : super(key: key);
+  const RatingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

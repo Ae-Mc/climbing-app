@@ -11,7 +11,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class MyRoutesPage extends StatelessWidget {
-  const MyRoutesPage({Key? key}) : super(key: key);
+  const MyRoutesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
