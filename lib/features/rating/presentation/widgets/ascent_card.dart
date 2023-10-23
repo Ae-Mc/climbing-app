@@ -4,6 +4,7 @@ import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
 import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class AscentCard extends StatelessWidget {
@@ -61,7 +62,7 @@ class AscentCard extends StatelessWidget {
                     style: textTheme.subtitle2,
                   ),
                   Text(
-                    'Дата пролаза: ${DateFormat('yyyy-MM-dd').format(ascent.date)}',
+                    'Дата пролаза: ${GetIt.I<DateFormat>().format(ascent.date)}',
                     style: textTheme.subtitle2,
                   ),
                 ],

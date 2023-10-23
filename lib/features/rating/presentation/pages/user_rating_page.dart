@@ -5,6 +5,7 @@ import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/ascent_card.dart';
+import 'package:climbing_app/features/rating/presentation/widgets/participation_card.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -53,10 +54,13 @@ class UserRatingPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "Work in progress, coming soon...",
-                    textAlign: TextAlign.center,
-                  ),
+                  ...score.participations.indexed.map(
+                    (e) => Padding(
+                      padding: const Pad(bottom: 16),
+                      child:
+                          ParticipationCard(competitionParticipantRead: e.$2),
+                    ),
+                  )
                 ],
                 if (sortedAscents.isNotEmpty) ...[
                   Text(
@@ -65,17 +69,19 @@ class UserRatingPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  ...sortedAscents.indexed.map((e) => Padding(
-                        padding: const Pad(bottom: 16),
-                        child: AscentCard(
-                            ascent: e.$2,
-                            highlightColor:
-                                e.$2.date.compareTo(lastCountedDate) >= 0
-                                    ? e.$1 < 5
-                                        ? colorTheme.ascentTop5
-                                        : colorTheme.ascentActual
-                                    : null),
-                      ))
+                  ...sortedAscents.indexed.map(
+                    (e) => Padding(
+                      padding: const Pad(bottom: 16),
+                      child: AscentCard(
+                          ascent: e.$2,
+                          highlightColor:
+                              e.$2.date.compareTo(lastCountedDate) >= 0
+                                  ? e.$1 < 5
+                                      ? colorTheme.ascentTop5
+                                      : colorTheme.ascentActual
+                                  : null),
+                    ),
+                  )
                 ],
                 if (score.ascents.isEmpty && score.participations.isEmpty)
                   Text(
