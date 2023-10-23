@@ -13,5 +13,5 @@ class CompetitionParticipantRead with _$CompetitionParticipantRead {
   }) = _;
 
   factory CompetitionParticipantRead.fromJson(Map<String, dynamic> json) =>
-      CompetitionParticipantRead.fromJson(json);
+      _$CompetitionParticipantReadFromJson(json);
 }
