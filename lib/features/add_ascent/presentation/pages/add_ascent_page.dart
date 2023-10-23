@@ -20,7 +20,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 class AddAscentPage extends StatefulWidget {
   final Route route;
 
-  const AddAscentPage({Key? key, required this.route}) : super(key: key);
+  const AddAscentPage({super.key, required this.route});
 
   @override
   State<AddAscentPage> createState() => _AddAscentPageState();

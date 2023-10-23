@@ -21,7 +21,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class RouteDetailsPage extends StatefulWidget {
   final Route route;
 
-  const RouteDetailsPage({Key? key, required this.route}) : super(key: key);
+  const RouteDetailsPage({super.key, required this.route});
 
   @override
   State<RouteDetailsPage> createState() => _RouteDetailsPageState();

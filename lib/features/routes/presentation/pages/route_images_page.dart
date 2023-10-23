@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 class RouteImagesPage extends StatefulWidget {
   final List<entities.Image> images;
 
-  const RouteImagesPage({Key? key, required this.images}) : super(key: key);
+  const RouteImagesPage({super.key, required this.images});
 
   @override
   State<RouteImagesPage> createState() => _RouteImagesPageState();

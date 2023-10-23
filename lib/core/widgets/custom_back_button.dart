@@ -8,9 +8,9 @@ class CustomBackButton extends StatelessWidget {
   static const double iconSize = 48;
 
   const CustomBackButton({
-    Key? key,
+    super.key,
     this.onPressed = defaultOnPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

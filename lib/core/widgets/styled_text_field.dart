@@ -17,7 +17,7 @@ class StyledTextField extends StatelessWidget {
   final TextAlign textAlign;
 
   const StyledTextField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.controller,
     this.errorText,
@@ -30,7 +30,7 @@ class StyledTextField extends StatelessWidget {
     this.readOnly = false,
     this.suffixIcon,
     this.textAlign = TextAlign.start,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

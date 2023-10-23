@@ -12,7 +12,7 @@ class RoutesList extends StatelessWidget {
   final String placeholderText;
 
   RoutesList({
-    Key? key,
+    super.key,
     required List<Route> routes,
     this.headerSliverBuilder,
     this.placeholderText = "Нет трасс",
@@ -29,8 +29,7 @@ class RoutesList extends StatelessWidget {
             },
           ),
         quarters =
-            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate))),
-        super(key: key);
+            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate)));
 
   @override
   Widget build(BuildContext context) {

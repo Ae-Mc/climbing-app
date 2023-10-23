@@ -27,8 +27,7 @@ class RegisterPage extends StatelessWidget {
   final void Function() onSuccessRegister;
   final PageRouteInfo? nextRoute;
 
-  RegisterPage({Key? key, required this.onSuccessRegister, this.nextRoute})
-      : super(key: key);
+  RegisterPage({super.key, required this.onSuccessRegister, this.nextRoute});
 
   @override
   Widget build(BuildContext context) {
