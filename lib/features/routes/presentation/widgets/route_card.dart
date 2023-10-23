@@ -10,7 +10,7 @@ import 'package:flutter/material.dart' hide Route;
 
 class RouteCard extends StatelessWidget {
   final Route route;
-  const RouteCard({Key? key, required this.route}) : super(key: key);
+  const RouteCard({super.key, required this.route});
 
   @override
   Widget build(BuildContext context) {

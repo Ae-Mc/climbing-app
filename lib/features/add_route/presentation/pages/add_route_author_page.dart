@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddRouteAuthorPage extends StatefulWidget {
-  const AddRouteAuthorPage({Key? key}) : super(key: key);
+  const AddRouteAuthorPage({super.key});
 
   @override
   State<AddRouteAuthorPage> createState() => _AddRouteAuthorPageState();

@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 
 @RoutePage()
 class AddRouteBasicsStepPage extends StatefulWidget {
-  const AddRouteBasicsStepPage({Key? key}) : super(key: key);
+  const AddRouteBasicsStepPage({super.key});
 
   @override
   State<AddRouteBasicsStepPage> createState() => _AddRouteBasicsStepPageState();

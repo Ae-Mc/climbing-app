@@ -10,7 +10,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 @RoutePage()
 class RootPage extends StatelessWidget {
   static const routes = [RatingRouterRoute(), RoutesRouterRoute()];
-  const RootPage({Key? key}) : super(key: key);
+  const RootPage({super.key});
 
   @override
   Widget build(BuildContext context) {

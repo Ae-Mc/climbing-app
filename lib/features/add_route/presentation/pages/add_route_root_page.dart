@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class AddRouteRootPage extends StatelessWidget {
-  const AddRouteRootPage({Key? key}) : super(key: key);
+  const AddRouteRootPage({super.key});
 
   @override
   Widget build(BuildContext context) {

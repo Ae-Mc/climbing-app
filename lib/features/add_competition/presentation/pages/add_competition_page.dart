@@ -21,7 +21,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class AddCompetitionPage extends StatefulWidget {
-  const AddCompetitionPage({Key? key}) : super(key: key);
+  const AddCompetitionPage({super.key});
 
   @override
   State<AddCompetitionPage> createState() => _AddCompetitionPageState();

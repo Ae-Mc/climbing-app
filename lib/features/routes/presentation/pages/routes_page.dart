@@ -12,7 +12,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class RoutesPage extends StatelessWidget {
-  const RoutesPage({Key? key}) : super(key: key);
+  const RoutesPage({super.key});
 
   void loadRoutes(BuildContext context) => BlocProvider.of<RoutesBloc>(context)
       .add(const RoutesBlocEvent.loadRoutes());

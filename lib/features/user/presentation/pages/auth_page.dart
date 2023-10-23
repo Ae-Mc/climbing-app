@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
+  const AuthPage({super.key});
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -67,7 +67,7 @@ class _AuthPageState extends State<AuthPage>
 class Recursive extends StatelessWidget {
   final List<Color> colors;
 
-  const Recursive({Key? key, required this.colors}) : super(key: key);
+  const Recursive({super.key, required this.colors});
 
   @override
   Widget build(BuildContext context) {

@@ -9,11 +9,11 @@ class UserCard extends StatelessWidget {
   final void Function() onTap;
 
   const UserCard({
-    Key? key,
+    super.key,
     required this.user,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

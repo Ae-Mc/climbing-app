@@ -6,7 +6,7 @@ class Header extends StatelessWidget {
   static const stepCount = 3;
   final int stepNum;
 
-  const Header({Key? key, required this.stepNum}) : super(key: key);
+  const Header({super.key, required this.stepNum});
 
   @override
   Widget build(BuildContext context) {
