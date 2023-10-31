@@ -22,22 +22,19 @@ class MyRoutesPage extends StatelessWidget {
             failure: (failure) => CustomToast(context)
                 .showTextFailureToast(failureToText(failure)),
           ),
-          builder: (context, state) {
-            return state.when(
-              authorized: (activeUser, allUsers, userRoutes) => RoutesList(
-                headerSliverBuilder: (context) => CustomSliverAppBar(
-                  text: 'Загруженные трассы',
-                  leadingBuilder: (context) =>
-                      const Center(child: CustomBackButton()),
-                ),
-                routes: userRoutes,
+          builder: (context, state) => state.when(
+            authorized: (activeUser, allUsers, userRoutes) => RoutesList(
+              headerSliverBuilder: (context) => CustomSliverAppBar(
+                text: 'Загруженные трассы',
+                leadingBuilder: (context) => const BackButton(),
               ),
-              initializationFailure: (_) =>
-                  throw UnimplementedError('Impossible state'),
-              loading: () => const Center(child: CustomProgressIndicator()),
-              notAuthorized: () => throw UnimplementedError('Impossible state'),
-            );
-          },
+              routes: userRoutes,
+            ),
+            initializationFailure: (_) =>
+                throw UnimplementedError('Impossible state'),
+            loading: () => const Center(child: CustomProgressIndicator()),
+            notAuthorized: () => throw UnimplementedError('Impossible state'),
+          ),
         ),
       ),
     );

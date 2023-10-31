@@ -22,36 +22,34 @@ class RoutesPage extends StatelessWidget {
     return SingleResultBlocBuilder<RoutesBloc, RoutesBlocState,
         RoutesBlocSingleResult>(
       onSingleResult: (context, result) => handleSingleResult(context, result),
-      builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: () async => loadRoutes(context),
-          child: Center(
-            child: state.map<Widget>(
-              connectionFailure: (_) => FailureWidget(
-                title: 'Нет подключения к интернету',
-                body: 'Проверьте настройки интернета и попробуйте еще раз',
-                onRetry: () => loadRoutes(context),
-              ),
-              loaded: (state) => RoutesList(
-                routes: state.routes,
-                headerSliverBuilder: (context) =>
-                    const CustomSliverAppBar(text: "Трассы"),
-              ),
-              loading: (_) => const CustomProgressIndicator(),
-              serverFailure: (state) => FailureWidget(
-                title:
-                    'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
-                onRetry: () => loadRoutes(context),
-              ),
-              unknownFailure: (_) => FailureWidget(
-                title: 'Упс! Произошла неожиданная ошибка!',
-                body: 'Пожалуйста, свяжитесь с разработчиком',
-                onRetry: () => loadRoutes(context),
-              ),
+      builder: (context, state) => RefreshIndicator(
+        onRefresh: () async => loadRoutes(context),
+        child: Center(
+          child: state.map<Widget>(
+            connectionFailure: (_) => FailureWidget(
+              title: 'Нет подключения к интернету',
+              body: 'Проверьте настройки интернета и попробуйте еще раз',
+              onRetry: () => loadRoutes(context),
+            ),
+            loaded: (state) => RoutesList(
+              routes: state.routes,
+              headerSliverBuilder: (context) =>
+                  const CustomSliverAppBar(text: "Трассы"),
+            ),
+            loading: (_) => const CustomProgressIndicator(),
+            serverFailure: (state) => FailureWidget(
+              title:
+                  'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+              onRetry: () => loadRoutes(context),
+            ),
+            unknownFailure: (_) => FailureWidget(
+              title: 'Упс! Произошла неожиданная ошибка!',
+              body: 'Пожалуйста, свяжитесь с разработчиком',
+              onRetry: () => loadRoutes(context),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
