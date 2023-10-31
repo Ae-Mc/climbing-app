@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+@RoutePage()
 class RootPage extends StatelessWidget {
-  static const routes = [RatingRouter(), RoutesRouter()];
-  const RootPage({Key? key}) : super(key: key);
+  static const routes = [RatingRouterRoute(), RoutesRouterRoute()];
+  const RootPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +103,7 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
-      builder: (context, child, animation) {
+      transitionBuilder: (context, child, animation) {
         return SafeArea(
           child: FadeTransition(opacity: animation, child: child),
         );
@@ -117,6 +118,7 @@ class RootPage extends StatelessWidget {
         activeIcon: Icons.close,
         spacing: 8,
         overlayOpacity: 0.5,
+        renderOverlay: false,
         children: [
           SpeedDialChild(
             label: "Трасса",

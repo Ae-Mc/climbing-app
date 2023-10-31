@@ -5,8 +5,7 @@ class StyledPasswordField extends StatefulWidget {
   final String hintText;
   final TextEditingController? controller;
 
-  const StyledPasswordField({Key? key, required this.hintText, this.controller})
-      : super(key: key);
+  const StyledPasswordField({super.key, required this.hintText, this.controller});
 
   @override
   State<StatefulWidget> createState() => _StyledPasswordField();

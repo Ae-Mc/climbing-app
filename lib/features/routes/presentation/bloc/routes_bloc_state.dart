@@ -1,7 +1,4 @@
-import 'package:climbing_app/core/failure.dart';
-import 'package:climbing_app/features/routes/domain/entities/route.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-part 'routes_bloc_state.freezed.dart';
+part of 'routes_bloc.dart';
 
 @freezed
 class RoutesBlocState with _$RoutesBlocState {

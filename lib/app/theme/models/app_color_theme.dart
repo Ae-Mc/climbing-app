@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 @immutable
 abstract class AppColorTheme {
   Brightness get brightness;
+  Color get ascentActual;
+  Color get ascentTop5;
   Color get background;
   Color get bronze;
   Color get error;
@@ -34,6 +36,10 @@ class LightColorTheme implements AppColorTheme {
   @override
   Brightness get brightness => Brightness.light;
 
+  @override
+  Color get ascentActual => AppPallete.green;
+  @override
+  Color get ascentTop5 => AppPallete.red;
   @override
   Color get background => AppPallete.white;
   @override

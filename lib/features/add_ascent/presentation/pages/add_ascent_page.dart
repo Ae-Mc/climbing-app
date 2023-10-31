@@ -16,10 +16,11 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class AddAscentPage extends StatefulWidget {
   final Route route;
 
-  const AddAscentPage({Key? key, required this.route}) : super(key: key);
+  const AddAscentPage({super.key, required this.route});
 
   @override
   State<AddAscentPage> createState() => _AddAscentPageState();

@@ -1,6 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
-import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/routes/presentation/widgets/routes_list.dart';
@@ -8,8 +8,9 @@ import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class MyRoutesPage extends StatelessWidget {
-  const MyRoutesPage({Key? key}) : super(key: key);
+  const MyRoutesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +21,19 @@ class MyRoutesPage extends StatelessWidget {
             failure: (failure) => CustomToast(context)
                 .showTextFailureToast(failureToText(failure)),
           ),
-          builder: (context, state) {
-            return state.when(
-              authorized: (activeUser, allUsers, userRoutes) =>
-                  NestedScrollView(
-                floatHeaderSlivers: true,
-                headerSliverBuilder: (_, __) => [
-                  CustomSliverAppBar(
-                    leadingBuilder: (context) => const Center(
-                      child: CustomBackButton(),
-                    ),
-                    text: 'Загруженные трассы',
-                  ),
-                ],
-                body: RoutesList(routes: userRoutes),
+          builder: (context, state) => state.when(
+            authorized: (activeUser, allUsers, userRoutes) => RoutesList(
+              headerSliverBuilder: (context) => CustomSliverAppBar(
+                text: 'Загруженные трассы',
+                leadingBuilder: (context) => const BackButton(),
               ),
-              initializationFailure: (_) =>
-                  throw UnimplementedError('Impossible state'),
-              loading: () => const Center(child: CustomProgressIndicator()),
-              notAuthorized: () => throw UnimplementedError('Impossible state'),
-            );
-          },
+              routes: userRoutes,
+            ),
+            initializationFailure: (_) =>
+                throw UnimplementedError('Impossible state'),
+            loading: () => const Center(child: CustomProgressIndicator()),
+            notAuthorized: () => throw UnimplementedError('Impossible state'),
+          ),
         ),
       ),
     );

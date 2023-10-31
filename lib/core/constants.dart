@@ -1,1 +1,1 @@
-const apiHostUrl = 'http://192.168.1.56:8000';
+const apiHostUrl = 'https://test.ae-mc.ru';

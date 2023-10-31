@@ -11,7 +11,7 @@ class RouteCreate {
   final String markColor;
   final String description;
   final String creationDate;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final List<XFile> images;
 
   const RouteCreate({

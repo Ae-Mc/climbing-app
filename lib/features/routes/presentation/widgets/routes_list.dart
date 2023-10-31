@@ -8,9 +8,15 @@ import 'package:intl/intl.dart';
 class RoutesList extends StatelessWidget {
   final List<Route> sortedRoutes;
   final Set<String> quarters;
+  final Widget Function(BuildContext context)? headerSliverBuilder;
+  final String placeholderText;
 
-  RoutesList({Key? key, required List<Route> routes})
-      : sortedRoutes = List.from(routes)
+  RoutesList({
+    super.key,
+    required List<Route> routes,
+    this.headerSliverBuilder,
+    this.placeholderText = "Нет трасс",
+  })  : sortedRoutes = List.from(routes)
           ..sort(
             (left, right) {
               final dateComparation =
@@ -23,14 +29,15 @@ class RoutesList extends StatelessWidget {
             },
           ),
         quarters =
-            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate))),
-        super(key: key);
+            Set.unmodifiable(routes.map((e) => getQuarter(e.creationDate)));
 
   @override
   Widget build(BuildContext context) {
-    String previous = '';
+    final textTheme = AppTheme.of(context).textTheme;
+    final headerSliverBuilder = this.headerSliverBuilder;
     List<Widget> elements = [];
 
+    String previous = '';
     for (int i = 0; i < sortedRoutes.length; i++) {
       if (previous != getQuarter(sortedRoutes[i].creationDate)) {
         previous = getQuarter(sortedRoutes[i].creationDate);
@@ -40,15 +47,33 @@ class RoutesList extends StatelessWidget {
           style: AppTheme.of(context).textTheme.title,
           textAlign: TextAlign.center,
         ));
+        elements.add(const SizedBox(height: 16));
       }
       elements.add(RouteCard(route: sortedRoutes[i]));
+      elements.add(const SizedBox(height: 16));
     }
 
-    return ListView.separated(
-      padding: const Pad(all: 16),
-      itemCount: elements.length,
-      itemBuilder: (context, index) => elements[index],
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
+    return CustomScrollView(
+      slivers: [
+        if (headerSliverBuilder != null) headerSliverBuilder(context),
+        SliverPadding(
+          padding: const Pad(all: 16),
+          sliver: (elements.isEmpty)
+              ? SliverToBoxAdapter(
+                  child: Text(
+                    placeholderText,
+                    style: textTheme.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: elements.length,
+                    (context, index) => elements[index],
+                  ),
+                ),
+        ),
+      ],
     );
   }
 

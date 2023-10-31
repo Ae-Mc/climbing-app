@@ -15,4 +15,9 @@ class RoutesRepositoryImpl implements RoutesRepository {
   Future<Either<Failure, List<Route>>> getAllRoutes() {
     return remoteDatasource.allRoutes();
   }
+
+  @override
+  Future<Either<Failure, void>> removeRoute(Route route) {
+    return remoteDatasource.removeRoute(route.id);
+  }
 }

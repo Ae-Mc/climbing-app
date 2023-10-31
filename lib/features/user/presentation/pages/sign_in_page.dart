@@ -17,12 +17,13 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class SignInPage extends StatelessWidget {
   final usernameOrEmailController = TextEditingController();
   final passwordController = TextEditingController();
   final void Function() onSuccessSignIn;
 
-  SignInPage({Key? key, required this.onSuccessSignIn}) : super(key: key);
+  SignInPage({super.key, required this.onSuccessSignIn});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +48,10 @@ class SignInPage extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Assets.icons.logo.svg(
-                                  color:
-                                      AppTheme.of(context).colorTheme.secondary,
+                                  colorFilter: ColorFilter.mode(
+                                    AppTheme.of(context).colorTheme.secondary,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
@@ -88,7 +91,7 @@ class SignInPage extends StatelessWidget {
                                       AutoRouter.of(context).replace(
                                     RegisterRoute(
                                       onSuccessRegister: () => {},
-                                      signInRoute: SignInRoute(
+                                      nextRoute: SignInRoute(
                                         onSuccessSignIn: onSuccessSignIn,
                                       ),
                                     ),

@@ -4,6 +4,7 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
+import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
@@ -13,8 +14,9 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
+@RoutePage()
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,7 @@ class ProfilePage extends StatelessWidget {
       body: SafeArea(
         child: SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
           onSingleResult: (context, singleResult) => singleResult.maybeWhen(
-            signOutSucceed: () =>
-                AutoTabsRouter.of(context).navigate(const RoutesRouter()),
+            signOutSucceed: () => AutoRouter.of(context).popUntilRoot(),
             failure: (failure) => CustomToast(context)
                 .showTextFailureToast(failureToText(failure)),
             orElse: () =>
@@ -38,10 +39,19 @@ class ProfilePage extends StatelessWidget {
             authorized: (activeUser, users, _) => ListView(
               padding: const Pad(all: 16),
               children: [
-                Text(
-                  'Профиль',
-                  style: textTheme.title,
-                  textAlign: TextAlign.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CustomBackButton(),
+                    Expanded(
+                      child: Text(
+                        'Профиль',
+                        style: textTheme.title,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
                 const SizedBox(height: 40),
                 Center(

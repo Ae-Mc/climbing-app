@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class CustomSliverAppBar extends StatelessWidget {
   final String text;
   final Widget Function(BuildContext context) leadingBuilder;
+  final List<Widget>? actions;
 
   const CustomSliverAppBar({
     super.key,
     required this.text,
     this.leadingBuilder = defaultLeadingBuilder,
+    this.actions,
   });
 
   @override
@@ -17,11 +19,11 @@ class CustomSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       backgroundColor: AppTheme.of(context).colorTheme.background,
       forceElevated: true,
-      foregroundColor: AppTheme.of(context).colorTheme.onBackground,
-      snap: true,
+      foregroundColor: AppTheme.of(context).colorTheme.secondary,
       floating: true,
-      leading: leadingBuilder(context),
+      leading: Center(child: leadingBuilder(context)),
       title: Text(text),
+      actions: actions,
     );
   }
 

@@ -60,7 +60,7 @@ class ExpiringAscentCard extends StatelessWidget {
                       maxLines: 2,
                     ),
                     Text(
-                      'Осталось до исчезновения: ${durationToString(expiringAscent.timeToExpire)}',
+                      'Осталось до обесценивания: ${durationToString(expiringAscent.timeToExpire)}',
                       style: textTheme.subtitle2,
                       maxLines: 2,
                     ),

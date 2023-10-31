@@ -13,8 +13,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
+
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,10 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (context) => SplashBloc(StartupRepositoryImpl(context)),
         ),
+        BlocProvider(
+          create: (_) =>
+              GetIt.I<RoutesBloc>()..add(const RoutesBlocEvent.loadRoutes()),
+        ),
       ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
         builder: (context, theme) => MaterialApp(
@@ -39,14 +45,8 @@ class App extends StatelessWidget {
           ),
           home: BlocBuilder<SplashBloc, SplashState>(
             builder: (context, splashState) => splashState.maybeWhen(
-              loaded: () => Router(
-                backButtonDispatcher: RootBackButtonDispatcher(),
-                routerDelegate: GetIt.I<AppRouter>().delegate(),
-                routeInformationParser:
-                    GetIt.I<AppRouter>().defaultRouteParser(),
-                routeInformationProvider:
-                    GetIt.I<AppRouter>().routeInfoProvider(),
-              ),
+              loaded: () =>
+                  Router.withConfig(config: GetIt.I<AppRouter>().config()),
               orElse: () => const SplashPage(),
             ),
           ),
@@ -100,6 +100,7 @@ class App extends StatelessWidget {
             ),
             fontFamily: theme.textTheme.fontFamily,
             iconTheme: IconThemeData(color: theme.colorTheme.primary),
+            scaffoldBackgroundColor: theme.colorTheme.background,
             textButtonTheme: TextButtonThemeData(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all(
@@ -111,9 +112,9 @@ class App extends StatelessWidget {
               ),
             ),
             textTheme: TextTheme(
-              bodyText1: theme.textTheme.body1Regular,
-              subtitle1: theme.textTheme.subtitle1,
-              subtitle2: theme.textTheme.subtitle2,
+              bodyLarge: theme.textTheme.body1Regular,
+              titleMedium: theme.textTheme.subtitle1,
+              titleSmall: theme.textTheme.subtitle2,
             ),
           ),
         ),

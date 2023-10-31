@@ -21,9 +21,9 @@ class AddCompetitionRepositoryImpl implements AddCompetitionRepository {
   ) async {
     try {
       return Right(await remoteDatasource.addCompetition(competition));
-    } on DioError catch (error) {
-      return Left(handleDioConnectionError(error).fold((l) => l, (r) {
-        GetIt.I<Logger>().e(r.response?.data, r);
+    } on DioException catch (error) {
+      return Left(handleDioException(error).fold((l) => l, (r) {
+        GetIt.I<Logger>().e(r.response?.data, error: r);
         GetIt.I<Logger>().d(r.requestOptions.data);
 
         return Failure.unknownFailure(r);

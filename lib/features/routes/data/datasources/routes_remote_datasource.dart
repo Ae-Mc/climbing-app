@@ -4,4 +4,5 @@ import 'package:dartz/dartz.dart';
 
 abstract class RoutesRemoteDatasource {
   Future<Either<Failure, List<Route>>> allRoutes();
+  Future<Either<Failure, void>> removeRoute(String id);
 }

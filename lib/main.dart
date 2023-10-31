@@ -7,6 +7,8 @@ import 'package:logger/logger.dart';
 
 void main() {
   runZonedGuarded(() => runApp(const App()), (error, stacktrace) async {
-    GetIt.I.get<Logger>().e('Critical error: ', error, stacktrace);
+    GetIt.I
+        .get<Logger>()
+        .e('Critical error: ', error: error, stackTrace: stacktrace);
   });
 }

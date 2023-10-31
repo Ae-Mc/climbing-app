@@ -5,8 +5,7 @@ class CustomProgressIndicator extends StatelessWidget {
   final Color? color;
   final double? value;
 
-  const CustomProgressIndicator({Key? key, this.color, this.value})
-      : super(key: key);
+  const CustomProgressIndicator({super.key, this.color, this.value});
 
   @override
   Widget build(BuildContext context) {
