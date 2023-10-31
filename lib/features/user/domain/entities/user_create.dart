@@ -11,6 +11,7 @@ class UserCreate with _$UserCreate {
     required String lastName,
     required String password,
     required String username,
+    required bool isStudent,
   }) = _UserCreate;
 
   factory UserCreate.fromJson(Map<String, dynamic> json) =>
