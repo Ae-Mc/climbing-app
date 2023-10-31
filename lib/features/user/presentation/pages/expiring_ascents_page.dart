@@ -4,7 +4,6 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/arch/universal_bloc/universal_bloc.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
-import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
 import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';

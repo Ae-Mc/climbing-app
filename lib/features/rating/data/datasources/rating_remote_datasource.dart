@@ -12,7 +12,13 @@ class RatingRemoteDatasource {
 
   RatingRemoteDatasource(this.api);
 
-  Future<List<Score>> getRating() => api.getRating();
+  Future<List<Score>> getRating(bool mustBeStudent) {
+    if (mustBeStudent) {
+      return api.getRating(mustBeStudent);
+    } else {
+      return api.getRating();
+    }
+  }
 }
 
 @singleton
@@ -22,5 +28,5 @@ abstract class RatingApi {
   factory RatingApi(Dio dio) => _RatingApi(dio);
 
   @GET('/rating')
-  Future<List<Score>> getRating();
+  Future<List<Score>> getRating([@Query("is_student") bool? isStudent]);
 }

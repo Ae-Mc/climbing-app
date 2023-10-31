@@ -15,21 +15,28 @@ class RatingBloc
     extends SingleResultBloc<RatingEvent, RatingState, RatingSingleResult> {
   final RatingRepository repository;
 
-  RatingBloc(this.repository) : super(const RatingState.loaded([])) {
+  RatingBloc(this.repository) : super(const RatingState.loaded([], false)) {
     on<RatingEvent>((event, emit) async {
       await event.when<Future<void>>(
         refresh: () async {
-          final previousScores =
-              state.when(loaded: (scores) => scores, loading: () => <Score>[]);
-          emit(const RatingState.loading());
+          final previousState = state;
+          emit(RatingState.loading(previousState.mustBeStudent));
 
-          return (await repository.getRating()).fold(
+          return (await repository.getRating(previousState.mustBeStudent)).fold(
             (l) {
               addSingleResult(RatingSingleResult.failure(l));
-              emit(RatingState.loaded(previousScores));
+              emit(RatingState.loaded(
+                previousState.when(
+                    loaded: (scores, _) => scores, loading: (_) => []),
+                previousState.mustBeStudent,
+              ));
             },
-            (r) => emit(RatingState.loaded(r)),
+            (r) => emit(RatingState.loaded(r, previousState.mustBeStudent)),
           );
+        },
+        setMustBeStudent: (mustBeStudent) async {
+          emit(RatingState.loading(mustBeStudent));
+          add(const RatingEvent.refresh());
         },
       );
     });

@@ -1,5 +1,6 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_progress_indicator.dart';
@@ -14,10 +15,15 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class RatingPage extends StatelessWidget {
-  const RatingPage({super.key});
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  RatingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = AppTheme.of(context).colorTheme;
+
     return BlocProvider(
       create: (context) =>
           GetIt.I<RatingBloc>()..add(const RatingEvent.refresh()),
@@ -32,11 +38,30 @@ class RatingPage extends StatelessWidget {
             buildWhen: (oldState, newState) =>
                 newState.map(loaded: (_) => true, loading: (_) => false),
             builder: (context, state) => state.when(
-              loaded: (scores) => RefreshIndicator(
+              loaded: (scores, mustBeStudent) => RefreshIndicator(
+                key: _refreshIndicatorKey,
                 onRefresh: () async => await onRefresh(context),
                 child: CustomScrollView(
                   slivers: [
-                    const CustomSliverAppBar(text: 'Рейтинг'),
+                    CustomSliverAppBar(
+                      text: 'Рейтинг',
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            BlocProvider.of<RatingBloc>(context).add(
+                                RatingEvent.setMustBeStudent(!mustBeStudent));
+                            _refreshIndicatorKey.currentState?.show();
+                          },
+                          icon: Icon(
+                            Icons.school_outlined,
+                            color: mustBeStudent
+                                ? colorTheme.primary
+                                : colorTheme.unselected,
+                          ),
+                          tooltip: "Рейтинг среди студентов",
+                        )
+                      ],
+                    ),
                     SliverPadding(
                       padding: const Pad(all: 16),
                       sliver: SliverList(
@@ -65,7 +90,7 @@ class RatingPage extends StatelessWidget {
                   ],
                 ),
               ),
-              loading: () => const Center(child: CustomProgressIndicator()),
+              loading: (_) => const Center(child: CustomProgressIndicator()),
             ),
           ),
         ),
