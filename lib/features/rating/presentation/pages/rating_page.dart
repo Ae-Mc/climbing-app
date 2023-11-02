@@ -27,68 +27,66 @@ class RatingPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           GetIt.I<RatingBloc>()..add(const RatingEvent.refresh()),
-      child: SafeArea(
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (context, userState) => SingleResultBlocBuilder<RatingBloc,
-              RatingState, RatingSingleResult>(
-            onSingleResult: (context, singleResult) => singleResult.when(
-              failure: (failure) => CustomToast(context)
-                  .showTextFailureToast(failureToText(failure)),
-            ),
-            buildWhen: (oldState, newState) =>
-                newState.map(loaded: (_) => true, loading: (_) => false),
-            builder: (context, state) => state.when(
-              loaded: (scores, mustBeStudent) => RefreshIndicator(
-                key: _refreshIndicatorKey,
-                onRefresh: () async => await onRefresh(context),
-                child: CustomScrollView(
-                  slivers: [
-                    CustomSliverAppBar(
-                      text: 'Рейтинг',
-                      actions: [
-                        IconButton(
-                          onPressed: () =>
-                              changeMustBeStudent(context, mustBeStudent),
-                          icon: Icon(
-                            Icons.school_outlined,
-                            color: mustBeStudent
-                                ? colorTheme.primary
-                                : colorTheme.unselected,
-                          ),
-                          tooltip: "Рейтинг среди студентов",
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, userState) => SingleResultBlocBuilder<RatingBloc,
+            RatingState, RatingSingleResult>(
+          onSingleResult: (context, singleResult) => singleResult.when(
+            failure: (failure) => CustomToast(context)
+                .showTextFailureToast(failureToText(failure)),
+          ),
+          buildWhen: (oldState, newState) =>
+              newState.map(loaded: (_) => true, loading: (_) => false),
+          builder: (context, state) => state.when(
+            loaded: (scores, mustBeStudent) => RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: () async => await onRefresh(context),
+              child: CustomScrollView(
+                slivers: [
+                  CustomSliverAppBar(
+                    text: 'Рейтинг',
+                    actions: [
+                      IconButton(
+                        onPressed: () =>
+                            changeMustBeStudent(context, mustBeStudent),
+                        icon: Icon(
+                          Icons.school_outlined,
+                          color: mustBeStudent
+                              ? colorTheme.primary
+                              : colorTheme.unselected,
                         ),
-                      ],
-                    ),
-                    SliverPadding(
-                      padding: const Pad(all: 16),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (index % 2 == 1) {
-                              return const SizedBox(height: 16);
-                            }
+                        tooltip: "Рейтинг среди студентов",
+                      ),
+                    ],
+                  ),
+                  SliverPadding(
+                    padding: const Pad(all: 16),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index % 2 == 1) {
+                            return const SizedBox(height: 16);
+                          }
 
-                            final realIndex = index ~/ 2;
-                            final score = scores[realIndex];
+                          final realIndex = index ~/ 2;
+                          final score = scores[realIndex];
 
-                            return ScoreCard(
-                              isHighlighted: userState.maybeWhen(
-                                authorized: (activeUser, allUsers, _) =>
-                                    activeUser.id == score.user.id,
-                                orElse: () => false,
-                              ),
-                              score: score,
-                            );
-                          },
-                          childCount: scores.length * 2,
-                        ),
+                          return ScoreCard(
+                            isHighlighted: userState.maybeWhen(
+                              authorized: (activeUser, allUsers, _) =>
+                                  activeUser.id == score.user.id,
+                              orElse: () => false,
+                            ),
+                            score: score,
+                          );
+                        },
+                        childCount: scores.length * 2,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              loading: (_) => const Center(child: CustomProgressIndicator()),
             ),
+            loading: (_) => const Center(child: CustomProgressIndicator()),
           ),
         ),
       ),

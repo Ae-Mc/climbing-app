@@ -17,12 +17,12 @@ class RootPage extends StatelessWidget {
     final colorTheme = AppTheme.of(context).colorTheme;
     final textTheme = AppTheme.of(context).textTheme;
 
-    return AutoTabsScaffold(
+    return AutoTabsRouter.pageView(
       routes: routes,
-      drawer: Drawer(
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (context, state) {
-            return ListView(
+      builder: (context, child, _) => Scaffold(
+        drawer: Drawer(
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) => ListView(
               shrinkWrap: true,
               children: [
                 ...state.maybeMap(
@@ -74,20 +74,18 @@ class RootPage extends StatelessWidget {
                   title: const Text("Истекающие пролазы"),
                 ),
               ],
-            );
-          },
+            ),
+          ),
         ),
-      ),
-      bottomNavigationBuilder: (context, tabsRouter) {
-        return BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           color: colorTheme.primary,
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
-            currentIndex: tabsRouter.activeIndex,
+            currentIndex: AutoTabsRouter.of(context).activeIndex,
             elevation: 0,
             iconSize: 32,
-            onTap: (index) => setActiveTab(context, index, tabsRouter),
+            onTap: AutoTabsRouter.of(context).setActiveIndex,
             selectedItemColor: colorTheme.onPrimary,
             unselectedItemColor: colorTheme.unselectedNavBar,
             items: const [
@@ -101,43 +99,36 @@ class RootPage extends StatelessWidget {
               ),
             ],
           ),
-        );
-      },
-      transitionBuilder: (context, child, animation) {
-        return SafeArea(
-          child: FadeTransition(opacity: animation, child: child),
-        );
-      },
-      extendBody: true,
-      floatingActionButton: SpeedDial(
-        backgroundColor: colorTheme.secondary,
-        foregroundColor: colorTheme.onSecondary,
-        // ignore: no-equal-arguments
-        overlayColor: colorTheme.secondary,
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        spacing: 8,
-        overlayOpacity: 0.5,
-        renderOverlay: false,
-        children: [
-          SpeedDialChild(
-            label: "Трасса",
-            child: const Icon(Icons.add),
-            onTap: () => AutoRouter.of(context).push(const AddRouteRootRoute()),
-          ),
-          SpeedDialChild(
-            label: "Соревнование",
-            child: const Icon(Icons.add),
-            onTap: () =>
-                AutoRouter.of(context).push(const AddCompetitionRoute()),
-          ),
-        ],
+        ),
+        body: SafeArea(child: child),
+        extendBody: true,
+        floatingActionButton: SpeedDial(
+          backgroundColor: colorTheme.secondary,
+          foregroundColor: colorTheme.onSecondary,
+          // ignore: no-equal-arguments
+          overlayColor: colorTheme.secondary,
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          spacing: 8,
+          overlayOpacity: 0.5,
+          renderOverlay: false,
+          children: [
+            SpeedDialChild(
+              label: "Трасса",
+              child: const Icon(Icons.add),
+              onTap: () =>
+                  AutoRouter.of(context).push(const AddRouteRootRoute()),
+            ),
+            SpeedDialChild(
+              label: "Соревнование",
+              child: const Icon(Icons.add),
+              onTap: () =>
+                  AutoRouter.of(context).push(const AddCompetitionRoute()),
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-  }
-
-  void setActiveTab(BuildContext _, int index, TabsRouter tabsRouter) {
-    tabsRouter.setActiveIndex(index);
   }
 }
