@@ -18,7 +18,8 @@ class ParticipantCard extends StatefulWidget {
   State<ParticipantCard> createState() => _ParticipantCardState();
 }
 
-class _ParticipantCardState extends State<ParticipantCard> {
+class _ParticipantCardState extends State<ParticipantCard>
+    with AutomaticKeepAliveClientMixin<ParticipantCard> {
   final TextEditingController placeController = TextEditingController();
   bool isError = false;
 
@@ -40,7 +41,11 @@ class _ParticipantCardState extends State<ParticipantCard> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final colorTheme = AppTheme.of(context).colorTheme;
     final textTheme = AppTheme.of(context).textTheme;
 
