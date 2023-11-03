@@ -15,8 +15,7 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class RatingPage extends StatelessWidget {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   RatingPage({super.key});
 
@@ -37,7 +36,7 @@ class RatingPage extends StatelessWidget {
           buildWhen: (oldState, newState) =>
               newState.map(loaded: (_) => true, loading: (_) => false),
           builder: (context, state) => state.when(
-            loaded: (scores, mustBeStudent) => RefreshIndicator(
+            loaded: (scores, mustBeStudent, mustBeFemale) => RefreshIndicator(
               key: _refreshIndicatorKey,
               onRefresh: () async => await onRefresh(context),
               child: CustomScrollView(
@@ -56,6 +55,16 @@ class RatingPage extends StatelessWidget {
                         ),
                         tooltip: "Рейтинг среди студентов",
                       ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.female_rounded,
+                          color: mustBeFemale
+                              ? colorTheme.primary
+                              : colorTheme.unselected,
+                        ),
+                        onPressed: () =>
+                            changeMustBeFemale(context, mustBeFemale),
+                      )
                     ],
                   ),
                   SliverPadding(
@@ -86,16 +95,22 @@ class RatingPage extends StatelessWidget {
                 ],
               ),
             ),
-            loading: (_) => const Center(child: CustomProgressIndicator()),
+            loading: (_, __) => const Center(child: CustomProgressIndicator()),
           ),
         ),
       ),
     );
   }
 
-  changeMustBeStudent(BuildContext context, bool mustBeStudent) {
+  void changeMustBeStudent(BuildContext context, bool mustBeStudent) {
     BlocProvider.of<RatingBloc>(context)
         .add(RatingEvent.setMustBeStudent(!mustBeStudent));
+    _refreshIndicatorKey.currentState?.show();
+  }
+
+  void changeMustBeFemale(BuildContext context, bool mustBeFemale) {
+    BlocProvider.of<RatingBloc>(context)
+        .add(RatingEvent.setMustBeFemale(!mustBeFemale));
     _refreshIndicatorKey.currentState?.show();
   }
 

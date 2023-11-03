@@ -14,9 +14,11 @@ class RatingRepositoryImpl implements RatingRepository {
   RatingRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<Either<Failure, List<Score>>> getRating(bool mustBeStudent) async {
+  Future<Either<Failure, List<Score>>> getRating(
+      bool mustBeStudent, bool mustBeFemale) async {
     try {
-      return Right(await remoteDatasource.getRating(mustBeStudent));
+      return Right(
+          await remoteDatasource.getRating(mustBeStudent, mustBeFemale));
     } on DioException catch (error) {
       return Left(handleDioException(error)
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
