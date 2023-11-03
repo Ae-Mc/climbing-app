@@ -60,7 +60,7 @@ class _ParticipantCardState extends State<ParticipantCard>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${widget.user.firstName} ${widget.user.lastName}',
+                    '${widget.user.lastName} ${widget.user.firstName}',
                     style: textTheme.subtitle1,
                   ),
                   const SizedBox(height: 8),

@@ -4,7 +4,6 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/util/pick_date.dart';
-import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/core/widgets/submit_button.dart';
 import 'package:climbing_app/features/add_competition/domain/entities/competition_create.dart';
@@ -40,8 +39,9 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> {
 
   @override
   void initState() {
-    // ignore: avoid-unnecessary-setstate
-    [checkDate(), checkName(), checkRatio()];
+    checkDate();
+    checkName();
+    checkRatio();
     dateController.addListener(checkDate);
     nameController.addListener(checkName);
     ratioController.addListener(checkRatio);
@@ -86,107 +86,117 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> {
         child: BlocProvider(
           create: (context) => GetIt.I<AddCompetitionBloc>(),
           child: BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) => ListView(
-              padding: const Pad(horizontal: 16, vertical: 16),
-              children: [
-                Row(
-                  children: [
-                    const CustomBackButton(),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        'Добавление соревнования',
-                        maxLines: 2,
-                        style: textTheme.title,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(width: 48),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                StyledTextField(
-                  controller: nameController,
-                  errorText: nameError,
-                  hintText: 'Название',
-                  suffixIcon: Icon(Icons.abc, color: colorTheme.primary),
-                ),
-                const SizedBox(height: 16),
-                StyledTextField(
-                  controller: dateController,
-                  errorText: dateError,
-                  hintText: 'Дата проведения',
-                  onTap: () => pickDate(context, dateController),
-                  readOnly: true,
-                  suffixIcon:
-                      Icon(Icons.calendar_today, color: colorTheme.primary),
-                ),
-                const SizedBox(height: 16),
-                StyledTextField(
-                  controller: ratioController,
-                  errorText: ratioError,
-                  hintText: 'Коэффицент баллов',
-                  suffixIcon:
-                      Icon(Icons.onetwothree, color: colorTheme.primary),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Участники',
-                  style: textTheme.subtitle1,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                ...state.maybeMap(
-                  authorized: (value) => value.allUsers.map((e) => Padding(
-                        padding: const Pad(top: 8),
-                        child: ParticipantCard(
-                          user: e,
-                          onPlaceChange: (place) => setState(() => place == null
-                              ? participants.remove(e)
-                              : participants[e] = place),
-                        ),
-                      )),
-                  orElse: () => throw UnimplementedError("Impossible state"),
-                ),
-                if (participants.isEmpty) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    'Добавьте участников!',
-                    style: textTheme.body1Regular
-                        .copyWith(color: colorTheme.error),
-                    textAlign: TextAlign.center,
+            builder: (context, state) {
+              final sortedUsers = state.maybeMap(
+                authorized: (value) {
+                  final sortedUsers = List<User>.from(value.allUsers);
+                  sortedUsers.sort(
+                    (a, b) => ('${a.lastName} ${a.firstName}'.toLowerCase())
+                        .compareTo(
+                            '${b.lastName} ${b.firstName}'.toLowerCase()),
+                  );
+
+                  return sortedUsers;
+                },
+                orElse: () => throw UnimplementedError('Impossible state'),
+              );
+
+              return NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverAppBar(
+                    backgroundColor: colorTheme.background,
+                    foregroundColor: colorTheme.onBackground,
+                    title: const Text('Добавление соревнования'),
+                    leading: const BackButton(),
+                    floating: true,
+                    snap: true,
+                    forceElevated: true,
                   ),
                 ],
-                const SizedBox(height: 24),
-                SingleResultBlocBuilder<AddCompetitionBloc, AddCompetitionState,
-                    AddCompetitionSingleResult>(
-                  onSingleResult: (context, singleResult) => singleResult.when(
-                    failure: (failure) => CustomToast(context)
-                        .showTextFailureToast(failureToText(failure)),
-                    success: () {
-                      CustomToast(context).showTextSuccessToast(
-                        'Соревнование успешно добавлено',
-                      );
+                body: ListView(
+                  padding: const Pad(horizontal: 16, vertical: 16),
+                  children: [
+                    StyledTextField(
+                      controller: nameController,
+                      errorText: nameError,
+                      hintText: 'Название',
+                      suffixIcon: Icon(Icons.abc, color: colorTheme.primary),
+                    ),
+                    const SizedBox(height: 16),
+                    StyledTextField(
+                      controller: dateController,
+                      errorText: dateError,
+                      hintText: 'Дата проведения',
+                      onTap: () => pickDate(context, dateController),
+                      readOnly: true,
+                      suffixIcon:
+                          Icon(Icons.calendar_today, color: colorTheme.primary),
+                    ),
+                    const SizedBox(height: 16),
+                    StyledTextField(
+                      controller: ratioController,
+                      errorText: ratioError,
+                      hintText: 'Коэффицент баллов',
+                      suffixIcon:
+                          Icon(Icons.onetwothree, color: colorTheme.primary),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Участники',
+                      style: textTheme.subtitle1,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    ...sortedUsers.map((e) => Padding(
+                          padding: const Pad(top: 8),
+                          child: ParticipantCard(
+                            user: e,
+                            onPlaceChange: (place) => setState(() =>
+                                place == null
+                                    ? participants.remove(e)
+                                    : participants[e] = place),
+                          ),
+                        )),
+                    if (participants.isEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        'Добавьте участников!',
+                        style: textTheme.body1Regular
+                            .copyWith(color: colorTheme.error),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    const SizedBox(height: 24),
+                    SingleResultBlocBuilder<AddCompetitionBloc,
+                        AddCompetitionState, AddCompetitionSingleResult>(
+                      onSingleResult: (context, singleResult) =>
+                          singleResult.when(
+                        failure: (failure) => CustomToast(context)
+                            .showTextFailureToast(failureToText(failure)),
+                        success: () {
+                          CustomToast(context).showTextSuccessToast(
+                            'Соревнование успешно добавлено',
+                          );
 
-                      return AutoRouter.of(context).pop();
-                    },
-                  ),
-                  builder: (context, state) {
-                    return SubmitButton(
-                      isActive: [nameError, dateError, ratioError]
-                              .every((element) => element == null) &&
-                          participants.isNotEmpty,
-                      isLoaded:
-                          state.when(loaded: () => true, loading: () => false),
-                      onPressed: () =>
-                          add(BlocProvider.of<AddCompetitionBloc>(context)),
-                      text: 'Добавить',
-                    );
-                  },
+                          return AutoRouter.of(context).pop();
+                        },
+                      ),
+                      builder: (context, state) => SubmitButton(
+                        isActive: [nameError, dateError, ratioError]
+                                .every((element) => element == null) &&
+                            participants.isNotEmpty,
+                        isLoaded: state.when(
+                            loaded: () => true, loading: () => false),
+                        onPressed: () =>
+                            add(BlocProvider.of<AddCompetitionBloc>(context)),
+                        text: 'Добавить',
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
