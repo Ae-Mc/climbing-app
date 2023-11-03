@@ -6,6 +6,7 @@ import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/submit_button.dart';
+import 'package:climbing_app/features/user/domain/entities/sex.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/core/widgets/styled_password_field.dart';
@@ -37,6 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordRepeatController = TextEditingController();
   final usernameController = TextEditingController();
   bool isStudent = false;
+  Sex selectedSex = Sex.male;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,33 @@ class _RegisterPageState extends State<RegisterPage> {
                                 hintText: 'Повтор пароля',
                               ),
                               const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Пол: ',
+                                    style: textTheme.body2Regular,
+                                  ),
+                                  const Spacer(),
+                                  DropdownButton<Sex>(
+                                    value: selectedSex,
+                                    style: textTheme.subtitle1.copyWith(
+                                        color: colorTheme.onBackground),
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: Sex.male,
+                                        child: Text('Мужчина'),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: Sex.female,
+                                        child: Text('Девушка'),
+                                      ),
+                                    ],
+                                    onChanged: (value) => setState(() =>
+                                        selectedSex = value ?? selectedSex),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
                               CheckboxListTile.adaptive(
                                 contentPadding: Pad.zero,
                                 value: isStudent,
@@ -167,6 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
             lastName: lastNameController.text.trim(),
             password: passwordController.text,
             username: usernameController.text.trim(),
+            sex: selectedSex,
             isStudent: isStudent,
           ),
         ),

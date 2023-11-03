@@ -1,3 +1,4 @@
+import 'package:climbing_app/features/user/domain/entities/sex.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
@@ -12,6 +13,7 @@ class User with _$User {
     required String firstName,
     required String lastName,
     required String username,
+    required Sex sex,
     required bool isStudent,
   }) = _User;
 
