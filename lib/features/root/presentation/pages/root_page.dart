@@ -22,58 +22,67 @@ class RootPage extends StatelessWidget {
       builder: (context, child, _) => Scaffold(
         drawer: Drawer(
           child: BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) => ListView(
-              shrinkWrap: true,
-              children: [
-                ...state.maybeMap(
-                  authorized: (value) => [
-                    DrawerHeader(
-                      decoration: BoxDecoration(color: colorTheme.primary),
-                      padding: Pad.zero,
-                      child: Material(
-                        color: colorTheme.primary,
-                        child: InkWell(
-                          onTap: () =>
-                              AutoRouter.of(context).push(const ProfileRoute()),
-                          child: Padding(
-                            padding: const Pad(all: 16, bottom: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  '${value.activeUser.firstName} ${value.activeUser.lastName}',
-                                  style: textTheme.title
-                                      .copyWith(color: colorTheme.onPrimary),
-                                ),
-                                Text(
-                                  '@${value.activeUser.username}',
-                                  style: textTheme.subtitle2.copyWith(
-                                    color:
-                                        colorTheme.onPrimary.withOpacity(0.8),
+            builder: (context, state) => SafeArea(
+              child: Column(
+                // shrinkWrap: true,
+                children: [
+                  ...state.maybeMap(
+                    authorized: (value) => [
+                      DrawerHeader(
+                        decoration: BoxDecoration(color: colorTheme.primary),
+                        padding: Pad.zero,
+                        child: Material(
+                          color: colorTheme.primary,
+                          child: InkWell(
+                            onTap: () => AutoRouter.of(context)
+                                .push(const ProfileRoute()),
+                            child: Padding(
+                              padding: const Pad(all: 16, bottom: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    '${value.activeUser.firstName} ${value.activeUser.lastName}',
+                                    style: textTheme.title
+                                        .copyWith(color: colorTheme.onPrimary),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    '@${value.activeUser.username}',
+                                    style: textTheme.subtitle2.copyWith(
+                                      color:
+                                          colorTheme.onPrimary.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                  orElse: () => [],
-                ),
-                ListTile(
-                  dense: true,
-                  onTap: () =>
-                      AutoRouter.of(context).push(const MyRoutesRoute()),
-                  title: const Text("Загруженные трассы"),
-                ),
-                ListTile(
-                  dense: true,
-                  onTap: () =>
-                      AutoRouter.of(context).push(const ExpiringAscentsRoute()),
-                  title: const Text("Истекающие пролазы"),
-                ),
-              ],
+                    ],
+                    orElse: () => [],
+                  ),
+                  ListTile(
+                    dense: true,
+                    onTap: () =>
+                        AutoRouter.of(context).push(const MyRoutesRoute()),
+                    title: const Text("Загруженные трассы"),
+                  ),
+                  ListTile(
+                    dense: true,
+                    onTap: () => AutoRouter.of(context)
+                        .push(const ExpiringAscentsRoute()),
+                    title: const Text("Истекающие пролазы"),
+                  ),
+                  const Spacer(),
+                  ListTile(
+                    dense: true,
+                    onTap: () => AutoRouter.of(context)
+                        .push(const AccountDeletionRoute()),
+                    title: const Text("Удаление аккаунта"),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

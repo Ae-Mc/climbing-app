@@ -58,6 +58,7 @@ dependencies:
   shared_preferences: ^2.0.13
   single_result_bloc: ^0.0.2
   smooth_page_indicator: ^1.0.0+2
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:

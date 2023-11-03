@@ -43,9 +43,9 @@ class ExpiringAscentsPage extends StatelessWidget {
               edgeOffset: 64,
               child: CustomScrollView(
                 slivers: [
-                  CustomSliverAppBar(
+                  const CustomSliverAppBar(
                     text: 'Истекающие пролазы',
-                    leadingBuilder: (context) => const BackButton(),
+                    leading: BackButton(),
                   ),
                   state.when<Widget>(
                     failure: (f) => SliverFillRemaining(

@@ -40,7 +40,7 @@ class UserRatingPage extends StatelessWidget {
         slivers: [
           CustomSliverAppBar(
             text: '${score.user.lastName} ${score.user.firstName}',
-            leadingBuilder: (context) => const BackButton(),
+            leading: const BackButton(),
           ),
           // Slivers
           SliverPadding(

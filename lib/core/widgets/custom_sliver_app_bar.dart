@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
   final String text;
-  final Widget Function(BuildContext context) leadingBuilder;
+  final Widget? leading;
   final List<Widget>? actions;
 
   const CustomSliverAppBar({
     super.key,
     required this.text,
-    this.leadingBuilder = defaultLeadingBuilder,
+    this.leading,
     this.actions,
   });
 
@@ -21,16 +21,17 @@ class CustomSliverAppBar extends StatelessWidget {
       forceElevated: true,
       foregroundColor: AppTheme.of(context).colorTheme.secondary,
       floating: true,
-      leading: Center(child: leadingBuilder(context)),
+      leading: Center(
+        child: leading ??
+            IconButton(
+              onPressed: () => openDrawer(context),
+              icon: const Icon(Icons.menu_rounded, size: 24),
+            ),
+      ),
       title: Text(text),
       actions: actions,
     );
   }
-
-  static Widget defaultLeadingBuilder(BuildContext context) => IconButton(
-        onPressed: () => openDrawer(context),
-        icon: const Icon(Icons.menu_rounded, size: 24),
-      );
 
   static void openDrawer(BuildContext context) {
     final scaffold = Scaffold.maybeOf(context);
