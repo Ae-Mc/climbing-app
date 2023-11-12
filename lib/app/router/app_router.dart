@@ -30,7 +30,10 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: ProfileRoute.page, guards: [authGuard]),
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: ForgotPasswordRoute.page),
-        AutoRoute(page: ResetPasswordRoute.page),
+        AutoRoute(
+          path: '/password-reset/:token',
+          page: ResetPasswordRoute.page,
+        ),
         AutoRoute(
           initial: true,
           page: RootRoute.page,

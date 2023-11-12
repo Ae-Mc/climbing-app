@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
+import 'package:logger/logger.dart';
 
 class SplashRouterDelegate extends RouterDelegate<Object> with ChangeNotifier {
   @override
@@ -74,10 +75,19 @@ class App extends StatelessWidget {
                     }
 
                     if (matchedRoutes.contains(ResetPasswordRoute.name)) {
+                      final match = deepLink.matches.firstWhere(
+                          (element) => element.name == ResetPasswordRoute.name);
+                      GetIt.I<Logger>().d(match);
+                      late final String? token;
+                      try {
+                        token = match.pathParams.getString("token", "");
+                      } on FlutterError {
+                        token = null;
+                      }
                       return DeepLink([
                         const RoutesRoute(),
                         SignInRoute(onSuccessSignIn: () => {}),
-                        ResetPasswordRoute(),
+                        ResetPasswordRoute(token: token),
                       ]);
                     }
                   }

@@ -45,7 +45,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Spacer(),
-            Text('Email', style: textTheme.subtitle2),
+            Text('Токен', style: textTheme.subtitle2),
             const SizedBox(height: 8),
             StyledTextField(
               hintText: 'Токен',
@@ -53,10 +53,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 8),
+            Text('Новый пароль', style: textTheme.subtitle2),
+            const SizedBox(height: 8),
             StyledPasswordField(
               hintText: 'Новый пароль',
               controller: passwordController,
             ),
+            const SizedBox(height: 8),
+            Text('Повтор пароля', style: textTheme.subtitle2),
             const SizedBox(height: 8),
             StyledPasswordField(
               hintText: 'Повтор пароля',
