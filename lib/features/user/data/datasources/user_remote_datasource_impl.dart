@@ -44,6 +44,13 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   @override
   Future<List<ExpiringAscent>> getCurrentUserExpiringAscents() =>
       authApi.getCurrentUserExpiringAscents();
+
+  @override
+  Future<void> forgotPassword(String email) => authApi.forgotPassword(email);
+
+  @override
+  Future<void> resetPassword(String token, String password) =>
+      authApi.resetPassword(token, password);
 }
 
 @singleton
@@ -80,4 +87,13 @@ abstract class AuthApi {
   @POST("auth/register")
   // ignore: long-parameter-list
   Future<User> register(@Body() UserCreate userCreate);
+
+  @POST("auth/forgot-password")
+  Future<void> forgotPassword(@Field('email') String email);
+
+  @POST("auth/reset-password")
+  Future<void> resetPassword(
+    @Field('token') String token,
+    @Field('password') String password,
+  );
 }

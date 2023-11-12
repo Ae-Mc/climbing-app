@@ -5,6 +5,7 @@ import 'package:climbing_app/features/user/data/datasources/user_remote_datasour
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/data/models/validation_error.dart';
 import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';
+import 'package:climbing_app/features/user/domain/entities/password_reset_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -246,14 +247,6 @@ class UserRepositoryImpl implements UserRepository {
     return null;
   }
 
-  static const remoteToLocalFieldNameDict = {
-    "email": "email",
-    "first_name": "имя",
-    "last_name": "фамилия",
-    "password": "пароль",
-    "username": "имя пользователя",
-  };
-
   @override
   Future<Either<Failure, List<Route>>> getCurrentUserRoutes() async {
     assert(isAuthenticated);
@@ -263,9 +256,7 @@ class UserRepositoryImpl implements UserRepository {
     } on DioException catch (error) {
       return Left(handleDioException(error).fold(
         (l) => l,
-        (r) {
-          return const UnknownFailure();
-        },
+        (r) => const UnknownFailure(),
       ));
     }
   }
@@ -282,6 +273,67 @@ class UserRepositoryImpl implements UserRepository {
       }));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword(String email) async {
+    try {
+      return Right(await remoteDatasource.forgotPassword(email));
+    } on DioException catch (error) {
+      return Left(handleDioException(error).fold((l) => l, (r) {
+        return UnknownFailure(r);
+      }));
+    }
+  }
+
+  @override
+  Future<Either<Either<Failure, PasswordResetFailure>, void>> resetPassword(
+    String token,
+    String newPassword,
+  ) async {
+    try {
+      return Right(await remoteDatasource.resetPassword(token, newPassword));
+    } on DioException catch (error) {
+      return Left(handleDioException(error).fold((l) => left(l), (r) {
+        final response = r.response;
+        if (response == null) {
+          return Left(UnknownFailure(r));
+        }
+        final result = response.data;
+        final detail = result["detail"];
+
+        if (response.statusCode == 400) {
+          if (detail == "RESET_PASSWORD_BAD_TOKEN") {
+            return const Right(PasswordResetFailure.wrongToken());
+          }
+          if (detail is Map) {
+            final code = detail["code"];
+            if (code != null) {
+              if (code == "RESET_PASSWORD_INVALID_PASSWORD") {
+                return const Right(PasswordResetFailure.badPassword());
+              }
+            }
+          }
+        } else if (response.statusCode == 422) {
+          final validationError = ValidationError.fromJson(result);
+          final text = parseValidationError(validationError);
+          if (text == null) {
+            return Left(UnknownFailure(r));
+          }
+          return Right(PasswordResetFailure.validationError(text));
+        }
+
+        return Left(UnknownFailure(r));
+      }));
+    }
+  }
+
+  static const remoteToLocalFieldNameDict = {
+    "email": "email",
+    "first_name": "имя",
+    "last_name": "фамилия",
+    "password": "пароль",
+    "username": "имя пользователя",
+  };
 }
 
 class AuthorizationInterceptor extends Interceptor {

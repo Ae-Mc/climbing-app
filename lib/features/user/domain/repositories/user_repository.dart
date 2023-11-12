@@ -1,6 +1,7 @@
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';
+import 'package:climbing_app/features/user/domain/entities/password_reset_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -21,5 +22,8 @@ abstract class UserRepository {
   Future<Either<Either<Failure, RegisterFailure>, void>> register(
     UserCreate userCreate,
   );
+  Future<Either<Failure, void>> forgotPassword(String email);
+  Future<Either<Either<Failure, PasswordResetFailure>, void>> resetPassword(
+      String token, String newPassword);
   Future<Either<Failure, List<ExpiringAscent>>> getCurrentUserExpiringAscents();
 }

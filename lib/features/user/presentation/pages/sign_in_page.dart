@@ -13,8 +13,6 @@ import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
@@ -98,6 +96,13 @@ class SignInPage extends StatelessWidget {
                                   ),
                                   child: const Text("Регистрация"),
                                 ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: () => AutoRouter.of(context).push(
+                                    const ForgotPasswordRoute(),
+                                  ),
+                                  child: const Text("Сброс пароля"),
+                                ),
                               ],
                             ),
                           ),
@@ -133,11 +138,9 @@ class SignInPage extends StatelessWidget {
       )),
       signInSucceed: () {
         onSuccessSignIn();
-        // ignore: avoid-ignoring-return-values
         AutoRouter.of(context).pop();
       },
-      orElse: () =>
-          GetIt.I<Logger>().w('Unexpected user single result: $singleResult'),
+      orElse: () => {},
     );
   }
 }

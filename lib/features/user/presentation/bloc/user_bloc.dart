@@ -1,5 +1,6 @@
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
+import 'package:climbing_app/features/user/domain/entities/password_reset_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/sign_in_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/user.dart';
@@ -33,6 +34,8 @@ class UserBloc
         signOut: (_) => signOut(emit),
         signIn: (event) => signIn(event, emit),
         register: (event) => register(event, emit),
+        forgotPassword: (event) => forgotPassword(event, emit),
+        resetPassword: (event) => resetPassword(event, emit),
       );
 
   Future<void> initialize(UserEmitter emit) async {
@@ -110,6 +113,34 @@ class UserBloc
           (r) => UserSingleResult.registerFailure(r),
         ),
         (r) => const UserSingleResult.registerSucceed(),
+      ),
+    );
+    emit(const UserState.notAuthorized());
+  }
+
+  Future<void> forgotPassword(
+      UserEventForgotPassword event, UserEmitter emit) async {
+    emit(const UserState.loading());
+    addSingleResult(
+      (await repository.forgotPassword(event.email)).fold<UserSingleResult>(
+        (failure) => UserSingleResult.failure(failure),
+        (_) => const UserSingleResult.success(),
+      ),
+    );
+    emit(const UserState.notAuthorized());
+  }
+
+  Future<void> resetPassword(
+      UserEventResetPassword event, UserEmitter emit) async {
+    emit(const UserState.loading());
+    addSingleResult(
+      (await repository.resetPassword(event.token, event.password))
+          .fold<UserSingleResult>(
+        (failure) => failure.fold(
+          (l) => UserSingleResult.failure(l),
+          (r) => UserSingleResult.passwordResetFailure(r),
+        ),
+        (_) => const UserSingleResult.success(),
       ),
     );
     emit(const UserState.notAuthorized());

@@ -8,4 +8,8 @@ class UserEvent with _$UserEvent {
       UserEventSignIn;
   const factory UserEvent.signOut() = UserEventSignOut;
   const factory UserEvent.register(UserCreate userCreate) = UserEventRegister;
+  const factory UserEvent.forgotPassword(String email) =
+      UserEventForgotPassword;
+  const factory UserEvent.resetPassword(String token, String password) =
+      UserEventResetPassword;
 }

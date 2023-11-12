@@ -13,5 +13,7 @@ abstract class UserRemoteDatasource {
   Future<AccessToken> signIn(String usernameOrEmail, String password);
   Future<void> signOut();
   Future<User> register(UserCreate userCreate);
+  Future<void> forgotPassword(String email);
+  Future<void> resetPassword(String token, String password);
   Future<List<ExpiringAscent>> getCurrentUserExpiringAscents();
 }
