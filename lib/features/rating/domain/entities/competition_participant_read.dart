@@ -9,6 +9,7 @@ class CompetitionParticipantRead with _$CompetitionParticipantRead {
   const factory CompetitionParticipantRead({
     required String id,
     required int place,
+    required double score,
     required CompetitionRead competition,
   }) = _;
 

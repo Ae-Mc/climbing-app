@@ -2,8 +2,6 @@ import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/features/rating/domain/entities/competition_participant_read.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
 class ParticipationCard extends StatelessWidget {
   final CompetitionParticipantRead competitionParticipantRead;
@@ -28,7 +26,7 @@ class ParticipationCard extends StatelessWidget {
               style: textTheme.subtitle2,
             ),
             Text(
-              "Дата: ${GetIt.I<DateFormat>().format(competitionParticipantRead.competition.date)}",
+              "Очки рейтинга: ${competitionParticipantRead.score}",
               style: textTheme.subtitle2,
             ),
           ],
