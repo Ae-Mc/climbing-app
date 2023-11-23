@@ -334,6 +334,17 @@ class UserRepositoryImpl implements UserRepository {
     "password": "пароль",
     "username": "имя пользователя",
   };
+
+  @override
+  Future<Either<Failure, void>> removeAscent(String id) async {
+    try {
+      return Right(await remoteDatasource.removeAscent(id));
+    } on DioException catch (error) {
+      return Left(handleDioException(error).fold((l) => l, (r) {
+        return UnknownFailure(r);
+      }));
+    }
+  }
 }
 
 class AuthorizationInterceptor extends Interceptor {

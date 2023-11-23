@@ -70,8 +70,8 @@ class RootPage extends StatelessWidget {
                   ),
                   ListTile(
                     dense: true,
-                    onTap: () => AutoRouter.of(context)
-                        .push(const ExpiringAscentsRoute()),
+                    onTap: () =>
+                        AutoRouter.of(context).push(ExpiringAscentsRoute()),
                     title: const Text("Истекающие пролазы"),
                   ),
                   const Spacer(),

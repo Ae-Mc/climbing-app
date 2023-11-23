@@ -36,6 +36,7 @@ class UserBloc
         register: (event) => register(event, emit),
         forgotPassword: (event) => forgotPassword(event, emit),
         resetPassword: (event) => resetPassword(event, emit),
+        removeAscent: (event) => removeAscent(event, emit),
       );
 
   Future<void> initialize(UserEmitter emit) async {
@@ -144,6 +145,17 @@ class UserBloc
       ),
     );
     emit(const UserState.notAuthorized());
+  }
+
+  Future<void> removeAscent(
+      UserEventRemoveAscent event, UserEmitter emit) async {
+    (await repository.removeAscent(event.id)).fold(
+      UserSingleResult.failure,
+      (r) {
+        addSingleResult(const UserSingleResult.success());
+        add(const UserEvent.fetch());
+      },
+    );
   }
 
   Future<void> fetchUserData({

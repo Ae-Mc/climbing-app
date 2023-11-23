@@ -10,6 +10,7 @@ abstract class UserRemoteDatasource {
   Future<User> getCurrentUser();
   Future<List<Ascent>> getCurrentUserAscents();
   Future<List<Route>> getCurrentUserRoutes();
+  Future<void> removeAscent(String id);
   Future<AccessToken> signIn(String usernameOrEmail, String password);
   Future<void> signOut();
   Future<User> register(UserCreate userCreate);

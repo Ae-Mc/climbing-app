@@ -16,7 +16,9 @@ import 'package:single_result_bloc/single_result_bloc.dart';
 
 @RoutePage()
 class ExpiringAscentsPage extends StatelessWidget {
-  const ExpiringAscentsPage({super.key});
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  ExpiringAscentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class ExpiringAscentsPage extends StatelessWidget {
                   .showTextFailureToast(failureToText(value)),
             ),
             builder: (context, state) => RefreshIndicator(
+              key: _refreshIndicatorKey,
               onRefresh: () async => await refresh(
                   BlocProvider.of<UniversalBloc<List<ExpiringAscent>>>(
                       context)),
@@ -64,8 +67,12 @@ class ExpiringAscentsPage extends StatelessWidget {
                                 ),
                               )
                             : (ascents)
-                                .map((e) =>
-                                    ExpiringAscentCard(expiringAscent: e))
+                                .map((e) => ExpiringAscentCard(
+                                      expiringAscent: e,
+                                      onDelete: () => _refreshIndicatorKey
+                                          .currentState
+                                          ?.show(),
+                                    ))
                                 .elementAt(index),
                         separatorBuilder: (_, __) => const SizedBox(height: 16),
                       ),

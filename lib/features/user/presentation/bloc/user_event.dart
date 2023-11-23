@@ -12,4 +12,5 @@ class UserEvent with _$UserEvent {
       UserEventForgotPassword;
   const factory UserEvent.resetPassword(String token, String password) =
       UserEventResetPassword;
+  const factory UserEvent.removeAscent(String id) = UserEventRemoveAscent;
 }

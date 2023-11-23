@@ -26,4 +26,5 @@ abstract class UserRepository {
   Future<Either<Either<Failure, PasswordResetFailure>, void>> resetPassword(
       String token, String newPassword);
   Future<Either<Failure, List<ExpiringAscent>>> getCurrentUserExpiringAscents();
+  Future<Either<Failure, void>> removeAscent(String id);
 }

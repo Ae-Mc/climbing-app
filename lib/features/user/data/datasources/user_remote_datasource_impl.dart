@@ -51,6 +51,9 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   @override
   Future<void> resetPassword(String token, String password) =>
       authApi.resetPassword(token, password);
+
+  @override
+  Future<void> removeAscent(String id) => authApi.removeAscent(id);
 }
 
 @singleton
@@ -73,6 +76,9 @@ abstract class AuthApi {
 
   @GET("users/me/ascents/expiring")
   Future<List<ExpiringAscent>> getCurrentUserExpiringAscents();
+
+  @DELETE("ascents/{id}")
+  Future<void> removeAscent(@Path("id") String id);
 
   @POST("auth/login")
   @FormUrlEncoded()

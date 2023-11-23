@@ -1,1 +1,1 @@
-const apiHostUrl = 'https://test.ae-mc.ru';
+const apiHostUrl = 'https://climbing.ae-mc.ru';
