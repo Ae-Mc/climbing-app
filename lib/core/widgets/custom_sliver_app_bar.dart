@@ -6,9 +6,12 @@ class CustomSliverAppBar extends StatelessWidget {
   final Widget? leading;
   final List<Widget>? actions;
 
+  final bool showLeading;
+
   const CustomSliverAppBar({
     super.key,
     required this.text,
+    this.showLeading = true,
     this.leading,
     this.actions,
   });
@@ -21,13 +24,15 @@ class CustomSliverAppBar extends StatelessWidget {
       forceElevated: true,
       foregroundColor: AppTheme.of(context).colorTheme.secondary,
       floating: true,
-      leading: Center(
-        child: leading ??
-            IconButton(
-              onPressed: () => openDrawer(context),
-              icon: const Icon(Icons.menu_rounded, size: 24),
-            ),
-      ),
+      leading: showLeading
+          ? Center(
+              child: leading ??
+                  IconButton(
+                    onPressed: () => openDrawer(context),
+                    icon: const Icon(Icons.menu_rounded, size: 24),
+                  ),
+            )
+          : null,
       title: Text(text),
       actions: actions,
     );

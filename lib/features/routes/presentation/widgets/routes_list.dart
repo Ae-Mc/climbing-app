@@ -66,11 +66,9 @@ class RoutesList extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 )
-              : SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    childCount: elements.length,
-                    (context, index) => elements[index],
-                  ),
+              : SliverList.builder(
+                  itemCount: elements.length,
+                  itemBuilder: (context, index) => elements[index],
                 ),
         ),
       ],

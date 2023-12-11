@@ -91,7 +91,6 @@ abstract class AuthApi {
   Future<void> signOut();
 
   @POST("auth/register")
-  // ignore: long-parameter-list
   Future<User> register(@Body() UserCreate userCreate);
 
   @POST("auth/forgot-password")

@@ -6,6 +6,7 @@ part 'competition_read.g.dart';
 @freezed
 class CompetitionRead with _$CompetitionRead {
   const factory CompetitionRead({
+    required String id,
     required String name,
     required DateTime date,
     required double ratio,

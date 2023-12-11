@@ -74,6 +74,12 @@ class RootPage extends StatelessWidget {
                         AutoRouter.of(context).push(ExpiringAscentsRoute()),
                     title: const Text("Истекающие пролазы"),
                   ),
+                  ListTile(
+                    dense: true,
+                    onTap: () => AutoRouter.of(context)
+                        .push(const MyCompetitionsRoute()),
+                    title: const Text("Добавленные соревнования"),
+                  ),
                   const Spacer(),
                   ListTile(
                     dense: true,

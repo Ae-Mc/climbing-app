@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme_bloc.dart';
+import 'package:climbing_app/features/competitions/presentation/bloc/competitions_bloc.dart';
 import 'package:climbing_app/features/splash/data/repositories/startup_repository_impl.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:climbing_app/features/splash/presentation/bloc/splash_state.dart';
@@ -53,6 +54,7 @@ class App extends StatelessWidget {
           create: (_) =>
               GetIt.I<RoutesBloc>()..add(const RoutesBlocEvent.loadRoutes()),
         ),
+        BlocProvider(create: (context) => GetIt.I<CompetitionsBloc>()),
       ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
         builder: (context, theme) => BlocBuilder<SplashBloc, SplashState>(

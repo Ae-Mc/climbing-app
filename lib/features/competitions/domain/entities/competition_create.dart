@@ -1,4 +1,4 @@
-import 'package:climbing_app/features/add_competition/domain/entities/participant_create.dart';
+import 'package:climbing_app/features/competitions/domain/entities/participant_create.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
@@ -10,7 +10,7 @@ class CompetitionCreate with _$CompetitionCreate {
   const factory CompetitionCreate({
     required String name,
     @JsonKey(toJson: dateTimeToDate, fromJson: dateToDateTime)
-        required DateTime date,
+    required DateTime date,
     required double ratio,
     required List<ParticipantCreate> participants,
   }) = _;

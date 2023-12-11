@@ -26,6 +26,7 @@ class AppRouter extends $AppRouter {
           ],
         ),
         AutoRoute(page: ExpiringAscentsRoute.page, guards: [authGuard]),
+        AutoRoute(page: MyCompetitionsRoute.page, guards: [authGuard]),
         AutoRoute(page: MyRoutesRoute.page, guards: [authGuard]),
         AutoRoute(page: ProfileRoute.page, guards: [authGuard]),
         AutoRoute(page: RegisterRoute.page),

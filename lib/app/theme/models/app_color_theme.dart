@@ -8,6 +8,7 @@ abstract class AppColorTheme {
   Color get ascentTop5;
   Color get background;
   Color get bronze;
+  Color get dangerousAction;
   Color get error;
   Color get gold;
   Color get onBackground;
@@ -44,6 +45,8 @@ class LightColorTheme implements AppColorTheme {
   Color get background => AppPallete.white;
   @override
   Color get bronze => AppPallete.bronze;
+  @override
+  Color get dangerousAction => AppPallete.red;
   @override
   Color get error => AppPallete.red;
   @override
