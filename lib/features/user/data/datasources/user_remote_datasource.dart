@@ -1,4 +1,4 @@
-import 'package:climbing_app/features/add_ascent/domain/entities/ascent.dart';
+import 'package:climbing_app/core/entities/ascent.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/user/data/models/access_token.dart';
 import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';

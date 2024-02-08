@@ -80,6 +80,12 @@ class RootPage extends StatelessWidget {
                         .push(const MyCompetitionsRoute()),
                     title: const Text("Добавленные соревнования"),
                   ),
+                  ListTile(
+                    dense: true,
+                    onTap: () =>
+                        AutoRouter.of(context).push(ActivityFeedRoute()),
+                    title: const Text("Недавняя активность секции"),
+                  ),
                   const Spacer(),
                   ListTile(
                     dense: true,

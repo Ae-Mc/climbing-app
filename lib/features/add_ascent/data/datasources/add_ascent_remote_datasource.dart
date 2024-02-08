@@ -1,5 +1,5 @@
 import 'package:climbing_app/core/constants.dart';
-import 'package:climbing_app/features/add_ascent/domain/entities/ascent.dart';
+import 'package:climbing_app/core/entities/ascent.dart';
 import 'package:climbing_app/features/add_ascent/domain/entities/ascent_create.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';

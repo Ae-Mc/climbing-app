@@ -1,4 +1,4 @@
-import 'package:climbing_app/features/add_ascent/domain/entities/ascent.dart';
+import 'package:climbing_app/core/entities/ascent.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'expiring_ascent.freezed.dart';
