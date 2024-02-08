@@ -17,9 +17,9 @@ class RoutesBloc extends SingleResultBloc<RoutesBlocEvent, RoutesBlocState,
 
   RoutesBloc(this.routesRepository) : super(const RoutesBlocState.loading()) {
     on<RoutesBlocEvent>((event, emit) async => await event.when<Future<void>>(
-          loadRoutes: () async {
+          loadRoutes: (archived) async {
             emit(const RoutesBlocState.loading());
-            (await routesRepository.getAllRoutes()).fold(
+            (await routesRepository.getAllRoutes(archived)).fold(
               (left) {
                 if (left is ConnectionFailure) {
                   emit(const RoutesBlocState.connectionFailure());

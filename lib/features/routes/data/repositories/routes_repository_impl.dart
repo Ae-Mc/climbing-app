@@ -12,8 +12,8 @@ class RoutesRepositoryImpl implements RoutesRepository {
   const RoutesRepositoryImpl({required this.remoteDatasource});
 
   @override
-  Future<Either<Failure, List<Route>>> getAllRoutes() {
-    return remoteDatasource.allRoutes();
+  Future<Either<Failure, List<Route>>> getAllRoutes(bool? archived) {
+    return remoteDatasource.allRoutes(archived);
   }
 
   @override

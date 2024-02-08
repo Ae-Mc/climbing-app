@@ -16,9 +16,9 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
   RoutesRemoteDatasourceImpl(this.api);
 
   @override
-  Future<Either<Failure, List<Route>>> allRoutes() async {
+  Future<Either<Failure, List<Route>>> allRoutes(bool? archived) async {
     try {
-      return Right(await api.routes());
+      return Right(await api.routes(archived));
     } on DioException catch (error) {
       return Left(handleDioException(error).fold<Failure>(
         (l) => l,
@@ -58,7 +58,7 @@ class RoutesRemoteDatasourceImpl implements RoutesRemoteDatasource {
 @RestApi(baseUrl: '$apiHostUrl/api/v1/')
 abstract class RoutesApi {
   @GET('/routes')
-  Future<List<Route>> routes();
+  Future<List<Route>> routes(@Query("archived") bool? archived);
 
   @DELETE('/routes/{id}')
   Future<void> removeRoute(@Path() String id);

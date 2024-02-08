@@ -3,6 +3,6 @@ import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class RoutesRemoteDatasource {
-  Future<Either<Failure, List<Route>>> allRoutes();
+  Future<Either<Failure, List<Route>>> allRoutes(bool? archived);
   Future<Either<Failure, void>> removeRoute(String id);
 }
