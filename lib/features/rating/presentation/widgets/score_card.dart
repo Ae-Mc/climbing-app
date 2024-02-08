@@ -53,10 +53,14 @@ class ScoreCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Text('${score.user.lastName} ${score.user.firstName}',
-              style: textTheme.subtitle1, maxLines: 3),
+          Expanded(
+            child: Text(
+              '${score.user.lastName} ${score.user.firstName}',
+              style: textTheme.subtitle1,
+              maxLines: 3,
+            ),
+          ),
           const SizedBox(width: 16),
-          const Spacer(),
           Text(
             trimRight(trimRight(score.score.toStringAsFixed(1), '0'), '.'),
             style: textTheme.title,
