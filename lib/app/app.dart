@@ -57,121 +57,143 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => GetIt.I<CompetitionsBloc>()),
       ],
       child: BlocBuilder<AppThemeBloc, AppTheme>(
-        builder: (context, theme) => BlocBuilder<SplashBloc, SplashState>(
-          builder: (context, splashState) => MaterialApp.router(
-            title: "Скалолазание ИТМО",
-            scrollBehavior: const ScrollBehavior().copyWith(
-              dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
-            ),
-            routerConfig: splashState.maybeWhen(
-              loaded: () => GetIt.I<AppRouter>().config(
-                deepLinkBuilder: (deepLink) {
-                  if (deepLink.isValid) {
-                    final matchedRoutes = deepLink.matches.map((e) => e.name);
-                    if (matchedRoutes.contains(ForgotPasswordRoute.name)) {
-                      return DeepLink([
-                        const RoutesRoute(),
-                        SignInRoute(onSuccessSignIn: () => {}),
-                        const ForgotPasswordRoute()
-                      ]);
-                    }
+        builder: (context, theme) {
+          inputBorder({required Color color, double width = 1}) =>
+              OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                  borderSide: BorderSide(
+                    color: color,
+                    width: width,
+                  ));
 
-                    if (matchedRoutes.contains(ResetPasswordRoute.name)) {
-                      final match = deepLink.matches.firstWhere(
-                          (element) => element.name == ResetPasswordRoute.name);
-                      GetIt.I<Logger>().d(match);
-                      late final String? token;
-                      try {
-                        token = match.pathParams.getString("token", "");
-                      } on FlutterError {
-                        token = null;
+          return BlocBuilder<SplashBloc, SplashState>(
+            builder: (context, splashState) => MaterialApp.router(
+              title: "Скалолазание ИТМО",
+              scrollBehavior: const ScrollBehavior().copyWith(
+                dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+              ),
+              routerConfig: splashState.maybeWhen(
+                loaded: () => GetIt.I<AppRouter>().config(
+                  deepLinkBuilder: (deepLink) {
+                    if (deepLink.isValid) {
+                      final matchedRoutes = deepLink.matches.map((e) => e.name);
+                      if (matchedRoutes.contains(ForgotPasswordRoute.name)) {
+                        return DeepLink([
+                          const RoutesRoute(),
+                          SignInRoute(onSuccessSignIn: () => {}),
+                          const ForgotPasswordRoute()
+                        ]);
                       }
-                      return DeepLink([
-                        const RoutesRoute(),
-                        SignInRoute(onSuccessSignIn: () => {}),
-                        ResetPasswordRoute(token: token),
-                      ]);
+
+                      if (matchedRoutes.contains(ResetPasswordRoute.name)) {
+                        final match = deepLink.matches.firstWhere((element) =>
+                            element.name == ResetPasswordRoute.name);
+                        GetIt.I<Logger>().d(match);
+                        late final String? token;
+                        try {
+                          token = match.pathParams.getString("token", "");
+                        } on FlutterError {
+                          token = null;
+                        }
+                        return DeepLink([
+                          const RoutesRoute(),
+                          SignInRoute(onSuccessSignIn: () => {}),
+                          ResetPasswordRoute(token: token),
+                        ]);
+                      }
                     }
-                  }
-                  return DeepLink.single(const RoutesRoute());
-                },
-              ),
-              orElse: () => null,
-            ),
-            routerDelegate: splashState.maybeWhen(
-              loaded: () => null,
-              orElse: () => SplashRouterDelegate(),
-            ),
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              cardTheme: CardTheme(
-                elevation: 8,
-                color: theme.colorTheme.surface,
-                margin: Pad.zero,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                    return DeepLink.single(const RoutesRoute());
+                  },
                 ),
+                orElse: () => null,
               ),
-              chipTheme: ChipThemeData(
-                backgroundColor: theme.colorTheme.secondary,
-                padding: const Pad(horizontal: 11, vertical: 0),
-                labelPadding: Pad.zero,
-                labelStyle: theme.textTheme.chip,
+              routerDelegate: splashState.maybeWhen(
+                loaded: () => null,
+                orElse: () => SplashRouterDelegate(),
               ),
-              colorScheme: const ColorScheme.light().copyWith(
-                background: theme.colorTheme.background,
-                brightness: theme.colorTheme.brightness,
-                error: theme.colorTheme.error,
-                onError: theme.colorTheme.onError,
-                onBackground: theme.colorTheme.onBackground,
-                onPrimary: theme.colorTheme.onPrimary,
-                primary: theme.colorTheme.primary,
-                secondary: theme.colorTheme.secondary,
-                surface: theme.colorTheme.surface,
-              ),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) => states.contains(MaterialState.disabled)
-                        ? theme.colorTheme.unselected
-                        : theme.colorTheme.primary,
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                inputDecorationTheme: InputDecorationTheme(
+                  enabledBorder:
+                      inputBorder(color: theme.colorTheme.unselected),
+                  focusedBorder:
+                      inputBorder(color: theme.colorTheme.primary, width: 2),
+                  errorBorder: inputBorder(color: theme.colorTheme.error),
+                  focusedErrorBorder:
+                      inputBorder(color: theme.colorTheme.error, width: 2),
+                  contentPadding: const Pad(left: 16, vertical: 14.5),
+                ),
+                cardTheme: CardTheme(
+                  elevation: 8,
+                  color: theme.colorTheme.surface,
+                  margin: Pad.zero,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  elevation: MaterialStateProperty.all(8),
-                  minimumSize: MaterialStateProperty.all(Size.zero),
-                  padding: MaterialStateProperty.all(
-                    const Pad(horizontal: 64, vertical: 16),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                chipTheme: ChipThemeData(
+                  backgroundColor: theme.colorTheme.secondary,
+                  padding: const Pad(horizontal: 11, vertical: 0),
+                  labelPadding: Pad.zero,
+                  labelStyle: theme.textTheme.chip,
+                ),
+                colorScheme: const ColorScheme.light().copyWith(
+                  background: theme.colorTheme.background,
+                  brightness: theme.colorTheme.brightness,
+                  error: theme.colorTheme.error,
+                  onError: theme.colorTheme.onError,
+                  onBackground: theme.colorTheme.onBackground,
+                  onPrimary: theme.colorTheme.onPrimary,
+                  primary: theme.colorTheme.primary,
+                  secondary: theme.colorTheme.secondary,
+                  surface: theme.colorTheme.surface,
+                ),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => states.contains(MaterialState.disabled)
+                          ? theme.colorTheme.unselected
+                          : theme.colorTheme.primary,
                     ),
+                    elevation: MaterialStateProperty.all(8),
+                    minimumSize: MaterialStateProperty.all(Size.zero),
+                    padding: MaterialStateProperty.all(
+                      const Pad(horizontal: 64, vertical: 16),
+                    ),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                    ),
+                    textStyle:
+                        MaterialStateProperty.all(theme.textTheme.button),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  textStyle: MaterialStateProperty.all(theme.textTheme.button),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-              ),
-              fontFamily: theme.textTheme.fontFamily,
-              iconTheme: IconThemeData(color: theme.colorTheme.primary),
-              scaffoldBackgroundColor: theme.colorTheme.background,
-              textButtonTheme: TextButtonThemeData(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(
-                    theme.colorTheme.secondaryVariant,
+                fontFamily: theme.textTheme.fontFamily,
+                iconTheme: IconThemeData(color: theme.colorTheme.primary),
+                scaffoldBackgroundColor: theme.colorTheme.background,
+                textButtonTheme: TextButtonThemeData(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(
+                      theme.colorTheme.secondaryVariant,
+                    ),
+                    padding: MaterialStateProperty.all(Pad.zero),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textStyle:
+                        MaterialStateProperty.all(theme.textTheme.subtitle2),
                   ),
-                  padding: MaterialStateProperty.all(Pad.zero),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textStyle:
-                      MaterialStateProperty.all(theme.textTheme.subtitle2),
                 ),
-              ),
-              textTheme: TextTheme(
-                bodyLarge: theme.textTheme.body1Regular,
-                titleMedium: theme.textTheme.subtitle1,
-                titleSmall: theme.textTheme.subtitle2,
+                textTheme: TextTheme(
+                  bodyLarge: theme.textTheme.body1Regular,
+                  titleMedium: theme.textTheme.subtitle1,
+                  titleSmall: theme.textTheme.subtitle2,
+                ),
+                useMaterial3: false,
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
