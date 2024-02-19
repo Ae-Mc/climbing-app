@@ -32,8 +32,6 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorTheme = AppTheme.of(context).colorTheme;
-
     return Scaffold(
       body: SafeArea(
         child: SingleResultBlocBuilder<RoutesBloc, RoutesBlocState,
@@ -65,25 +63,20 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                               width: CustomBackButton.iconSize,
                               height: CustomBackButton.iconSize,
                               child: state.whenOrNull(
-                                authorized: (activeUser, _, __) => (activeUser
-                                            .id ==
-                                        widget.route.author.id)
-                                    ? IconButton(
-                                        padding: Pad.zero,
-                                        color: colorTheme.error,
-                                        onPressed: () =>
-                                            BlocProvider.of<RoutesBloc>(context)
-                                                .add(
-                                          RoutesBlocEvent.removeRoute(
-                                            widget.route,
-                                          ),
-                                        ),
-                                        icon: const Icon(
-                                          Icons.delete_forever_rounded,
-                                        ),
-                                        iconSize: CustomBackButton.iconSize,
-                                      )
-                                    : null,
+                                authorized: (activeUser, _, __) =>
+                                    (activeUser.id == widget.route.author.id)
+                                        ? IconButton(
+                                            padding: Pad.zero,
+                                            onPressed: () =>
+                                                AutoRouter.of(context).push(
+                                                    UpdateRouteRoute(
+                                                        route: widget.route)),
+                                            icon: const Icon(
+                                              Icons.edit_rounded,
+                                            ),
+                                            iconSize: CustomBackButton.iconSize,
+                                          )
+                                        : null,
                               ),
                             ),
                           ),

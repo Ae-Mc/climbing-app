@@ -57,6 +57,7 @@ class AppRouter extends $AppRouter {
           ],
         ),
         AutoRoute(page: RouteDetailsRoute.page),
+        AutoRoute(page: UpdateRouteRoute.page),
         AutoRoute(page: RouteImagesRoute.page),
         AutoRoute(page: SignInRoute.page),
         AutoRoute(page: AccountDeletionRoute.page),
