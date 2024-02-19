@@ -55,9 +55,8 @@ class _AddRouteCategoryStepPageState extends State<AddRouteCategoryStepPage> {
               Padding(
                 padding: const Pad(horizontal: 8),
                 child: Builder(builder: (context) {
-                  final allCategories = Category.categories
-                      .map((e) => Category(e))
-                      .where((element) => element <= Category('8a+'));
+                  final allCategories = Category.values
+                      .where((element) => element <= Category.eightAPlus);
                   final categories = [
                     allCategories
                         .where((element) =>

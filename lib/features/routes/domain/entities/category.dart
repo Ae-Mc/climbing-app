@@ -1,57 +1,54 @@
-class Category implements Comparable<Category> {
-  final int index;
-  static const categories = [
-    '5a',
-    '5a+',
-    '5b',
-    '5b+',
-    '5c',
-    '5c+',
-    '6a',
-    '6a+',
-    '6b',
-    '6b+',
-    '6c',
-    '6c+',
-    '7a',
-    '7a+',
-    '7b',
-    '7b+',
-    '7c',
-    '7c+',
-    '8a',
-    '8a+',
-    '8b',
-    '8b+',
-    '8c',
-    '8c+',
-    '9a',
-    '9a+',
-    '9b',
-    '9b+',
-    '9c',
-    '9c+',
-  ];
+enum Category implements Comparable<Category> {
+  fiveA(name: '5a'),
+  fiveAPlus(name: '5a+'),
+  fiveB(name: '5b'),
+  fiveBPlus(name: '5b+'),
+  fiveC(name: '5c'),
+  fiveCPlus(name: '5c+'),
+  sixA(name: '6a'),
+  sixAPlus(name: '6a+'),
+  sixB(name: '6b'),
+  sixBPlus(name: '6b+'),
+  sixC(name: '6c'),
+  sixCPlus(name: '6c+'),
+  sevenA(name: '7a'),
+  sevenAPlus(name: '7a+'),
+  sevenB(name: '7b'),
+  sevenBPlus(name: '7b+'),
+  sevenC(name: '7c'),
+  sevenCPlus(name: '7c+'),
+  eightA(name: '8a'),
+  eightAPlus(name: '8a+'),
+  eightB(name: '8b'),
+  eightBPlus(name: '8b+'),
+  eightC(name: '8c'),
+  eightCPlus(name: '8c+'),
+  nineA(name: '9a'),
+  nineAPlus(name: '9a+'),
+  nineB(name: '9b'),
+  nineBPlus(name: '9b+'),
+  nineC(name: '9c'),
+  nineCPlus(name: '9c+');
 
-  Category(String categoryName) : index = categories.indexOf(categoryName);
+  // Category(String categoryName) : index = categories.indexOf(categoryName);
 
-  factory Category.fromJson(String jsonValue) => Category(jsonValue);
+  factory Category.fromJson(String jsonValue) =>
+      Category.values.firstWhere((element) => element.name == jsonValue);
 
-  String toJson() => categories[index];
+  String toJson() => name;
 
   @override
-  String toString() => categories[index];
+  String toString() => name;
 
   @override
   int compareTo(Category other) => index.compareTo(other.index);
 
-  @override
-  bool operator ==(Object? other) => other is Category && other.index == index;
   bool operator <(Category other) => index < other.index;
   bool operator >(Category other) => index > other.index;
   bool operator <=(Category other) => index <= other.index;
   bool operator >=(Category other) => index >= other.index;
 
-  @override
-  int get hashCode => index.hashCode;
+  final String name;
+
+  const Category({required this.name});
 }
