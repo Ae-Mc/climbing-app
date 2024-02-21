@@ -1,4 +1,5 @@
 import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/features/update_route/data/datasources/update_route_remote_datasource.dart';
 import 'package:climbing_app/features/update_route/domain/entities/route_update.dart';
 import 'package:climbing_app/core/failure.dart';
@@ -14,16 +15,14 @@ class UpdateRouteRepositoryImpl implements UpdateRouteRepository {
   UpdateRouteRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<Either<Failure, void>> updateRoute(
+  Future<Either<Failure, Route>> updateRoute(
       String routeId, RouteUpdate route) async {
     try {
-      // ignore: avoid-ignoring-return-values
-      await remoteDatasource.updateRoute(routeId, route);
-
-      return const Right(null);
+      return Right(await remoteDatasource.updateRoute(routeId, route));
     } on DioException catch (error) {
       return Left(handleDioException(error).fold((l) => l, (r) {
-        return Failure.unknownFailure(error);
+        final message = error.response?.data?.toString() ?? error.message;
+        return Failure.unknownFailure(error.copyWith(message: message));
       }));
     }
   }

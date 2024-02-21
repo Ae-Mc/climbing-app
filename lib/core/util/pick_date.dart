@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-void pickDate(
+Future<DateTime?> pickDate(
   BuildContext context,
   TextEditingController dateInputController,
 ) async {
@@ -17,4 +17,5 @@ void pickDate(
   if (date != null) {
     dateInputController.text = GetIt.I<DateFormat>().format(date);
   }
+  return date;
 }

@@ -5,6 +5,7 @@ import 'package:climbing_app/features/update_route/domain/entities/route_update.
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mime/mime.dart';
 
 @Singleton(as: UpdateRouteRemoteDatasource)
 class UpdateRouteRemoteDatasourceImpl implements UpdateRouteRemoteDatasource {
@@ -15,21 +16,26 @@ class UpdateRouteRemoteDatasourceImpl implements UpdateRouteRemoteDatasource {
   @override
   Future<Route> updateRoute(String routeId, RouteUpdate route) async {
     final formData = FormData.fromMap({
+      // _hiddent field MUST NOT BE DELETED!
+      // Used to send empty images, otherwise 400 error will be returned
+      '_hidden': '',
       'images': route.images.map((image) {
+        final mimeType = lookupMimeType(image.filename);
         return MultipartFile.fromBytes(
           image.data,
           filename: image.filename,
-          contentType: MediaType.parse(image.filename),
+          contentType: mimeType == null ? null : MediaType.parse(mimeType),
         );
-      }).toList(),
+      }).toList()
     });
     final response = await dio.put<Map<String, dynamic>>(
       '$apiHostUrl/api/v1/routes/$routeId',
       queryParameters: route.toJson(),
       data: formData,
       options: Options(
-          receiveTimeout: const Duration(seconds: 5),
-          contentType: 'multipart/form-data'),
+        contentType: 'multipart/form-data',
+        receiveTimeout: const Duration(seconds: 5),
+      ),
     );
     final responseRoute = response.data;
     if (responseRoute == null) {
