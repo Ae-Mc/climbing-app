@@ -46,7 +46,7 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
       // ignore: avoid-non-null-assertion
       description: dataState.description!,
       // ignore: avoid-non-null-assertion
-      images: dataState.images!,
+      images: dataState.images ?? [],
       // ignore: avoid-non-null-assertion
       markColor: dataState.color!,
       // ignore: avoid-non-null-assertion
