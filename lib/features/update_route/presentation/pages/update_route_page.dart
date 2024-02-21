@@ -40,6 +40,8 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
   final imagesCarouselController = ImagesCarouselController(images: []);
   late Category category;
 
+  late bool archived;
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +52,7 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
     categoryController.text = widget.route.category.name;
     descriptionController.text = widget.route.description;
     category = widget.route.category;
+    archived = widget.route.archived;
   }
 
   @override
@@ -104,6 +107,12 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
         maxLines: 8,
         textInputAction: TextInputAction.newline,
         keyboardType: TextInputType.multiline,
+      ),
+      CheckboxListTile.adaptive(
+        value: archived,
+        onChanged: (value) => setState(() => archived = value ?? archived),
+        title: const Text('Архив'),
+        contentPadding: Pad.zero,
       ),
     ];
 
@@ -208,6 +217,7 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
                         images: imagesCarouselController.images,
                         markColor: marksColorController.text,
                         name: nameController.text,
+                        archived: archived,
                       ),
                     )
                     .then(

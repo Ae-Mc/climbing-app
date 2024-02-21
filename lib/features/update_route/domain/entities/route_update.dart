@@ -13,6 +13,7 @@ class RouteUpdate {
   final String creationDate;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<File> images;
+  final bool archived;
 
   const RouteUpdate({
     required this.category,
@@ -21,6 +22,7 @@ class RouteUpdate {
     required this.images,
     required this.markColor,
     required this.name,
+    required this.archived,
   });
 
   Map<String, dynamic> toJson() => _$RouteUpdateToJson(this);
