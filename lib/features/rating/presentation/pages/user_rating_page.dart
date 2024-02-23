@@ -9,20 +9,24 @@ import 'package:climbing_app/features/rating/presentation/widgets/participation_
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class UserRatingPage extends StatelessWidget {
+class UserRatingPage extends StatefulWidget {
   final Score score;
 
   const UserRatingPage({super.key, required this.score});
 
   @override
-  Widget build(BuildContext context) {
-    final colorTheme = AppTheme.of(context).colorTheme;
-    final textTheme = AppTheme.of(context).textTheme;
-    final List<AscentRead> sortedAscents = List.from(score.ascents);
-    final lastCountedDate = DateTime.now()
-        .subtract(const Duration(days: 45))
-        .copyWith(
-            hour: 0, minute: 0, second: 0, microsecond: 0, millisecond: 0);
+  State<UserRatingPage> createState() => _UserRatingPageState();
+}
+
+class _UserRatingPageState extends State<UserRatingPage> {
+  late final List<AscentRead> sortedAscents;
+  final lastCountedDate = DateTime.now()
+      .subtract(const Duration(days: 45))
+      .copyWith(hour: 0, minute: 0, second: 0, microsecond: 0, millisecond: 0);
+
+  @override
+  void initState() {
+    sortedAscents = List.from(widget.score.ascents);
     sortedAscents.sort((a, b) {
       if (a.date.compareTo(lastCountedDate) < 0 ||
           b.date.compareTo(lastCountedDate) < 0) {
@@ -34,12 +38,20 @@ class UserRatingPage extends StatelessWidget {
       }
       return result;
     });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = AppTheme.of(context).colorTheme;
+    final textTheme = AppTheme.of(context).textTheme;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           CustomSliverAppBar(
-            text: '${score.user.lastName} ${score.user.firstName}',
+            text:
+                '${widget.score.user.lastName} ${widget.score.user.firstName}',
             leading: const BackButton(),
           ),
           // Slivers
@@ -47,14 +59,14 @@ class UserRatingPage extends StatelessWidget {
             padding: const Pad(all: 16),
             sliver: SliverList.list(
               children: [
-                if (score.participations.isNotEmpty) ...[
+                if (widget.score.participations.isNotEmpty) ...[
                   Text(
                     "Соревнования",
                     style: textTheme.title,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  ...score.participations.indexed.map(
+                  ...widget.score.participations.indexed.map(
                     (e) => Padding(
                       padding: const Pad(bottom: 16),
                       child:
@@ -83,7 +95,8 @@ class UserRatingPage extends StatelessWidget {
                     ),
                   )
                 ],
-                if (score.ascents.isEmpty && score.participations.isEmpty)
+                if (widget.score.ascents.isEmpty &&
+                    widget.score.participations.isEmpty)
                   Text(
                     "Этот пользователь пока не участвовал в спортивной деятельности секции",
                     style: textTheme.subtitle1,
