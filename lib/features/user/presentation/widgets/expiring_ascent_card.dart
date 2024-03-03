@@ -7,8 +7,6 @@ import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 class ExpiringAscentCard extends StatefulWidget {
   final ExpiringAscent expiringAscent;
@@ -47,13 +45,9 @@ class _ExpiringAscentCardState extends State<ExpiringAscentCard> {
 
     return TapRegion(
       onTapInside: (event) {
-        GetIt.I<Logger>()
-            .d('Tap inside: ${widget.expiringAscent.ascent.route.name}');
         setState(() => isRemoveShown = true);
       },
       onTapOutside: (event) {
-        GetIt.I<Logger>()
-            .d('Tap outside: ${widget.expiringAscent.ascent.route.name}');
         setState(() => isRemoveShown = false);
       },
       child: Card(
