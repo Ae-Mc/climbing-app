@@ -12,7 +12,10 @@ abstract class InfrastructureModule {
   Logger logger() => Logger(level: Level.debug, printer: PrettyPrinter());
 
   @lazySingleton
-  Dio dio() => Dio(BaseOptions(connectTimeout: const Duration(seconds: 5)));
+  Dio dio() => Dio(BaseOptions(
+      connectTimeout: const Duration(seconds: 5),
+      sendTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5)));
 
   @preResolve
   Future<SharedPreferences> sharedPreferences() async =>

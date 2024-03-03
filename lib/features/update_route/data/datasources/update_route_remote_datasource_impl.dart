@@ -34,7 +34,8 @@ class UpdateRouteRemoteDatasourceImpl implements UpdateRouteRemoteDatasource {
       data: formData,
       options: Options(
         contentType: 'multipart/form-data',
-        receiveTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 25),
+        sendTimeout: const Duration(seconds: 25),
       ),
     );
     final responseRoute = response.data;

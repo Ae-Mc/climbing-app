@@ -64,7 +64,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                               height: CustomBackButton.iconSize,
                               child: state.whenOrNull(
                                 authorized: (activeUser, _, __) =>
-                                    (activeUser.id == widget.route.author.id)
+                                    (activeUser.id == widget.route.author.id ||
+                                            activeUser.isSuperuser)
                                         ? IconButton(
                                             padding: Pad.zero,
                                             onPressed: () =>
