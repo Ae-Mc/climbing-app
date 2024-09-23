@@ -138,7 +138,7 @@ class SignInPage extends StatelessWidget {
       )),
       signInSucceed: () {
         onSuccessSignIn();
-        AutoRouter.of(context).pop();
+        AutoRouter.of(context).maybePop();
       },
       orElse: () => {},
     );

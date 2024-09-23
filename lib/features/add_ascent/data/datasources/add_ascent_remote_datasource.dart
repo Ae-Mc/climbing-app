@@ -3,7 +3,7 @@ import 'package:climbing_app/core/entities/ascent.dart';
 import 'package:climbing_app/features/add_ascent/domain/entities/ascent_create.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'add_ascent_remote_datasource.g.dart';
 

@@ -148,7 +148,7 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
                 onSingleResult: (context, singleResult) => singleResult.when(
                   addedSuccessfully: () => AutoRouter.of(context)
                     ..popUntilRoot()
-                    ..pop(),
+                    ..maybePop(),
                   failure: (failure) => CustomToast(context)
                       .showTextFailureToast(failureToText(failure)),
                 ),

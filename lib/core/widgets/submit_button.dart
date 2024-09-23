@@ -25,9 +25,9 @@ class SubmitButton extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: color == null
             ? null
-            : MaterialStateProperty.resolveWith((states) {
+            : WidgetStateProperty.resolveWith((states) {
                 for (final state in states) {
-                  if (state == MaterialState.disabled) {
+                  if (state == WidgetState.disabled) {
                     return AppTheme.of(context).colorTheme.unselected;
                   }
                 }

@@ -179,14 +179,14 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
                         content: const Text("Удалить трассу?"),
                         actions: [
                           TextButton(
-                            onPressed: () => context.router.pop(false),
+                            onPressed: () => context.router.maybePop(false),
                             child: Text(
                               "Отмена",
                               style: TextStyle(color: colorTheme.primary),
                             ),
                           ),
                           TextButton(
-                            onPressed: () => context.router.pop(true),
+                            onPressed: () => context.router.maybePop(true),
                             child: Text(
                               "Да",
                               style: TextStyle(color: colorTheme.primary),

@@ -213,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
       registerSucceed: () {
         widget.onSuccessRegister();
         // ignore: avoid-ignoring-return-values
-        AutoRouter.of(context).pop();
+        AutoRouter.of(context).maybePop();
       },
       registerFailure: (registerFailure) =>
           customToast.showTextFailureToast(registerFailure.when(

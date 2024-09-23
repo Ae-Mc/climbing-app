@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/features/update_route/domain/entities/file.dart';
 import 'package:climbing_app/features/routes/domain/entities/image.dart'
     as route_image;
@@ -35,26 +36,35 @@ class _ImagesCarouselState extends State<ImagesCarousel>
   bool get wantKeepAlive => true;
 
   Future<List<File>> initImages() async {
-    if (!widget.controller.imagesInitialized) {
-      final temp = <int, File>{};
-      for (int i = 0; i < widget.initialImages.length; i++) {
-        final image = widget.initialImages[i];
-        var imageData = GetIt.I<Dio>()
-            .get(image.url, options: Options(responseType: ResponseType.bytes))
-            .then((value) => Uint8List.fromList(value.data as List<int>));
-        temp[i] =
-            (File(filename: path.basename(image.url), data: await imageData));
-        GetIt.I<Logger>().d("Image $image loaded");
-      }
-      widget.controller.images.clear();
-      for (int i = 0; i < widget.initialImages.length; i++) {
-        if (temp.containsKey(i)) {
-          widget.controller.images.add(temp[i]!);
+    try {
+      if (!widget.controller.imagesInitialized) {
+        final temp = <int, File>{};
+        for (int i = 0; i < widget.initialImages.length; i++) {
+          final image = widget.initialImages[i];
+          var imageData = GetIt.I<Dio>()
+              .get(image.url,
+                  options: Options(responseType: ResponseType.bytes))
+              .then((value) => Uint8List.fromList(value.data as List<int>));
+          temp[i] =
+              (File(filename: path.basename(image.url), data: await imageData));
+          GetIt.I<Logger>().d("Image $image loaded");
         }
+        widget.controller.images.clear();
+        for (int i = 0; i < widget.initialImages.length; i++) {
+          if (temp.containsKey(i)) {
+            widget.controller.images.add(temp[i]!);
+          }
+        }
+        imagesTapped =
+            List.filled(widget.controller.images.length, false, growable: true);
+        widget.controller.imagesInitialized = true;
       }
-      imagesTapped =
-          List.filled(widget.controller.images.length, false, growable: true);
-      widget.controller.imagesInitialized = true;
+    } catch (error) {
+      if (mounted) {
+        CustomToast(context).showTextFailureToast(error.toString());
+      } else {
+        GetIt.I<Logger>().e(error);
+      }
     }
     return widget.controller.images;
   }

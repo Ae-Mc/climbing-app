@@ -8,7 +8,7 @@ import 'package:climbing_app/features/user/domain/entities/user.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'user_remote_datasource_impl.g.dart';
 

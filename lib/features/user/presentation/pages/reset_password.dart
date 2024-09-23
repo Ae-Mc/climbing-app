@@ -69,7 +69,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             const Spacer(),
             SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
               onSingleResult: (context, singleResult) => singleResult.maybeMap(
-                  success: (value) => GetIt.I<AppRouter>().pop(),
+                  success: (value) => GetIt.I<AppRouter>().maybePop(),
                   passwordResetFailure: (value) => value.maybeMap(
                       failure: (event) =>
                           CustomToast(context).showTextFailureToast(

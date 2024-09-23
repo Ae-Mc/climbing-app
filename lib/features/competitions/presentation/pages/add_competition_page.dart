@@ -175,7 +175,7 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> {
                           'Соревнование успешно добавлено',
                         );
 
-                        return AutoRouter.of(context).pop();
+                        return AutoRouter.of(context).maybePop();
                       },
                     ),
                     builder: (context, state) => SubmitButton(

@@ -4,7 +4,7 @@ import 'package:climbing_app/features/competitions/domain/entities/competition_c
 import 'package:climbing_app/features/rating/domain/entities/competition_read.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'competitions_datasource_impl.g.dart';
 

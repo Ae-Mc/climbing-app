@@ -18,10 +18,10 @@ class CustomBackButton extends StatelessWidget {
 
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(colorTheme.secondary),
-        foregroundColor: MaterialStateProperty.all(colorTheme.background),
-        padding: MaterialStateProperty.all(Pad.zero),
-        shape: MaterialStateProperty.all(const CircleBorder()),
+        backgroundColor: WidgetStatePropertyAll(colorTheme.secondary),
+        foregroundColor: WidgetStatePropertyAll(colorTheme.background),
+        padding: const WidgetStatePropertyAll(Pad.zero),
+        shape: const WidgetStatePropertyAll(CircleBorder()),
       ),
       onPressed: () => onPressed(context),
       child: Icon(Icons.chevron_left,
@@ -31,5 +31,5 @@ class CustomBackButton extends StatelessWidget {
 
   static void defaultOnPressed(BuildContext context) =>
       // ignore: avoid-ignoring-return-values
-      AutoRouter.of(context).pop();
+      AutoRouter.of(context).maybePop();
 }

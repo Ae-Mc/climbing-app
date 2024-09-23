@@ -138,35 +138,33 @@ class App extends StatelessWidget {
                   labelStyle: theme.textTheme.chip,
                 ),
                 colorScheme: const ColorScheme.light().copyWith(
-                  background: theme.colorTheme.background,
                   brightness: theme.colorTheme.brightness,
                   error: theme.colorTheme.error,
                   onError: theme.colorTheme.onError,
-                  onBackground: theme.colorTheme.onBackground,
                   onPrimary: theme.colorTheme.onPrimary,
                   primary: theme.colorTheme.primary,
                   secondary: theme.colorTheme.secondary,
                   surface: theme.colorTheme.surface,
+                  onSurface: theme.colorTheme.onBackground,
                 ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => states.contains(MaterialState.disabled)
+                    backgroundColor: WidgetStateProperty.resolveWith(
+                      (states) => states.contains(WidgetState.disabled)
                           ? theme.colorTheme.unselected
                           : theme.colorTheme.primary,
                     ),
-                    elevation: MaterialStateProperty.all(8),
-                    minimumSize: MaterialStateProperty.all(Size.zero),
-                    padding: MaterialStateProperty.all(
-                      const Pad(horizontal: 64, vertical: 16),
+                    elevation: const WidgetStatePropertyAll(8),
+                    minimumSize: const WidgetStatePropertyAll(Size.zero),
+                    padding: const WidgetStatePropertyAll(
+                      Pad(horizontal: 64, vertical: 16),
                     ),
-                    shape: MaterialStateProperty.all(
-                      const RoundedRectangleBorder(
+                    shape: const WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
-                    textStyle:
-                        MaterialStateProperty.all(theme.textTheme.button),
+                    textStyle: WidgetStatePropertyAll(theme.textTheme.button),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
@@ -175,13 +173,13 @@ class App extends StatelessWidget {
                 scaffoldBackgroundColor: theme.colorTheme.background,
                 textButtonTheme: TextButtonThemeData(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(
+                    foregroundColor: WidgetStatePropertyAll(
                       theme.colorTheme.secondaryVariant,
                     ),
-                    padding: MaterialStateProperty.all(Pad.zero),
+                    padding: const WidgetStatePropertyAll(Pad.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     textStyle:
-                        MaterialStateProperty.all(theme.textTheme.subtitle2),
+                        WidgetStatePropertyAll(theme.textTheme.subtitle2),
                   ),
                 ),
                 textTheme: TextTheme(

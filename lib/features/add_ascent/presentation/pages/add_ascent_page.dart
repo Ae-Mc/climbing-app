@@ -121,7 +121,7 @@ class _AddAscentPageState extends State<AddAscentPage> {
                               'Пролаз успешно добавлен',
                             );
 
-                            return AutoRouter.of(context).pop();
+                            return AutoRouter.of(context).maybePop();
                           },
                         ),
                         builder: (context, state) => SubmitButton(

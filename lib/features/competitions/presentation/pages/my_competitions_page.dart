@@ -95,7 +95,7 @@ class MyCompetitionsPage extends StatelessWidget {
                                             const UniversalBlocEvent.refresh()),
                                     style: const ButtonStyle(
                                       alignment: Alignment.center,
-                                      shape: MaterialStatePropertyAll(
+                                      shape: WidgetStatePropertyAll(
                                         CircleBorder(),
                                       ),
                                     ),

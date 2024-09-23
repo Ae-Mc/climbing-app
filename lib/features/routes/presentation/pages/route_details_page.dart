@@ -232,7 +232,8 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
       removeRouteSuccess: () {
         toast.showTextSuccessToast("Трасса успешно удалена!");
         BlocProvider.of<UserBloc>(context).add(const UserEvent.fetch());
-        AutoRouter.of(context).pop(); // ignore: avoid-ignoring-return-values
+        AutoRouter.of(context)
+            .maybePop(); // ignore: avoid-ignoring-return-values
       },
     );
   }
