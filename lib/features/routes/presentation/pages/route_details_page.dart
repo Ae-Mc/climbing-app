@@ -3,16 +3,23 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
+import 'package:climbing_app/core/entities/ascent.dart';
+import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/core/util/category_to_color.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
+import 'package:climbing_app/features/routes/domain/repositories/routes_repository.dart';
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:climbing_app/features/routes/presentation/widgets/custom_table_row.dart';
+import 'package:climbing_app/features/routes/presentation/widgets/route_ascent_card.dart';
 import 'package:climbing_app/features/routes/presentation/widgets/route_details_carousel_image.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
+import 'package:dartz/dartz.dart' hide State;
+import 'package:flex_list/flex_list.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:single_result_bloc/single_result_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -205,6 +212,58 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                           .push(AddAscentRoute(route: widget.route)),
                       child: const Text('Я пролез трассу'),
                     ),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const Pad(horizontal: 16, vertical: 8),
+                  child: FutureBuilder<Either<Failure, List<Ascent>>>(
+                    future:
+                        GetIt.I<RoutesRepository>().routeAscents(widget.route),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final data = snapshot.data!;
+                        return data.fold(
+                          (l) => const Text(
+                              'Ошибка! Не удалось получить список пролазов!'),
+                          (r) => r.isEmpty
+                              ? Text(
+                                  'Трассу ещё никто не пролез. Станьте первым!',
+                                  style: AppTheme.of(context).textTheme.title,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                )
+                              : Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      'Список пролазов (${r.length}):',
+                                      style:
+                                          AppTheme.of(context).textTheme.title,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    FlexList(
+                                      verticalSpacing: 8,
+                                      horizontalSpacing: 8,
+                                      // spacing: 8,
+                                      // runSpacing: 8,
+                                      // alignment: WrapAlignment.spaceBetween,
+                                      children: [
+                                        ...r.map(
+                                          (e) => RouteAscentCard(ascent: e),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                        );
+                      }
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive());
+                    },
                   ),
                 ),
               ),

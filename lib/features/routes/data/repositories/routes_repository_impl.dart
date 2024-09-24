@@ -1,3 +1,4 @@
+import 'package:climbing_app/core/entities/ascent.dart';
 import 'package:climbing_app/features/routes/data/datasources/routes_remote_datasource.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:climbing_app/core/failure.dart';
@@ -19,5 +20,10 @@ class RoutesRepositoryImpl implements RoutesRepository {
   @override
   Future<Either<Failure, void>> removeRoute(Route route) {
     return remoteDatasource.removeRoute(route.id);
+  }
+
+  @override
+  Future<Either<Failure, List<Ascent>>> routeAscents(Route route) {
+    return remoteDatasource.routeAscents(route.id);
   }
 }
