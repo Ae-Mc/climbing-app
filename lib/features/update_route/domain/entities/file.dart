@@ -7,6 +7,7 @@ part 'file.freezed.dart';
 class File with _$File {
   const factory File({
     required String filename,
+    required String contentType,
     required Uint8List data,
   }) = _File;
 }

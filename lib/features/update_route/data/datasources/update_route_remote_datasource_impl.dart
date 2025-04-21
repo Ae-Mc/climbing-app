@@ -5,7 +5,6 @@ import 'package:climbing_app/features/update_route/domain/entities/route_update.
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
-import 'package:mime/mime.dart';
 
 @Singleton(as: UpdateRouteRemoteDatasource)
 class UpdateRouteRemoteDatasourceImpl implements UpdateRouteRemoteDatasource {
@@ -20,11 +19,10 @@ class UpdateRouteRemoteDatasourceImpl implements UpdateRouteRemoteDatasource {
       // Used to send empty images, otherwise 400 error will be returned
       '_hidden': '',
       'images': route.images.map((image) {
-        final mimeType = lookupMimeType(image.filename);
         return MultipartFile.fromBytes(
           image.data,
           filename: image.filename,
-          contentType: mimeType == null ? null : MediaType.parse(mimeType),
+          contentType: MediaType.parse(image.contentType),
         );
       }).toList()
     });

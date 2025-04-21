@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
@@ -12,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 
 class ImagesCarousel extends StatefulWidget {
@@ -39,32 +38,41 @@ class _ImagesCarouselState extends State<ImagesCarousel>
     try {
       if (!widget.controller.imagesInitialized) {
         final temp = <int, File>{};
-        for (int i = 0; i < widget.initialImages.length; i++) {
-          final image = widget.initialImages[i];
-          var imageData = GetIt.I<Dio>()
-              .get(image.url,
-                  options: Options(responseType: ResponseType.bytes))
-              .then((value) => Uint8List.fromList(value.data as List<int>));
-          temp[i] =
-              (File(filename: path.basename(image.url), data: await imageData));
-          GetIt.I<Logger>().d("Image $image loaded");
-        }
+        await Future.forEach(
+          widget.initialImages.asMap().entries,
+          (element) async {
+            final i = element.key;
+            final image = element.value;
+            var imageResponse = await GetIt.I<Dio>().get(
+              image.url,
+              options: Options(responseType: ResponseType.bytes),
+            );
+            temp[i] = (File(
+              filename: path.basename(image.url),
+              contentType:
+                  imageResponse.headers.value('Content-Type') ?? 'image/jpeg',
+              data: imageResponse.data,
+            ));
+            GetIt.I<Logger>().d("Image $image loaded: ${temp[i]?.filename}");
+          },
+        );
         widget.controller.images.clear();
         for (int i = 0; i < widget.initialImages.length; i++) {
-          if (temp.containsKey(i)) {
-            widget.controller.images.add(temp[i]!);
-          }
+          widget.controller.images.add(temp[i]!);
         }
         imagesTapped =
             List.filled(widget.controller.images.length, false, growable: true);
         widget.controller.imagesInitialized = true;
       }
-    } catch (error) {
+    } on DioException catch (error) {
+      if (error.response?.data != null) {
+        GetIt.I<Logger>().e(String.fromCharCodes(error.response?.data));
+      }
       if (mounted) {
         CustomToast(context).showTextFailureToast(error.toString());
-      } else {
-        GetIt.I<Logger>().e(error);
       }
+    } catch (error) {
+      GetIt.I<Logger>().e(error);
     }
     return widget.controller.images;
   }
@@ -208,28 +216,54 @@ class _ImagesCarouselState extends State<ImagesCarousel>
   }
 
   void pickImage() async {
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      final imageBytes = await image.readAsBytes();
-      widget.controller.images
-          .add(File(filename: path.basename(image.path), data: imageBytes));
-      imagesTapped.add(false);
-      setState(() => {});
+    try {
+      final imageFile = await pickImageFile();
+      if (imageFile != null) {
+        setState(() {
+          widget.controller.images.add(imageFile);
+          imagesTapped.add(false);
+        });
+      }
+    } on UnsupportedError catch (error) {
+      if (mounted) {
+        CustomToast(context).showTextFailureToast(error.message.toString());
+      }
     }
   }
 
   void replaceImage(int index) async {
+    try {
+      final imageFile = await pickImageFile();
+      if (imageFile != null) {
+        setState(() {
+          widget.controller.images[index] = imageFile;
+          imagesTapped[index] = false;
+        });
+      }
+    } on UnsupportedError catch (error) {
+      if (mounted) {
+        CustomToast(context).showTextFailureToast(error.message.toString());
+      }
+    }
+  }
+
+  Future<File?> pickImageFile() async {
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final imageBytes = await image.readAsBytes();
-      setState(() {
-        widget.controller.images[index] =
-            (File(filename: path.basename(image.path), data: imageBytes));
-        imagesTapped[index] = false;
-      });
+      final mime = lookupMimeType(image.name);
+      if (mime == null || !mime.startsWith("image/")) {
+        throw UnsupportedError(
+            'Данный формат файлов не поддерживается${mime == null ? '' : ' $mime'} ${image.name}');
+      }
+      return File(
+        filename: path.basename(image.path),
+        contentType: mime,
+        data: imageBytes,
+      );
     }
+    return null;
   }
 }
 
