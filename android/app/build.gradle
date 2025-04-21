@@ -29,6 +29,7 @@ if (keystorePropertiesFile.exists())
 
 android {
     compileSdkVersion flutter.compileSdkVersion
+    namespace 'ru.aemc.itmo_climbing'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
