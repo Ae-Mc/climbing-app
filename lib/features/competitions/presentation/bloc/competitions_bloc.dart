@@ -16,9 +16,9 @@ class CompetitionsBloc extends SingleResultBloc<CompetitionsEvent,
   final CompetitionsRepository repository;
 
   CompetitionsBloc(this.repository) : super(const CompetitionsState.loaded()) {
-    on<CompetitionsEvent>(
-      (event, emit) async => await event.when<Future<void>>(
-        addCompetition: (competition) async {
+    on<CompetitionsEvent>((event, emit) async {
+      switch (event) {
+        case CompetitionsEventAddCompetition(:final competition):
           emit(const CompetitionsState.loading());
           (await repository.addCompetition(competition)).fold(
             (l) {
@@ -30,8 +30,7 @@ class CompetitionsBloc extends SingleResultBloc<CompetitionsEvent,
               emit(const CompetitionsState.loaded());
             },
           );
-        },
-        removeCompetition: (String competitionId) async {
+        case CompetitionsEventRemoveCompetition(:final competitionId):
           emit(const CompetitionsState.loading());
           (await repository.removeCompetition(competitionId)).fold(
             (l) {
@@ -43,8 +42,7 @@ class CompetitionsBloc extends SingleResultBloc<CompetitionsEvent,
               emit(const CompetitionsState.loaded());
             },
           );
-        },
-      ),
-    );
+      }
+    });
   }
 }

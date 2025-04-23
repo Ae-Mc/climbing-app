@@ -112,23 +112,21 @@ class _AddAscentPageState extends State<AddAscentPage> {
                       width: double.infinity,
                       child: SingleResultBlocBuilder<AddAscentBloc,
                           AddAscentState, AddAscentSingleResult>(
-                        onSingleResult: (context, singleResult) =>
-                            singleResult.when(
-                          failure: (failure) => CustomToast(context)
-                              .showTextFailureToast(failureToText(failure)),
-                          success: () {
-                            CustomToast(context).showTextSuccessToast(
-                              'Пролаз успешно добавлен',
-                            );
+                        onSingleResult: (context, singleResult) {
+                          switch (singleResult) {
+                            case AddAscentSingleResultFailure(:final failure):
+                              CustomToast(context)
+                                  .showTextFailureToast(failureToText(failure));
+                            case AddAscentSingleResultSuccess():
+                              CustomToast(context).showTextSuccessToast(
+                                'Пролаз успешно добавлен',
+                              );
 
-                            return AutoRouter.of(context).maybePop();
-                          },
-                        ),
+                              AutoRouter.of(context).maybePop();
+                          }
+                        },
                         builder: (context, state) => SubmitButton(
-                          isLoaded: state.when(
-                            loaded: () => true,
-                            loading: () => false,
-                          ),
+                          isLoaded: state is! AddAscentStateLoading,
                           onPressed: () => addAscent(context),
                           text: 'Добавить пролаз',
                         ),

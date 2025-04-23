@@ -69,23 +69,24 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
                             builder: (context, state) => SizedBox(
                               width: CustomBackButton.iconSize,
                               height: CustomBackButton.iconSize,
-                              child: state.whenOrNull(
-                                authorized: (activeUser, _, __) =>
-                                    (activeUser.id == widget.route.author.id ||
-                                            activeUser.isSuperuser)
-                                        ? IconButton(
-                                            padding: Pad.zero,
-                                            onPressed: () =>
-                                                AutoRouter.of(context).push(
-                                                    UpdateRouteRoute(
-                                                        route: widget.route)),
-                                            icon: const Icon(
-                                              Icons.edit_rounded,
-                                            ),
-                                            iconSize: CustomBackButton.iconSize,
-                                          )
-                                        : null,
-                              ),
+                              child: switch (state) {
+                                UserStateAuthorized(:final activeUser) =>
+                                  (activeUser.id == widget.route.author.id ||
+                                          activeUser.isSuperuser)
+                                      ? IconButton(
+                                          padding: Pad.zero,
+                                          onPressed: () =>
+                                              AutoRouter.of(context).push(
+                                                  UpdateRouteRoute(
+                                                      route: widget.route)),
+                                          icon: const Icon(
+                                            Icons.edit_rounded,
+                                          ),
+                                          iconSize: CustomBackButton.iconSize,
+                                        )
+                                      : null,
+                                _ => null,
+                              },
                             ),
                           ),
                         ],
@@ -286,14 +287,14 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
   ) {
     final toast = CustomToast(context);
 
-    return singleResult.when<void>(
-      failure: (failure) => toast.showTextFailureToast(failureToText(failure)),
-      removeRouteSuccess: () {
+    switch (singleResult) {
+      case RoutesBlocSingleResultFailure(:final failure):
+        toast.showTextFailureToast(failureToText(failure));
+      case RoutesBlocSingleResultRemoveRouteSuccess():
         toast.showTextSuccessToast("Трасса успешно удалена!");
         BlocProvider.of<UserBloc>(context).add(const UserEvent.fetch());
         AutoRouter.of(context)
             .maybePop(); // ignore: avoid-ignoring-return-values
-      },
-    );
+    }
   }
 }

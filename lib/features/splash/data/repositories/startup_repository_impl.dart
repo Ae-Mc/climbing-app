@@ -92,11 +92,10 @@ class StartupRepositoryImpl implements StartupRepository {
     final UserBloc userBloc = BlocProvider.of(context);
     userBloc.add(const UserEvent.initialize());
 
-    return (await userBloc.stream
-            .firstWhere((element) => element is! UserStateLoading))
-        .maybeWhen(
-      initializationFailure: (failure) => Left(failure),
-      orElse: () => const Right(null),
-    );
+    return switch (await userBloc.stream
+        .firstWhere((element) => element is! UserStateLoading)) {
+      UserStateInitializationFailure(:final failure) => Left(failure),
+      _ => const Right(null),
+    };
   }
 }

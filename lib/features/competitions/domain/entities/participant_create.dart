@@ -4,7 +4,7 @@ part 'participant_create.freezed.dart';
 part 'participant_create.g.dart';
 
 @freezed
-class ParticipantCreate with _$ParticipantCreate {
+sealed class ParticipantCreate with _$ParticipantCreate {
   const factory ParticipantCreate({
     required int place,
     required String userId,

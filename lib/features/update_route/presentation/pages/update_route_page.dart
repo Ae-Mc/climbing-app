@@ -158,20 +158,21 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
             children: [
               SingleResultBlocBuilder<RoutesBloc, RoutesBlocState,
                   RoutesBlocSingleResult>(
-                onSingleResult: (context, singleResult) =>
-                    singleResult.when<void>(
-                  removeRouteSuccess: () {
-                    CustomToast(context).showTextSuccessToast("Трасса удалена");
-                    refreshAndPop(context);
-                  },
-                  failure: (failure) => CustomToast(context)
-                      .showTextFailureToast(failureToText(failure)),
-                ),
+                onSingleResult: (context, singleResult) {
+                  switch (singleResult) {
+                    case RoutesBlocSingleResultRemoveRouteSuccess():
+                      CustomToast(context)
+                          .showTextSuccessToast("Трасса удалена");
+                      refreshAndPop(context);
+                    case RoutesBlocSingleResultFailure(:final failure):
+                      CustomToast(context)
+                          .showTextFailureToast(failureToText(failure));
+                  }
+                },
                 builder: (context, state) => SubmitButton(
                   color: colorTheme.error,
                   text: "Удалить",
-                  isLoaded:
-                      state.maybeMap(loading: (_) => false, orElse: () => true),
+                  isLoaded: state is! RoutesBlocStateLoading,
                   onPressed: () {
                     showDialog(
                       context: context,

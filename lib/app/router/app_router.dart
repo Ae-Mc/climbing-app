@@ -4,7 +4,7 @@ import 'package:climbing_app/app/router/guards/auth_guard.dart';
 export 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends $AppRouter {
+class AppRouter extends RootStackRouter {
   AuthGuard authGuard;
 
   AppRouter({required this.authGuard});

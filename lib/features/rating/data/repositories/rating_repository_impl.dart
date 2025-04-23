@@ -3,6 +3,7 @@ import 'package:climbing_app/features/rating/data/datasources/rating_remote_data
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/rating/domain/repositories/rating_repository.dart';
+import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -24,4 +25,8 @@ class RatingRepositoryImpl implements RatingRepository {
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }
   }
+
+  @override
+  Future<List<Route>> getUserRating(String userId) =>
+      remoteDatasource.getUserRoutes(userId);
 }

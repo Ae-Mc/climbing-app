@@ -6,7 +6,7 @@ part 'competition_create.freezed.dart';
 part 'competition_create.g.dart';
 
 @freezed
-class CompetitionCreate with _$CompetitionCreate {
+sealed class CompetitionCreate with _$CompetitionCreate {
   const factory CompetitionCreate({
     required String name,
     @JsonKey(toJson: dateTimeToDate, fromJson: dateToDateTime)

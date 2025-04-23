@@ -18,20 +18,23 @@ class RatingBloc
   RatingBloc(this.repository)
       : super(const RatingState.loaded([], false, false)) {
     on<RatingEvent>((event, emit) async {
-      await event.when<Future<void>>(
-        refresh: () async {
+      switch (event) {
+        case RatingEventRefresh():
           final previousState = state;
           emit(RatingState.loading(
-              previousState.mustBeStudent, previousState.mustBeFemale));
+            previousState.mustBeStudent,
+            previousState.mustBeFemale,
+          ));
 
           return (await repository.getRating(
-                  previousState.mustBeStudent, previousState.mustBeFemale))
+            previousState.mustBeStudent,
+            previousState.mustBeFemale,
+          ))
               .fold(
             (l) {
               addSingleResult(RatingSingleResult.failure(l));
               emit(RatingState.loaded(
-                previousState.when(
-                    loaded: (scores, _, __) => scores, loading: (_, __) => []),
+                previousState is RatingStateLoaded ? previousState.scores : [],
                 previousState.mustBeStudent,
                 previousState.mustBeFemale,
               ));
@@ -39,16 +42,13 @@ class RatingBloc
             (r) => emit(RatingState.loaded(
                 r, previousState.mustBeStudent, previousState.mustBeFemale)),
           );
-        },
-        setMustBeStudent: (mustBeStudent) async {
+        case RatingEventSetMustBeStudent(:final mustBeStudent):
           emit(RatingState.loading(mustBeStudent, state.mustBeFemale));
           add(const RatingEvent.refresh());
-        },
-        setMustBeFemale: (mustBeFemale) async {
+        case RatingEventSetMustBeFemale(:final mustBeFemale):
           emit(RatingState.loading(state.mustBeStudent, mustBeFemale));
           add(const RatingEvent.refresh());
-        },
-      );
+      }
     });
   }
 }

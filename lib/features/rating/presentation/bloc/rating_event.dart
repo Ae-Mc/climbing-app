@@ -1,10 +1,10 @@
 part of 'rating_bloc.dart';
 
 @freezed
-class RatingEvent with _$RatingEvent {
-  const factory RatingEvent.refresh() = _Refresh;
+sealed class RatingEvent with _$RatingEvent {
+  const factory RatingEvent.refresh() = RatingEventRefresh;
   const factory RatingEvent.setMustBeFemale(bool mustBeFemale) =
-      _SetMustBeFemale;
+      RatingEventSetMustBeFemale;
   const factory RatingEvent.setMustBeStudent(bool mustBeStudent) =
-      _SetMustBeStudent;
+      RatingEventSetMustBeStudent;
 }

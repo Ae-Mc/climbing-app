@@ -4,7 +4,7 @@ part 'image.freezed.dart';
 part 'image.g.dart';
 
 @freezed
-class Image with _$Image {
+sealed class Image with _$Image {
   @JsonSerializable()
   const factory Image({
     required String id,

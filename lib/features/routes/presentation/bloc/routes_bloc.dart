@@ -16,24 +16,25 @@ class RoutesBloc extends SingleResultBloc<RoutesBlocEvent, RoutesBlocState,
   final RoutesRepository routesRepository;
 
   RoutesBloc(this.routesRepository) : super(const RoutesBlocState.loading()) {
-    on<RoutesBlocEvent>((event, emit) async => await event.when<Future<void>>(
-          loadRoutes: (archived) async {
-            emit(const RoutesBlocState.loading());
-            (await routesRepository.getAllRoutes(archived)).fold(
-              (left) {
-                if (left is ConnectionFailure) {
-                  emit(const RoutesBlocState.connectionFailure());
-                } else if (left is ServerFailure) {
-                  emit(RoutesBlocState.serverFailure(left));
-                } else {
-                  emit(const RoutesBlocState.unknownFailure());
-                }
-                addSingleResult(RoutesBlocSingleResult.failure(left));
-              },
-              (right) => emit(RoutesBlocState.loaded(right)),
-            );
-          },
-          removeRoute: (Route route) async => addSingleResult(
+    on<RoutesBlocEvent>((event, emit) async {
+      switch (event) {
+        case RoutesBlocEventLoadRoutes(:final archived):
+          emit(const RoutesBlocState.loading());
+          (await routesRepository.getAllRoutes(archived)).fold(
+            (left) {
+              if (left is ConnectionFailure) {
+                emit(const RoutesBlocState.connectionFailure());
+              } else if (left is ServerFailure) {
+                emit(RoutesBlocState.serverFailure(left));
+              } else {
+                emit(const RoutesBlocState.unknownFailure());
+              }
+              addSingleResult(RoutesBlocSingleResult.failure(left));
+            },
+            (right) => emit(RoutesBlocState.loaded(right)),
+          );
+        case RoutesBlocEventRemoveRoute(:final route):
+          addSingleResult(
             (await routesRepository.removeRoute(route)).fold(
               RoutesBlocSingleResult.failure,
               (r) {
@@ -42,7 +43,8 @@ class RoutesBloc extends SingleResultBloc<RoutesBlocEvent, RoutesBlocState,
                 return const RoutesBlocSingleResult.removeRouteSuccess();
               },
             ),
-          ),
-        ));
+          );
+      }
+    });
   }
 }

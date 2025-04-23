@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'initialization_status.freezed.dart';
 
 @freezed
-class InitializationStatus with _$InitializationStatus {
+sealed class InitializationStatus with _$InitializationStatus {
   factory InitializationStatus({
     @Default(false) bool getItInitialized,
     @Default(false) bool intlInitialized,

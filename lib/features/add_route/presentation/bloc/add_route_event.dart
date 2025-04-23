@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 part 'add_route_event.freezed.dart';
 
 @freezed
-class AddRouteEvent with _$AddRouteEvent {
+sealed class AddRouteEvent with _$AddRouteEvent {
   const factory AddRouteEvent.uploadRoute() = AddRouteEventUploadRoute;
   const factory AddRouteEvent.setName(String name) = AddRouteEventSetName;
   const factory AddRouteEvent.setMarksColor(String marksColor) =

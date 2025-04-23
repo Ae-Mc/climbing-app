@@ -29,21 +29,24 @@ class MyCompetitionsPage extends StatelessWidget {
         body: SafeArea(
           child: SingleResultBlocBuilder<CompetitionsBloc, CompetitionsState,
               CompetitionsSingleResult>(
-            onSingleResult: (context, singleResult) => singleResult.whenOrNull(
-              failure: (failure) => CustomToast(context)
-                  .showTextFailureToast(failureToText(failure)),
-              success: () => BlocProvider.of<UniversalBloc<CompList>>(context)
-                  .add(const UniversalBlocEvent.refresh()),
-            ),
+            onSingleResult: (context, singleResult) => switch (singleResult) {
+              CompetitionsSingleResultFailure(:final failure) =>
+                CustomToast(context)
+                    .showTextFailureToast(failureToText(failure)),
+              CompetitionsSingleResultSuccess() =>
+                BlocProvider.of<UniversalBloc<CompList>>(context)
+                    .add(const UniversalBlocEvent.refresh()),
+            },
             builder: (context, state) => SingleResultBlocBuilder<
                 UniversalBloc<CompList>,
                 UniversalBlocState<CompList>,
                 UniversalBlocSingleResult<CompList>>(
-              onSingleResult: (context, singleResult) => singleResult.when(
-                loaded: (_) => null,
-                failure: (failure) => CustomToast(context)
-                    .showTextFailureToast(failureToText(failure)),
-              ),
+              onSingleResult: (context, singleResult) => switch (singleResult) {
+                UniversalBlocSingleResultFailure(:final failure) =>
+                  CustomToast(context)
+                      .showTextFailureToast(failureToText(failure)),
+                _ => null
+              },
               builder: (context, state) => RefreshIndicator.adaptive(
                 onRefresh: () async =>
                     BlocProvider.of<UniversalBloc<CompList>>(context)
@@ -59,53 +62,56 @@ class MyCompetitionsPage extends StatelessWidget {
                       sliver: SliverList.list(
                         children: [
                           const SizedBox(height: 16),
-                          ...state.when(
-                            failure: (_) => const [],
-                            loaded: (competitions) => competitions.isEmpty
-                                ? [
-                                    Text(
-                                      'Вы ещё не добавляли соревнования!',
-                                      textAlign: TextAlign.center,
-                                      style: AppTheme.of(context)
-                                          .textTheme
-                                          .body2Regular,
-                                    )
-                                  ]
-                                : competitions.map(
-                                    (e) => CompetitionCard(
-                                      competition: e,
-                                      showDeleteButton: true,
-                                    ),
-                                  ),
-                            loading: () => const [],
-                          )
+                          ...switch (state) {
+                            UniversalBlocStateFailure() => const [],
+                            UniversalBlocStateLoaded(
+                              result: final competitions
+                            ) =>
+                              competitions.isEmpty
+                                  ? [
+                                      Text(
+                                        'Вы ещё не добавляли соревнования!',
+                                        textAlign: TextAlign.center,
+                                        style: AppTheme.of(context)
+                                            .textTheme
+                                            .body2Regular,
+                                      )
+                                    ]
+                                  : competitions
+                                      .map(
+                                        (e) => CompetitionCard(
+                                          competition: e,
+                                          showDeleteButton: true,
+                                        ),
+                                      )
+                                      .toList(),
+                            UniversalBlocStateLoading() => const [],
+                          }
                         ],
                       ),
                     ),
-                    if (state.mapOrNull(
-                            loading: (_) => true, failure: (_) => true) ??
-                        false)
+                    if (state is UniversalBlocStateLoading)
                       SliverFillRemaining(
                         child: Center(
-                          child: state.map(
-                              failure: (_) => ElevatedButton(
-                                    onPressed: () => BlocProvider.of<
-                                            UniversalBloc<CompList>>(context)
-                                        .add(
-                                            const UniversalBlocEvent.refresh()),
-                                    style: const ButtonStyle(
-                                      alignment: Alignment.center,
-                                      shape: WidgetStatePropertyAll(
-                                        CircleBorder(),
-                                      ),
-                                    ),
-                                    child: const Icon(Icons.refresh),
-                                  ),
-                              loaded: (_) => const SizedBox(),
-                              loading: (_) =>
-                                  const CircularProgressIndicator.adaptive()),
-                        ),
-                      )
+                            child: switch (state) {
+                          UniversalBlocStateFailure() => ElevatedButton(
+                              onPressed: () =>
+                                  BlocProvider.of<UniversalBloc<CompList>>(
+                                          context)
+                                      .add(const UniversalBlocEvent.refresh()),
+                              style: const ButtonStyle(
+                                alignment: Alignment.center,
+                                shape: WidgetStatePropertyAll(
+                                  CircleBorder(),
+                                ),
+                              ),
+                              child: const Icon(Icons.refresh),
+                            ),
+                          UniversalBlocStateLoaded() => const SizedBox(),
+                          UniversalBlocStateLoading() =>
+                            const CircularProgressIndicator.adaptive(),
+                        }),
+                      ),
                   ],
                 ),
               ),

@@ -27,85 +27,85 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-          onSingleResult: (context, singleResult) => singleResult.maybeWhen(
-            signOutSucceed: () => AutoRouter.of(context).popUntilRoot(),
-            failure: (failure) => CustomToast(context)
-                .showTextFailureToast(failureToText(failure)),
-            orElse: () =>
-                GetIt.I<Logger>().d('Unexpected error: $singleResult'),
-          ),
-          builder: (context, state) => state.maybeWhen(
-            orElse: () => const Center(child: CustomProgressIndicator()),
-            authorized: (activeUser, users, _) => ListView(
-              padding: const Pad(all: 16),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const CustomBackButton(),
-                    Expanded(
-                      child: Text(
-                        'Профиль',
-                        style: textTheme.title,
-                        textAlign: TextAlign.center,
+          onSingleResult: (context, singleResult) => switch (singleResult) {
+            UserSingleResultSuccess() => AutoRouter.of(context).popUntilRoot(),
+            UserSingleResultFailure(:final failure) =>
+              CustomToast(context).showTextFailureToast(failureToText(failure)),
+            _ => GetIt.I<Logger>().d('Unexpected error: $singleResult'),
+          },
+          builder: (context, state) => switch (state) {
+            UserStateAuthorized(:final activeUser) => ListView(
+                padding: const Pad(all: 16),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const CustomBackButton(),
+                      Expanded(
+                        child: Text(
+                          'Профиль',
+                          style: textTheme.title,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 48),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                Center(
-                  child: Container(
-                    width: 144,
-                    height: 144,
-                    decoration: ShapeDecoration(
-                      shape: CircleBorder(
-                        side: BorderSide(color: colorTheme.primary, width: 4),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: Container(
+                      width: 144,
+                      height: 144,
+                      decoration: ShapeDecoration(
+                        shape: CircleBorder(
+                          side: BorderSide(color: colorTheme.primary, width: 4),
+                        ),
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(72)),
-                      child: Assets.icons.climber.svg(fit: BoxFit.cover),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '${activeUser.firstName} ${activeUser.lastName}',
-                  style: textTheme.subtitle1,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: cardBorderRadius,
-                  ),
-                  child: InkWell(
-                    onTap: () =>
-                        AutoRouter.of(context).push(const MyRoutesRoute()),
-                    borderRadius: cardBorderRadius,
-                    child: Padding(
-                      padding: const Pad(all: 24),
-                      child: Text(
-                        'Загруженные трассы',
-                        style: textTheme.title,
-                        textAlign: TextAlign.center,
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(72)),
+                        child: Assets.icons.climber.svg(fit: BoxFit.cover),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => BlocProvider.of<UserBloc>(context)
-                      .add(const UserEvent.signOut()),
-                  child: const Text(
-                    'Выйти',
+                  const SizedBox(height: 16),
+                  Text(
+                    '${activeUser.firstName} ${activeUser.lastName}',
+                    style: textTheme.subtitle1,
                     textAlign: TextAlign.center,
                   ),
-                ),
-              ],
-            ),
-          ),
+                  const SizedBox(height: 16),
+                  Card(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: cardBorderRadius,
+                    ),
+                    child: InkWell(
+                      onTap: () =>
+                          AutoRouter.of(context).push(const MyRoutesRoute()),
+                      borderRadius: cardBorderRadius,
+                      child: Padding(
+                        padding: const Pad(all: 24),
+                        child: Text(
+                          'Загруженные трассы',
+                          style: textTheme.title,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () => BlocProvider.of<UserBloc>(context)
+                        .add(const UserEvent.signOut()),
+                    child: const Text(
+                      'Выйти',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            _ => const Center(child: CustomProgressIndicator()),
+          },
         ),
       ),
     );

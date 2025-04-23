@@ -16,11 +16,9 @@ class RouteAscentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        var shape = null;
-        if (ascent.user.id ==
-            state.mapOrNull(
-              authorized: (value) => value.activeUser.id,
-            )) {
+        ShapeBorder? shape;
+        if (state is UserStateAuthorized &&
+            ascent.user.id == state.activeUser.id) {
           shape = Theme.of(context).cardTheme.shape;
           if (shape is OutlinedBorder) {
             shape = shape.copyWith(

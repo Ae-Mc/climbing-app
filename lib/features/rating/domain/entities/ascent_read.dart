@@ -5,7 +5,7 @@ part 'ascent_read.freezed.dart';
 part 'ascent_read.g.dart';
 
 @freezed
-class AscentRead with _$AscentRead {
+sealed class AscentRead with _$AscentRead {
   const factory AscentRead({
     required String id,
     required bool isFlash,

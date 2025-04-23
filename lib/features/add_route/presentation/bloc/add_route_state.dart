@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 part 'add_route_state.freezed.dart';
 
 @freezed
-class AddRouteState with _$AddRouteState {
+sealed class AddRouteState with _$AddRouteState {
   const factory AddRouteState.data({
     String? name,
     String? color,

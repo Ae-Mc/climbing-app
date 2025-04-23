@@ -5,7 +5,7 @@ part 'competition_participant_read.freezed.dart';
 part 'competition_participant_read.g.dart';
 
 @freezed
-class CompetitionParticipantRead with _$CompetitionParticipantRead {
+sealed class CompetitionParticipantRead with _$CompetitionParticipantRead {
   const factory CompetitionParticipantRead({
     required String id,
     required int place,

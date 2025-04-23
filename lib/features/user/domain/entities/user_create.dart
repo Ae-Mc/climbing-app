@@ -5,7 +5,7 @@ part 'user_create.freezed.dart';
 part 'user_create.g.dart';
 
 @freezed
-class UserCreate with _$UserCreate {
+sealed class UserCreate with _$UserCreate {
   const factory UserCreate({
     required String email,
     required String firstName,

@@ -1,7 +1,7 @@
 part of 'routes_bloc.dart';
 
 @freezed
-class RoutesBlocState with _$RoutesBlocState {
+sealed class RoutesBlocState with _$RoutesBlocState {
   const factory RoutesBlocState.connectionFailure() =
       RoutesBlocStateConnectionFailure;
   const factory RoutesBlocState.loaded(List<Route> routes) =

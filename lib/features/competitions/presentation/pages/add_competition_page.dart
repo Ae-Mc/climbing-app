@@ -85,17 +85,13 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> {
       body: SafeArea(
         child: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
-            final sortedUsers = state.maybeMap(
-              authorized: (value) {
-                final sortedUsers = List<User>.from(value.allUsers);
-                sortedUsers.sort(
-                  (a, b) => ('${a.lastName} ${a.firstName}'.toLowerCase())
-                      .compareTo('${b.lastName} ${b.firstName}'.toLowerCase()),
-                );
-
-                return sortedUsers;
-              },
-              orElse: () => throw UnimplementedError('Impossible state'),
+            if (state is! UserStateAuthorized) {
+              throw UnimplementedError('Impossible state');
+            }
+            final sortedUsers = List<User>.from(state.allUsers);
+            sortedUsers.sort(
+              (a, b) => ('${a.lastName} ${a.firstName}'.toLowerCase())
+                  .compareTo('${b.lastName} ${b.firstName}'.toLowerCase()),
             );
 
             return NestedScrollView(
@@ -166,24 +162,24 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> {
                   const SizedBox(height: 24),
                   SingleResultBlocBuilder<CompetitionsBloc, CompetitionsState,
                       CompetitionsSingleResult>(
-                    onSingleResult: (context, singleResult) =>
-                        singleResult.when(
-                      failure: (failure) => CustomToast(context)
-                          .showTextFailureToast(failureToText(failure)),
-                      success: () {
-                        CustomToast(context).showTextSuccessToast(
-                          'Соревнование успешно добавлено',
-                        );
+                    onSingleResult: (context, singleResult) {
+                      switch (singleResult) {
+                        case CompetitionsSingleResultFailure(:final failure):
+                          CustomToast(context)
+                              .showTextFailureToast(failureToText(failure));
+                        case CompetitionsSingleResultSuccess():
+                          CustomToast(context).showTextSuccessToast(
+                            'Соревнование успешно добавлено',
+                          );
 
-                        return AutoRouter.of(context).maybePop();
-                      },
-                    ),
+                          AutoRouter.of(context).maybePop();
+                      }
+                    },
                     builder: (context, state) => SubmitButton(
                       isActive: [nameError, dateError, ratioError]
                               .every((element) => element == null) &&
                           participants.isNotEmpty,
-                      isLoaded:
-                          state.when(loaded: () => true, loading: () => false),
+                      isLoaded: state is! CompetitionsStateLoading,
                       onPressed: () =>
                           add(BlocProvider.of<CompetitionsBloc>(context)),
                       text: 'Добавить',
