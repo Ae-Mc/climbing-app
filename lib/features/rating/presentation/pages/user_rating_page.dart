@@ -33,6 +33,37 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
     final colorTheme = AppTheme.of(context).colorTheme;
     final textTheme = AppTheme.of(context).textTheme;
     final provider = userRatingProvider(widget.score.user.id);
+    final best5AscentsHeader = [
+      Text(
+        "5 лучших пролазов",
+        style: textTheme.title,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+      ),
+      const SizedBox(height: 16),
+    ];
+
+    final ascents = ref.watch(provider);
+    ref.listen(
+      provider,
+      (previous, next) {
+        if (next.hasError && !next.isLoading) {
+          late final String errorText;
+          final error = next.error!;
+          GetIt.I<Logger>().e(error);
+          switch (error) {
+            case DioException(:final response, :final requestOptions)
+                when response != null:
+              GetIt.I<Logger>().e(response.data);
+              GetIt.I<Logger>().e(requestOptions.uri);
+              errorText = "Ошибка сервера. Код ошибки: ${response.statusCode}";
+            case _:
+              errorText = "Ошибка загрузки. Проверьте интернет соединение";
+          }
+          CustomToast(context).showTextFailureToast(errorText);
+        }
+      },
+    );
 
     return Scaffold(
       body: NestedScrollView(
@@ -70,72 +101,38 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
                         ),
                       )
                     ],
-                    if (widget.score.ascents.isNotEmpty) ...[
-                      Text(
-                        "5 лучших пролазов",
-                        style: textTheme.title,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
+                    ascents.when(
+                      data: (ascents) => Column(
+                        children: [
+                          if (ascents.isNotEmpty) ...best5AscentsHeader,
+                          ...ascents
+                              .map((e) => Padding(
+                                    padding: const Pad(bottom: 16),
+                                    child: AscentCard(ascent: e),
+                                  ))
+                              .toList(),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final ascents = ref.watch(provider);
-                          ref.listen(
-                            provider,
-                            (previous, next) {
-                              if (next.hasError && !next.isLoading) {
-                                late final String errorText;
-                                final error = next.error!;
-                                GetIt.I<Logger>().e(error);
-                                switch (error) {
-                                  case DioException(
-                                        :final response,
-                                        :final requestOptions
-                                      )
-                                      when response != null:
-                                    GetIt.I<Logger>().e(response.data);
-                                    GetIt.I<Logger>().e(requestOptions.uri);
-                                    errorText =
-                                        "Ошибка сервера. Код ошибки: ${response.statusCode}";
-                                  case _:
-                                    errorText =
-                                        "Ошибка загрузки. Проверьте интернет соединение";
-                                }
-                                CustomToast(context)
-                                    .showTextFailureToast(errorText);
-                              }
-                            },
-                          );
-
-                          return ascents.when(
-                            data: (ascents) => Column(
-                              children: ascents
-                                  .map((e) => Padding(
-                                        padding: const Pad(bottom: 16),
-                                        child: AscentCard(ascent: e),
-                                      ))
-                                  .toList(),
+                      error: (error, stackTrace) {
+                        return Column(
+                          children: [
+                            ...best5AscentsHeader,
+                            Center(
+                              child: FloatingActionButton(
+                                onPressed: () async => ref.invalidate(provider),
+                                foregroundColor: colorTheme.onSecondary,
+                                child: const Icon(Icons.refresh),
+                              ),
                             ),
-                            error: (error, stackTrace) {
-                              return Center(
-                                child: FloatingActionButton(
-                                  onPressed: () async =>
-                                      ref.invalidate(provider),
-                                  foregroundColor: colorTheme.onSecondary,
-                                  child: const Icon(Icons.refresh),
-                                ),
-                              );
-                            },
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        },
+                          ],
+                        );
+                      },
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
+                    ),
                     if (widget.score.ascents.isEmpty &&
-                        widget.score.participations.isEmpty)
+                        ascents.valueOrNull?.isEmpty == true)
                       Text(
                         "Этот пользователь пока не участвовал в спортивной деятельности секции",
                         style: textTheme.subtitle1,
