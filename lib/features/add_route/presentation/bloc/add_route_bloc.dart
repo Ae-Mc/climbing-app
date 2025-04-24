@@ -17,19 +17,27 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
 
   AddRouteBloc(this.repository) : super(const AddRouteState.data()) {
     on<AddRouteEvent>((event, emit) async {
-      await state.map<Future<void>>(
-        data: (state) async => event.when<void>(
-          setName: (name) => emit(state.copyWith(name: name)),
-          setMarksColor: (color) => emit(state.copyWith(color: color)),
-          setDate: (date) => emit(state.copyWith(date: date)),
-          setDescription: (description) =>
-              emit(state.copyWith(description: description)),
-          setCategory: (category) => emit(state.copyWith(category: category)),
-          setImages: (images) => emit(state.copyWith(images: images)),
-          uploadRoute: () => upload(state, emit),
-        ),
-        loading: (_) => throw UnimplementedError('Impossible state'),
-      );
+      switch (state) {
+        case AddRouteStateData state:
+          switch (event) {
+            case AddRouteEventSetName(:var name):
+              emit(state.copyWith(name: name));
+            case AddRouteEventSetMarksColor(:var marksColor):
+              emit(state.copyWith(color: marksColor));
+            case AddRouteEventSetDate(:var date):
+              emit(state.copyWith(date: date));
+            case AddRouteEventSetDescription(:var description):
+              emit(state.copyWith(description: description));
+            case AddRouteEventSetCategory(:var category):
+              emit(state.copyWith(category: category));
+            case AddRouteEventSetImages(:var images):
+              emit(state.copyWith(images: images));
+            case AddRouteEventUploadRoute():
+              await upload(state, emit);
+          }
+        case AddRouteStateLoading():
+          throw UnimplementedError('Impossible state');
+      }
     });
   }
 
@@ -39,17 +47,11 @@ class AddRouteBloc extends SingleResultBloc<AddRouteEvent, AddRouteState,
   ) async {
     emit(const AddRouteState.loading());
     final route = RouteCreate(
-      // ignore: avoid-non-null-assertion
       category: dataState.category!,
-      // ignore: avoid-non-null-assertion
       creationDate: GetIt.I<DateFormat>().format(dataState.date!),
-      // ignore: avoid-non-null-assertion
       description: dataState.description!,
-      // ignore: avoid-non-null-assertion
       images: dataState.images ?? [],
-      // ignore: avoid-non-null-assertion
       markColor: dataState.color!,
-      // ignore: avoid-non-null-assertion
       name: dataState.name!,
     );
     (await repository.addRoute(route)).fold(

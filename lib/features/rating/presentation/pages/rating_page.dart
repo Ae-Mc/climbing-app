@@ -29,74 +29,76 @@ class RatingPage extends StatelessWidget {
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, userState) => SingleResultBlocBuilder<RatingBloc,
             RatingState, RatingSingleResult>(
-          onSingleResult: (context, singleResult) => singleResult.when(
-            failure: (failure) => CustomToast(context)
-                .showTextFailureToast(failureToText(failure)),
-          ),
-          buildWhen: (oldState, newState) =>
-              newState.map(loaded: (_) => true, loading: (_) => false),
-          builder: (context, state) => state.when(
-            loaded: (scores, mustBeStudent, mustBeFemale) => RefreshIndicator(
-              key: _refreshIndicatorKey,
-              onRefresh: () async => await onRefresh(context),
-              child: CustomScrollView(
-                slivers: [
-                  CustomSliverAppBar(
-                    text: 'Рейтинг',
-                    actions: [
-                      IconButton(
-                        onPressed: () =>
-                            changeMustBeStudent(context, mustBeStudent),
-                        icon: Icon(
-                          Icons.school_outlined,
-                          color: mustBeStudent
-                              ? colorTheme.primary
-                              : colorTheme.unselected,
+          onSingleResult: (context, singleResult) => switch (singleResult) {
+            RatingSingleResultFailure(:final failure) =>
+              CustomToast(context).showTextFailureToast(failureToText(failure)),
+          },
+          buildWhen: (oldState, newState) => newState is RatingStateLoaded,
+          builder: (context, state) => switch (state) {
+            RatingStateLoaded(
+              :final scores,
+              :final mustBeStudent,
+              :final mustBeFemale,
+            ) =>
+              RefreshIndicator(
+                key: _refreshIndicatorKey,
+                onRefresh: () async => await onRefresh(context),
+                child: CustomScrollView(
+                  slivers: [
+                    CustomSliverAppBar(
+                      text: 'Рейтинг',
+                      actions: [
+                        IconButton(
+                          onPressed: () =>
+                              changeMustBeStudent(context, mustBeStudent),
+                          icon: Icon(
+                            Icons.school_outlined,
+                            color: mustBeStudent
+                                ? colorTheme.primary
+                                : colorTheme.unselected,
+                          ),
+                          tooltip: "Рейтинг среди студентов",
                         ),
-                        tooltip: "Рейтинг среди студентов",
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.female_rounded,
-                          color: mustBeFemale
-                              ? colorTheme.primary
-                              : colorTheme.unselected,
+                        IconButton(
+                          icon: Icon(
+                            Icons.female_rounded,
+                            color: mustBeFemale
+                                ? colorTheme.primary
+                                : colorTheme.unselected,
+                          ),
+                          onPressed: () =>
+                              changeMustBeFemale(context, mustBeFemale),
+                        )
+                      ],
+                    ),
+                    SliverPadding(
+                      padding: const Pad(all: 16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index % 2 == 1) {
+                              return const SizedBox(height: 16);
+                            }
+
+                            final realIndex = index ~/ 2;
+                            final score = scores[realIndex];
+
+                            return ScoreCard(
+                              isHighlighted: userState is UserStateAuthorized &&
+                                  userState.activeUser.id == score.user.id,
+                              score: score,
+                            );
+                          },
+                          childCount: scores.length * 2,
                         ),
-                        onPressed: () =>
-                            changeMustBeFemale(context, mustBeFemale),
-                      )
-                    ],
-                  ),
-                  SliverPadding(
-                    padding: const Pad(all: 16),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          if (index % 2 == 1) {
-                            return const SizedBox(height: 16);
-                          }
-
-                          final realIndex = index ~/ 2;
-                          final score = scores[realIndex];
-
-                          return ScoreCard(
-                            isHighlighted: userState.maybeWhen(
-                              authorized: (activeUser, allUsers, _) =>
-                                  activeUser.id == score.user.id,
-                              orElse: () => false,
-                            ),
-                            score: score,
-                          );
-                        },
-                        childCount: scores.length * 2,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            loading: (_, __) => const Center(child: CustomProgressIndicator()),
-          ),
+            RatingStateLoading() =>
+              const Center(child: CustomProgressIndicator()),
+          },
         ),
       ),
     );
@@ -118,8 +120,6 @@ class RatingPage extends StatelessWidget {
     final bloc = BlocProvider.of<RatingBloc>(context);
     bloc.add(const RatingEvent.refresh());
     // ignore: avoid-ignoring-return-values
-    await bloc.stream.firstWhere(
-      (element) => element.map(loaded: (_) => true, loading: (_) => false),
-    );
+    await bloc.stream.firstWhere((element) => element is RatingStateLoaded);
   }
 }

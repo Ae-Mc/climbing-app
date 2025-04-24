@@ -43,29 +43,30 @@ class _SplashPageState extends State<SplashPage> {
                 children: [
                   Assets.icons.logo.svg(),
                   Center(
-                    child: state.when<Widget>(
-                      loading: () => SizedBox(
-                        height: 48,
-                        width: 48,
-                        child: CustomProgressIndicator(
-                          color: AppTheme.of(context).colorTheme.onPrimary,
+                    child: switch (state) {
+                      SplashStateLoading() => SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: CustomProgressIndicator(
+                            color: AppTheme.of(context).colorTheme.onPrimary,
+                          ),
                         ),
-                      ),
-                      failure: (_) => SizedBox(
-                        height: 48,
-                        width: 48,
-                        child: FloatingActionButton.small(
-                          onPressed: () => BlocProvider.of<SplashBloc>(context)
-                              .add(const SplashEvent.retryInitialization()),
-                          backgroundColor:
-                              AppTheme.of(context).colorTheme.primary,
-                          foregroundColor:
-                              AppTheme.of(context).colorTheme.onPrimary,
-                          child: const Icon(Icons.replay),
+                      SplashStateFailure() => SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: FloatingActionButton.small(
+                            onPressed: () =>
+                                BlocProvider.of<SplashBloc>(context).add(
+                                    const SplashEvent.retryInitialization()),
+                            backgroundColor:
+                                AppTheme.of(context).colorTheme.primary,
+                            foregroundColor:
+                                AppTheme.of(context).colorTheme.onPrimary,
+                            child: const Icon(Icons.replay),
+                          ),
                         ),
-                      ),
-                      loaded: () => const UnexpectedBehavior(),
-                    ),
+                      SplashStateLoaded() => const UnexpectedBehavior(),
+                    },
                   ),
                 ],
               ),
@@ -80,9 +81,8 @@ class _SplashPageState extends State<SplashPage> {
     final customToast = CustomToast(context);
 
     // ignore: avoid-ignoring-return-values
-    singleResult.when<void>(
-      failure: (failure) =>
-          customToast.showTextFailureToast(failureToText(failure)),
-    );
+    if (singleResult is SplashSingleResultFailure) {
+      customToast.showTextFailureToast(failureToText(singleResult.failure));
+    }
   }
 }

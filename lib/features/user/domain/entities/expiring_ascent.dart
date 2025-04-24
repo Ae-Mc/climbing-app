@@ -5,7 +5,7 @@ part 'expiring_ascent.freezed.dart';
 part 'expiring_ascent.g.dart';
 
 @Freezed(toJson: false)
-class ExpiringAscent with _$ExpiringAscent {
+sealed class ExpiringAscent with _$ExpiringAscent {
   const factory ExpiringAscent({
     required Ascent ascent,
     @JsonKey(fromJson: durationFromIsoString) required Duration timeToExpire,

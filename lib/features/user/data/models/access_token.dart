@@ -4,7 +4,7 @@ part 'access_token.freezed.dart';
 part 'access_token.g.dart';
 
 @freezed
-class AccessToken with _$AccessToken {
+sealed class AccessToken with _$AccessToken {
   factory AccessToken({
     required String accessToken,
     required String tokenType,

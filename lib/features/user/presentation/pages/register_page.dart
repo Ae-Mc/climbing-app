@@ -6,6 +6,7 @@ import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
 import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/core/widgets/submit_button.dart';
+import 'package:climbing_app/features/user/domain/entities/register_failure.dart';
 import 'package:climbing_app/features/user/domain/entities/sex.dart';
 import 'package:climbing_app/features/user/domain/entities/user_create.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
@@ -149,10 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               const SizedBox(height: 16),
                               SubmitButton(
-                                isLoaded: state.maybeWhen(
-                                  orElse: () => true,
-                                  loading: () => false,
-                                ),
+                                isLoaded: state is! UserStateLoading,
                                 onPressed: () => register(context),
                                 text: 'Зарегестрироваться',
                               ),
@@ -207,23 +205,22 @@ class _RegisterPageState extends State<RegisterPage> {
   void onUserSingleResult(BuildContext context, UserSingleResult singleResult) {
     final customToast = CustomToast(context);
     // ignore: avoid-ignoring-return-values
-    singleResult.maybeWhen<void>(
-      failure: (failure) =>
-          customToast.showTextFailureToast(failureToText(failure)),
-      registerSucceed: () {
+    switch (singleResult) {
+      case UserSingleResultFailure(:final failure):
+        customToast.showTextFailureToast(failureToText(failure));
+      case UserSingleResultRegisterSucceed():
         widget.onSuccessRegister();
         // ignore: avoid-ignoring-return-values
         AutoRouter.of(context).maybePop();
-      },
-      registerFailure: (registerFailure) =>
-          customToast.showTextFailureToast(registerFailure.when(
-        validationError: (text) => text,
-        userAlreadyExists: () =>
+      case UserSingleResultRegisterFailure(:final registerFailure):
+        customToast.showTextFailureToast(switch (registerFailure) {
+          RegisterFailureValidationError(:final text) => text,
+          RegisterFailureUserAlreadyExists() =>
             "Пользователь с таким именем пользователя или email'ом уже существует",
-        invalidPassword: (reason) => reason,
-      )),
-      orElse: () =>
-          GetIt.I<Logger>().w('Unexpected user single result: $singleResult'),
-    );
+          RegisterFailureInvalidPassword(:final reason) => reason,
+        });
+      case _:
+        GetIt.I<Logger>().w('Unexpected user single result: $singleResult');
+    }
   }
 }

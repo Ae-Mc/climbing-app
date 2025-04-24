@@ -34,10 +34,13 @@ class ActivityFeedPage extends StatelessWidget {
               UniversalBloc<List<Ascent>>,
               UniversalBlocState<List<Ascent>>,
               UniversalBlocSingleResult<List<Ascent>>>(
-            onSingleResult: (context, singleResult) => singleResult.whenOrNull(
-              failure: (value) => CustomToast(context)
-                  .showTextFailureToast(failureToText(value)),
-            ),
+            onSingleResult: (context, singleResult) => switch (singleResult) {
+              UniversalBlocSingleResultFailure(:var failure) =>
+                CustomToast(context).showTextFailureToast(
+                  failureToText(failure),
+                ),
+              _ => null
+            },
             builder: (context, state) => RefreshIndicator(
               key: _refreshIndicatorKey,
               onRefresh: () async => await refresh(
@@ -49,34 +52,36 @@ class ActivityFeedPage extends StatelessWidget {
                     text: 'Недавние пролазы секции',
                     leading: BackButton(),
                   ),
-                  state.when<Widget>(
-                    failure: (f) => SliverFillRemaining(
-                      child: Center(child: Text(failureToText(f))),
-                    ),
-                    loaded: (ascents) => SliverPadding(
-                      padding: const Pad(all: 16),
-                      sliver: SliverList.separated(
-                        itemCount: ascents.isEmpty ? 1 : ascents.length,
-                        itemBuilder: (context, index) => (ascents.isEmpty)
-                            ? Center(
-                                child: Text(
-                                  'В последнее время в секции не было добавлено пролазов',
-                                  style: textTheme.subtitle1,
-                                  maxLines: 2,
-                                ),
-                              )
-                            : (ascents)
-                                .map((e) => AscentCard(
-                                      ascent: e,
-                                    ))
-                                .elementAt(index),
-                        separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  switch (state) {
+                    UniversalBlocStateFailure(:var f) => SliverFillRemaining(
+                        child: Center(child: Text(failureToText(f))),
                       ),
-                    ),
-                    loading: () => const SliverFillRemaining(
-                      child: Center(child: CustomProgressIndicator()),
-                    ),
-                  ),
+                    UniversalBlocStateLoaded(result: var ascents) =>
+                      SliverPadding(
+                        padding: const Pad(all: 16),
+                        sliver: SliverList.separated(
+                          itemCount: ascents.isEmpty ? 1 : ascents.length,
+                          itemBuilder: (context, index) => (ascents.isEmpty)
+                              ? Center(
+                                  child: Text(
+                                    'В последнее время в секции не было добавлено пролазов',
+                                    style: textTheme.subtitle1,
+                                    maxLines: 2,
+                                  ),
+                                )
+                              : (ascents)
+                                  .map((e) => AscentCard(
+                                        ascent: e,
+                                      ))
+                                  .elementAt(index),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 16),
+                        ),
+                      ),
+                    UniversalBlocStateLoading _ => const SliverFillRemaining(
+                        child: Center(child: CustomProgressIndicator()),
+                      ),
+                  },
                 ],
               ),
             ),

@@ -43,15 +43,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             const Spacer(),
             SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-              onSingleResult: (context, singleResult) => singleResult.maybeMap(
-                  success: (value) =>
-                      GetIt.I<AppRouter>().replace(ResetPasswordRoute()),
-                  orElse: () => null),
+              onSingleResult: (context, singleResult) =>
+                  singleResult is UserSingleResultSuccess
+                      ? GetIt.I<AppRouter>().replace(ResetPasswordRoute())
+                      : null,
               builder: (context, state) {
                 return SubmitButton(
                     text: 'Сброс пароля',
-                    isLoaded: state.maybeMap(
-                        loading: (_) => false, orElse: () => true),
+                    isLoaded: state is! UserStateLoading,
                     onPressed: () {
                       var email = emailController.text.trim();
                       if (emailValidator.hasMatch(email)) {

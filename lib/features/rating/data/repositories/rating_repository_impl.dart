@@ -1,5 +1,6 @@
 import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
 import 'package:climbing_app/features/rating/data/datasources/rating_remote_datasource.dart';
+import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/rating/domain/repositories/rating_repository.dart';
@@ -24,4 +25,8 @@ class RatingRepositoryImpl implements RatingRepository {
           .fold((l) => l, (r) => Failure.unknownFailure(error)));
     }
   }
+
+  @override
+  Future<List<AscentRead>> getUserRatingAscents(String userId) =>
+      remoteDatasource.getUserRatingAscents(userId);
 }

@@ -145,17 +145,20 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
               width: double.infinity,
               child: SingleResultBlocBuilder<AddRouteBloc, AddRouteState,
                   AddRouteSingleResult>(
-                onSingleResult: (context, singleResult) => singleResult.when(
-                  addedSuccessfully: () => AutoRouter.of(context)
-                    ..popUntilRoot()
-                    ..maybePop(),
-                  failure: (failure) => CustomToast(context)
-                      .showTextFailureToast(failureToText(failure)),
-                ),
+                onSingleResult: (context, singleResult) =>
+                    switch (singleResult) {
+                  AddRouteSingleResultAddedSuccessfully() =>
+                    AutoRouter.of(context)
+                      ..popUntilRoot()
+                      ..maybePop(),
+                  AddRouteSingleResultFailure(:final failure) =>
+                    CustomToast(context)
+                        .showTextFailureToast(failureToText(failure)),
+                },
                 builder: (context, state) => SubmitButton(
                   onPressed: () => BlocProvider.of<AddRouteBloc>(context)
                       .add(const AddRouteEvent.uploadRoute()),
-                  isLoaded: state.map(data: (_) => true, loading: (_) => false),
+                  isLoaded: state is! AddRouteStateLoading,
                   text: 'Добавить трассу',
                 ),
               ),
@@ -179,7 +182,7 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
 }
 
 @freezed
-class UploadImageModel with _$UploadImageModel {
+sealed class UploadImageModel with _$UploadImageModel {
   const factory UploadImageModel(XFile file, Uint8List fileBytes) =
       _UploadImageModel;
 }

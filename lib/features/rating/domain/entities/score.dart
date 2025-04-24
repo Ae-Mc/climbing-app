@@ -7,7 +7,7 @@ part 'score.freezed.dart';
 part 'score.g.dart';
 
 @freezed
-class Score with _$Score {
+sealed class Score with _$Score {
   const factory Score({
     required double ascentsScore,
     required double score,

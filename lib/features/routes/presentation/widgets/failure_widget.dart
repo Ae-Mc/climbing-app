@@ -30,6 +30,7 @@ class FailureWidget extends StatelessWidget {
           title,
           style: AppTheme.of(context).textTheme.subtitle1,
           textAlign: TextAlign.center,
+          maxLines: 3,
         ),
         if (body != null)
           Text(

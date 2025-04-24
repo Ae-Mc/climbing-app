@@ -6,7 +6,7 @@ part 'ascent.freezed.dart';
 part 'ascent.g.dart';
 
 @freezed
-class Ascent with _$Ascent {
+sealed class Ascent with _$Ascent {
   const factory Ascent({
     required String id,
     required DateTime date,

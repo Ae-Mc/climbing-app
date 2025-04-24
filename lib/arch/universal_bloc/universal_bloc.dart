@@ -13,29 +13,30 @@ class UniversalBloc<T> extends SingleResultBloc<UniversalBlocEvent,
   UniversalBloc(Future<Either<Failure, T>> Function() futureGenerator)
       : super(const UniversalBlocState.loading()) {
     on<UniversalBlocEvent>(
-      (event, emit) async => await event.when<Future<void>>(
-        refresh: () async {
-          final UniversalBlocState<T>? previousState = state.maybeMap(
-            loaded: (value) => value.copyWith(),
-            orElse: () => null,
-          );
-          emit(const UniversalBlocState.loading());
-          (await futureGenerator()).fold(
-            (l) {
-              addSingleResult(UniversalBlocSingleResult<T>.failure(l));
-              if (previousState != null) {
-                emit(previousState);
-              } else {
-                emit(UniversalBlocState<T>.failure(l));
-              }
-            },
-            (r) {
-              addSingleResult(UniversalBlocSingleResult<T>.loaded(r));
-              emit(UniversalBlocState<T>.loaded(r));
-            },
-          );
-        },
-      ),
+      (event, emit) async {
+        switch (event) {
+          case UniversalBlocEventRefresh():
+            final UniversalBlocState<T>? previousState =
+                state is UniversalBlocStateLoaded<T>
+                    ? (state as UniversalBlocStateLoaded<T>).copyWith()
+                    : null;
+            emit(const UniversalBlocState.loading());
+            (await futureGenerator()).fold(
+              (l) {
+                addSingleResult(UniversalBlocSingleResult<T>.failure(l));
+                if (previousState != null) {
+                  emit(previousState);
+                } else {
+                  emit(UniversalBlocState<T>.failure(l));
+                }
+              },
+              (r) {
+                addSingleResult(UniversalBlocSingleResult<T>.loaded(r));
+                emit(UniversalBlocState<T>.loaded(r));
+              },
+            );
+        }
+      },
     );
     add(const UniversalBlocEvent.refresh());
   }

@@ -18,18 +18,19 @@ class AddAscentBloc extends SingleResultBloc<AddAscentEvent, AddAscentState,
   AddAscentBloc(this.repository) : super(const AddAscentState.loaded()) {
     on<AddAscentEvent>((event, emit) async {
       emit(const AddAscentState.loading());
-      await event.when<Future<void>>(
-        addAscent: (ascent) async => (await repository.addAscent(ascent)).fold(
-          (l) {
-            emit(const AddAscentState.loaded());
-            addSingleResult(AddAscentSingleResult.failure(l));
-          },
-          (r) {
-            emit(const AddAscentState.loaded());
-            addSingleResult(const AddAscentSingleResult.success());
-          },
-        ),
-      );
+      switch (event) {
+        case AddAscentEventAddAscent(:final ascent):
+          (await repository.addAscent(ascent)).fold(
+            (l) {
+              emit(const AddAscentState.loaded());
+              addSingleResult(AddAscentSingleResult.failure(l));
+            },
+            (r) {
+              emit(const AddAscentState.loaded());
+              addSingleResult(const AddAscentSingleResult.success());
+            },
+          );
+      }
     });
   }
 }

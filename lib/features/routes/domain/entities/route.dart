@@ -7,7 +7,7 @@ part 'route.freezed.dart';
 part 'route.g.dart';
 
 @freezed
-class Route with _$Route {
+sealed class Route with _$Route {
   @JsonSerializable()
   const factory Route({
     required String id,

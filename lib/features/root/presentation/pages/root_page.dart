@@ -26,42 +26,44 @@ class RootPage extends StatelessWidget {
               child: Column(
                 // shrinkWrap: true,
                 children: [
-                  ...state.maybeMap(
-                    authorized: (value) => [
-                      DrawerHeader(
-                        decoration: BoxDecoration(color: colorTheme.primary),
-                        padding: Pad.zero,
-                        child: Material(
-                          color: colorTheme.primary,
-                          child: InkWell(
-                            onTap: () => AutoRouter.of(context)
-                                .push(const ProfileRoute()),
-                            child: Padding(
-                              padding: const Pad(all: 16, bottom: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    '${value.activeUser.firstName} ${value.activeUser.lastName}',
-                                    style: textTheme.title
-                                        .copyWith(color: colorTheme.onPrimary),
-                                  ),
-                                  Text(
-                                    '@${value.activeUser.username}',
-                                    style: textTheme.subtitle2.copyWith(
-                                      color:
-                                          colorTheme.onPrimary.withOpacity(0.8),
+                  ...switch (state) {
+                    UserStateAuthorized(:final activeUser) => [
+                        DrawerHeader(
+                          decoration: BoxDecoration(color: colorTheme.primary),
+                          padding: Pad.zero,
+                          child: Material(
+                            color: colorTheme.primary,
+                            child: InkWell(
+                              onTap: () => AutoRouter.of(context)
+                                  .push(const ProfileRoute()),
+                              child: Padding(
+                                padding: const Pad(all: 16, bottom: 8),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      '${activeUser.firstName} ${activeUser.lastName}',
+                                      style: textTheme.title.copyWith(
+                                        color: colorTheme.onPrimary,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      '@${activeUser.username}',
+                                      style: textTheme.subtitle2.copyWith(
+                                        color: colorTheme.onPrimary
+                                            .withValues(alpha: 0.8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                    orElse: () => [],
-                  ),
+                      ],
+                    _ => [],
+                  },
                   ListTile(
                     dense: true,
                     onTap: () =>

@@ -1,7 +1,7 @@
 part of 'user_bloc.dart';
 
 @freezed
-class UserState with _$UserState {
+sealed class UserState with _$UserState {
   const factory UserState.authorized({
     required User activeUser,
     required List<User> allUsers,

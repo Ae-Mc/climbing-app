@@ -27,17 +27,34 @@ class UserBloc
     on<UserEvent>(handleEvent);
   }
 
-  Future<void> handleEvent(UserEvent event, UserEmitter emit) =>
-      event.map<Future<void>>(
-        fetch: (_) => fetchUserData(onFailure: (_) async => 0, emit: emit),
-        initialize: (_) => initialize(emit), // ignore: no-equal-arguments
-        signOut: (_) => signOut(emit),
-        signIn: (event) => signIn(event, emit),
-        register: (event) => register(event, emit),
-        forgotPassword: (event) => forgotPassword(event, emit),
-        resetPassword: (event) => resetPassword(event, emit),
-        removeAscent: (event) => removeAscent(event, emit),
-      );
+  Future<void> handleEvent(UserEvent event, UserEmitter emit) async {
+    switch (event) {
+      case UserEventFetch():
+        await fetchUserData(onFailure: (_) async => 0, emit: emit);
+        break;
+      case UserEventInit():
+        await initialize(emit);
+        break;
+      case UserEventSignOut():
+        await signOut(emit);
+        break;
+      case UserEventSignIn():
+        await signIn(event, emit);
+        break;
+      case UserEventRegister():
+        await register(event, emit);
+        break;
+      case UserEventForgotPassword():
+        await forgotPassword(event, emit);
+        break;
+      case UserEventResetPassword():
+        await resetPassword(event, emit);
+        break;
+      case UserEventRemoveAscent():
+        await removeAscent(event, emit);
+        break;
+    }
+  }
 
   Future<void> initialize(UserEmitter emit) async {
     emit(const UserState.loading());
@@ -81,17 +98,22 @@ class UserBloc
   }
 
   Future<void> signOut(UserEmitter emit) async {
-    final previousState = state.when<UserState>(
-      authorized: (user, allUsers, userRoutes) => UserState.authorized(
-        activeUser: user,
-        allUsers: allUsers,
-        userRoutes: userRoutes,
-      ),
-      initializationFailure: (failure) =>
-          UserState.initializationFailure(failure),
-      loading: () => const UserState.loading(),
-      notAuthorized: () => const UserState.notAuthorized(),
-    );
+    final previousState = switch (state) {
+      UserStateAuthorized(
+        :final activeUser,
+        :final allUsers,
+        :final userRoutes
+      ) =>
+        UserState.authorized(
+          activeUser: activeUser,
+          allUsers: allUsers,
+          userRoutes: userRoutes,
+        ),
+      UserStateInitializationFailure(:final failure) =>
+        UserState.initializationFailure(failure),
+      UserStateLoading() => const UserState.loading(),
+      UserStateNotAuthorized() => const UserState.notAuthorized(),
+    };
     emit(const UserState.loading());
     (await repository.signOut()).fold<void>(
       (failure) {

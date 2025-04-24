@@ -14,11 +14,12 @@ class SplashBloc
     on<SplashEvent>((event, emit) async {
       emit(const SplashState.loading());
       // ignore: avoid-ignoring-return-values
-      await event.when<Future<void>>(
-        init: () async => parseResult(await repository.initialize(), emit),
-        retryInitialization: () async =>
-            parseResult(await repository.retryInitialization(), emit),
-      );
+      switch (event) {
+        case SplashEventInit():
+          parseResult(await repository.initialize(), emit);
+        case SplashEventRetryInitialization():
+          parseResult(await repository.retryInitialization(), emit);
+      }
     });
   }
 

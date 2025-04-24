@@ -1,19 +1,20 @@
 part of 'user_bloc.dart';
 
 @freezed
-class UserSingleResult with _$UserSingleResult {
+sealed class UserSingleResult with _$UserSingleResult {
   const factory UserSingleResult.failure(Failure failure) =
       UserSingleResultFailure;
   const factory UserSingleResult.passwordResetFailure(
     PasswordResetFailure failure,
-  ) = _PasswordResetFailure;
+  ) = UserSingleResultPasswordResetFailure;
   const factory UserSingleResult.signInFailure(SignInFailure signInFailure) =
-      _SignInFailure;
-  const factory UserSingleResult.signInSucceed() = _SignIn;
-  const factory UserSingleResult.signOutSucceed() = _SignOut;
+      UserSingleResultSignInFailure;
+  const factory UserSingleResult.signInSucceed() = UserSingleResultSignIn;
+  const factory UserSingleResult.signOutSucceed() = UserSingleResultSignOut;
   const factory UserSingleResult.registerFailure(
     RegisterFailure registerFailure,
-  ) = _RegisterFailure;
-  const factory UserSingleResult.registerSucceed() = _RegisterSucceed;
+  ) = UserSingleResultRegisterFailure;
+  const factory UserSingleResult.registerSucceed() =
+      UserSingleResultRegisterSucceed;
   const factory UserSingleResult.success() = UserSingleResultSuccess;
 }

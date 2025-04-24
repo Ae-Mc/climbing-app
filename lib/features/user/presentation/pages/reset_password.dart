@@ -3,10 +3,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/arch/custom_toast/custom_toast.dart';
-import 'package:climbing_app/core/util/failure_to_text.dart';
 import 'package:climbing_app/core/widgets/styled_password_field.dart';
 import 'package:climbing_app/core/widgets/styled_text_field.dart';
 import 'package:climbing_app/core/widgets/submit_button.dart';
+import 'package:climbing_app/features/user/domain/entities/password_reset_failure.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,28 +68,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
             const Spacer(),
             SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-              onSingleResult: (context, singleResult) => singleResult.maybeMap(
-                  success: (value) => GetIt.I<AppRouter>().maybePop(),
-                  passwordResetFailure: (value) => value.maybeMap(
-                      failure: (event) =>
-                          CustomToast(context).showTextFailureToast(
-                            failureToText(event.failure),
-                          ),
-                      passwordResetFailure: (event) =>
-                          CustomToast(context).showTextFailureToast(
-                            event.failure.map(
-                              badPassword: (_) =>
-                                  "Неверный формат пароля (слишком короткий?)",
-                              validationError: (value) => value.text,
-                              wrongToken: (_) => "Неверный токен",
-                            ),
-                          ),
-                      orElse: () => {}),
-                  orElse: () => null),
+              onSingleResult: (context, singleResult) => switch (singleResult) {
+                UserSingleResultSuccess() => GetIt.I<AppRouter>().maybePop(),
+                UserSingleResultPasswordResetFailure(:final failure) =>
+                  CustomToast(context).showTextFailureToast(
+                    switch (failure) {
+                      PasswordResetFailureBadPassword() =>
+                        "Неверный формат пароля (слишком короткий?)",
+                      PasswordResetFailureValidationError(:final text) => text,
+                      PasswordResetFailureWrongToken() => "Неверный токен",
+                    },
+                  ),
+                _ => null,
+              },
               builder: (context, state) => SubmitButton(
                   text: 'Сброс пароля',
-                  isLoaded:
-                      state.maybeMap(loading: (_) => false, orElse: () => true),
+                  isLoaded: state is! UserStateLoading,
                   onPressed: () {
                     if (passwordController.text ==
                         passwordRepeatController.text) {

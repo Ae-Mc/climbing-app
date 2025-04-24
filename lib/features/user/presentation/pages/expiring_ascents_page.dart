@@ -34,10 +34,12 @@ class ExpiringAscentsPage extends StatelessWidget {
               UniversalBloc<List<ExpiringAscent>>,
               UniversalBlocState<List<ExpiringAscent>>,
               UniversalBlocSingleResult<List<ExpiringAscent>>>(
-            onSingleResult: (context, singleResult) => singleResult.whenOrNull(
-              failure: (value) => CustomToast(context)
-                  .showTextFailureToast(failureToText(value)),
-            ),
+            onSingleResult: (context, singleResult) => switch (singleResult) {
+              UniversalBlocSingleResultFailure(:final failure) =>
+                CustomToast(context)
+                    .showTextFailureToast(failureToText(failure)),
+              _ => null
+            },
             builder: (context, state) => RefreshIndicator(
               key: _refreshIndicatorKey,
               onRefresh: () async => await refresh(
@@ -50,37 +52,39 @@ class ExpiringAscentsPage extends StatelessWidget {
                     text: 'Истекающие пролазы',
                     leading: BackButton(),
                   ),
-                  state.when<Widget>(
-                    failure: (f) => SliverFillRemaining(
-                      child: Center(child: Text(failureToText(f))),
-                    ),
-                    loaded: (ascents) => SliverPadding(
-                      padding: const Pad(all: 16),
-                      sliver: SliverList.separated(
-                        itemCount: ascents.isEmpty ? 1 : ascents.length,
-                        itemBuilder: (context, index) => (ascents.isEmpty)
-                            ? Center(
-                                child: Text(
-                                  "Нет трасс, которые скоро обесценятся",
-                                  style: textTheme.subtitle1,
-                                  maxLines: 2,
-                                ),
-                              )
-                            : (ascents)
-                                .map((e) => ExpiringAscentCard(
-                                      expiringAscent: e,
-                                      onDelete: () => _refreshIndicatorKey
-                                          .currentState
-                                          ?.show(),
-                                    ))
-                                .elementAt(index),
-                        separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  switch (state) {
+                    UniversalBlocStateFailure(:final f) => SliverFillRemaining(
+                        child: Center(child: Text(failureToText(f))),
                       ),
-                    ),
-                    loading: () => const SliverFillRemaining(
-                      child: Center(child: CustomProgressIndicator()),
-                    ),
-                  ),
+                    UniversalBlocStateLoaded(result: final ascents) =>
+                      SliverPadding(
+                        padding: const Pad(all: 16),
+                        sliver: SliverList.separated(
+                          itemCount: ascents.isEmpty ? 1 : ascents.length,
+                          itemBuilder: (context, index) => (ascents.isEmpty)
+                              ? Center(
+                                  child: Text(
+                                    "Нет трасс, которые скоро обесценятся",
+                                    style: textTheme.subtitle1,
+                                    maxLines: 2,
+                                  ),
+                                )
+                              : (ascents)
+                                  .map((e) => ExpiringAscentCard(
+                                        expiringAscent: e,
+                                        onDelete: () => _refreshIndicatorKey
+                                            .currentState
+                                            ?.show(),
+                                      ))
+                                  .elementAt(index),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 16),
+                        ),
+                      ),
+                    UniversalBlocStateLoading() => const SliverFillRemaining(
+                        child: Center(child: CustomProgressIndicator()),
+                      ),
+                  }
                 ],
               ),
             ),

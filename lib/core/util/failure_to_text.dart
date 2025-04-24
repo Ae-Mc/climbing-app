@@ -2,26 +2,22 @@ import 'package:climbing_app/core/failure.dart';
 import 'package:dio/dio.dart';
 
 String failureToText(Failure failure) {
-  return failure.when(
-    connectionFailure: () => "Ошибка соединения",
-    serverFailure: (statusCode) =>
-        "Произошла ошибка на сервере. Код ошибки: $statusCode",
-    unknownFailure: (error) {
-      late final String result;
+  switch (failure) {
+    case ConnectionFailure():
+      return "Ошибка соединения";
+    case ServerFailure(statusCode: var statusCode):
+      return "Произошла ошибка на сервере. Код ошибки: $statusCode";
+    case UnknownFailure(originalError: var error):
       if (error == null) {
-        result = 'Произошла неизвестная ошибка. Свяжитесь с разработчиком';
-      } else if (error is DioException) {
+        return 'Произошла неизвестная ошибка. Свяжитесь с разработчиком';
+      }
+      if (error is DioException) {
         final statusCode = error.response?.statusCode;
         if (statusCode == null) {
-          result = "Произошла ошибка сети ($error).";
-        } else {
-          result = "Произошла ошибка сети. Код ошибки: $statusCode";
+          return "Произошла ошибка сети ($error).";
         }
-      } else {
-        result =
-            'Произошла неизвестная ошибка ($error). Свяжитесь с разработчиком';
+        return "Произошла ошибка сети. Код ошибки: $statusCode";
       }
-      return result;
-    },
-  );
+      return 'Произошла неизвестная ошибка ($error). Свяжитесь с разработчиком';
+  }
 }

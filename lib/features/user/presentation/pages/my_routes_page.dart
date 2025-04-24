@@ -17,23 +17,26 @@ class MyRoutesPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleResultBlocBuilder<UserBloc, UserState, UserSingleResult>(
-          onSingleResult: (context, singleResult) => singleResult.whenOrNull(
-            failure: (failure) => CustomToast(context)
-                .showTextFailureToast(failureToText(failure)),
-          ),
-          builder: (context, state) => state.when(
-            authorized: (activeUser, allUsers, userRoutes) => RoutesList(
-              headerSliverBuilder: (context) => const CustomSliverAppBar(
-                text: 'Загруженные трассы',
-                leading: BackButton(),
+          onSingleResult: (context, singleResult) => switch (singleResult) {
+            UserSingleResultFailure(:final failure) =>
+              CustomToast(context).showTextFailureToast(failureToText(failure)),
+            _ => null
+          },
+          builder: (context, state) => switch (state) {
+            UserStateAuthorized(:final userRoutes) => RoutesList(
+                headerSliverBuilder: (context) => const CustomSliverAppBar(
+                  text: 'Загруженные трассы',
+                  leading: BackButton(),
+                ),
+                routes: userRoutes,
               ),
-              routes: userRoutes,
-            ),
-            initializationFailure: (_) =>
-                throw UnimplementedError('Impossible state'),
-            loading: () => const Center(child: CustomProgressIndicator()),
-            notAuthorized: () => throw UnimplementedError('Impossible state'),
-          ),
+            UserStateInitializationFailure() =>
+              throw UnimplementedError('Impossible state'),
+            UserStateLoading() =>
+              const Center(child: CustomProgressIndicator()),
+            UserStateNotAuthorized() =>
+              throw UnimplementedError('Impossible state'),
+          },
         ),
       ),
     );

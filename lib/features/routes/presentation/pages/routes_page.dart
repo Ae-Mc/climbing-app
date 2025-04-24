@@ -25,40 +25,38 @@ class RoutesPage extends StatelessWidget {
       builder: (context, state) => RefreshIndicator(
         onRefresh: () async => loadRoutes(context),
         child: Center(
-          child: state.map<Widget>(
-            connectionFailure: (_) => FailureWidget(
+            child: switch (state) {
+          RoutesBlocStateConnectionFailure() => FailureWidget(
               title: 'Нет подключения к интернету',
               body: 'Проверьте настройки интернета и попробуйте еще раз',
               onRetry: () => loadRoutes(context),
             ),
-            loaded: (state) => RoutesList(
-              routes: state.routes,
+          RoutesBlocStateLoaded(:final routes) => RoutesList(
+              routes: routes,
               headerSliverBuilder: (context) =>
                   const CustomSliverAppBar(text: "Трассы"),
             ),
-            loading: (_) => const CustomProgressIndicator(),
-            serverFailure: (state) => FailureWidget(
+          RoutesBlocStateLoading() => const CustomProgressIndicator(),
+          RoutesBlocStateServerFailure(:final serverFailure) => FailureWidget(
               title:
-                  'Упс! Сервер вернул неожиданный код ответа: ${state.serverFailure.statusCode}',
+                  'Упс! Сервер вернул неожиданный код ответа: ${serverFailure.statusCode}',
               onRetry: () => loadRoutes(context),
             ),
-            unknownFailure: (_) => FailureWidget(
+          RoutesBlocStateUnknownFailure() => FailureWidget(
               title: 'Упс! Произошла неожиданная ошибка!',
               body: 'Пожалуйста, свяжитесь с разработчиком',
               onRetry: () => loadRoutes(context),
             ),
-          ),
-        ),
+        }),
       ),
     );
   }
 
   void handleSingleResult(BuildContext context, RoutesBlocSingleResult result) {
     final customToast = CustomToast(context);
-    final text = result.when<String?>(
-      failure: failureToText,
-      removeRouteSuccess: () => null,
-    );
+    final text = result is RoutesBlocSingleResultFailure
+        ? failureToText(result.failure)
+        : null;
 
     if (text != null) {
       customToast.showTextFailureToast(text);
