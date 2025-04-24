@@ -1,9 +1,9 @@
 import 'package:climbing_app/core/util/handle_dio_connection_error.dart';
 import 'package:climbing_app/features/rating/data/datasources/rating_remote_datasource.dart';
+import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/core/failure.dart';
 import 'package:climbing_app/features/rating/domain/repositories/rating_repository.dart';
-import 'package:climbing_app/features/routes/domain/entities/route.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -27,6 +27,6 @@ class RatingRepositoryImpl implements RatingRepository {
   }
 
   @override
-  Future<List<Route>> getUserRating(String userId) =>
-      remoteDatasource.getUserRoutes(userId);
+  Future<List<AscentRead>> getUserRatingAscents(String userId) =>
+      remoteDatasource.getUserRatingAscents(userId);
 }
