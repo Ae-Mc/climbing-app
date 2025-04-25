@@ -42,8 +42,8 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text("О цветовой индикации"),
-              contentPadding: Pad(all: 16),
+              title: const Text("О цветовой индикации"),
+              contentPadding: const Pad(all: 16),
               actions: [
                 TextButton(
                   onPressed: () => context.pop(),
@@ -117,6 +117,7 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
 
     return Scaffold(
       body: NestedScrollView(
+        floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           CustomSliverAppBar(
             text:

@@ -196,7 +196,7 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
                         ],
                       ),
                     ).then((value) {
-                      if (value == true) {
+                      if (value == true && context.mounted) {
                         BlocProvider.of<RoutesBloc>(context)
                             .add(RoutesBlocEvent.removeRoute(widget.route));
                       }
