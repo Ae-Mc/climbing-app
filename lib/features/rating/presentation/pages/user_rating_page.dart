@@ -6,6 +6,7 @@ import 'package:climbing_app/core/widgets/custom_sliver_app_bar.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:climbing_app/features/rating/presentation/providers/user_rating.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/ascent_card.dart';
+import 'package:climbing_app/features/rating/presentation/widgets/centered_text_with_button.dart';
 import 'package:climbing_app/features/rating/presentation/widgets/participation_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -33,12 +34,61 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
     final colorTheme = AppTheme.of(context).colorTheme;
     final textTheme = AppTheme.of(context).textTheme;
     final provider = userRatingProvider(widget.score.user.id);
-    final best5AscentsHeader = [
-      Text(
-        "5 лучших пролазов",
-        style: textTheme.title,
-        textAlign: TextAlign.center,
-        maxLines: 2,
+    final ascentsHeader = [
+      CenteredTextWithButton(
+        text: "Последние пролазы",
+        textStyle: textTheme.title,
+        button: IconButton(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text("О цветовой индикации"),
+              contentPadding: Pad(all: 16),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(),
+                  child: const Text('Понятно'),
+                ),
+              ],
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(children: [
+                      WidgetSpan(
+                        child: Box(
+                          color: colorTheme.ascentTop5,
+                          width: textTheme.body2Regular.fontSize,
+                          height: textTheme.body2Regular.fontSize,
+                        ),
+                      ),
+                      const TextSpan(
+                        text:
+                            ' рамкой обведены актуальные пролазы, используемые при подсчёте рейтинга\n',
+                      ),
+                      WidgetSpan(
+                        child: Box(
+                          color: colorTheme.ascentActual,
+                          width: textTheme.body2Regular.fontSize,
+                          height: textTheme.body2Regular.fontSize,
+                        ),
+                      ),
+                      const TextSpan(
+                        text:
+                            ' рамкой обведены актуальные пролазы, не используемые при подсчёте рейтинга из-за наличия лучших пролазов',
+                      ),
+                    ]),
+                    style: textTheme.body2Regular,
+                    maxLines: 15,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          icon: const Icon(Icons.help_outline),
+        ),
       ),
       const SizedBox(height: 16),
     ];
@@ -103,20 +153,28 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
                     ],
                     ascents.when(
                       data: (ascents) => Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (ascents.isNotEmpty) ...best5AscentsHeader,
-                          ...ascents
-                              .map((e) => Padding(
-                                    padding: const Pad(bottom: 16),
-                                    child: AscentCard(ascent: e),
-                                  ))
-                              .toList(),
+                          if (ascents.isNotEmpty) ...ascentsHeader,
+                          ...ascents.asMap().entries.map((e) => Padding(
+                                padding: const Pad(bottom: 16),
+                                child: AscentCard(
+                                  ascent: e.value,
+                                  highlightColor: e.value.takenInAccount
+                                      ? switch (e.key) {
+                                          < 5 => colorTheme.ascentTop5,
+                                          _ => colorTheme.ascentActual
+                                        }
+                                      : null,
+                                ),
+                              )),
                         ],
                       ),
                       error: (error, stackTrace) {
                         return Column(
                           children: [
-                            ...best5AscentsHeader,
+                            ...ascentsHeader,
                             Center(
                               child: FloatingActionButton(
                                 onPressed: () async => ref.invalidate(provider),

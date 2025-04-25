@@ -1,5 +1,5 @@
 import 'package:climbing_app/core/constants.dart';
-import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
+import 'package:climbing_app/features/rating/domain/entities/ascent_read_rating.dart';
 import 'package:climbing_app/features/rating/domain/entities/score.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -16,7 +16,7 @@ class RatingRemoteDatasource {
   Future<List<Score>> getRating(bool mustBeStudent, bool mustBeFemale) => api
       .getRating(mustBeStudent ? true : null, mustBeFemale ? "female" : null);
 
-  Future<List<AscentRead>> getUserRatingAscents(String userId) =>
+  Future<List<AscentReadRating>> getUserRatingAscents(String userId) =>
       api.getUserRatingAscents(userId);
 }
 
@@ -31,5 +31,6 @@ abstract class RatingApi {
       [@Query("is_student") bool? isStudent, @Query("sex") String? sex]);
 
   @GET('/rating/user/{user_id}/ascents')
-  Future<List<AscentRead>> getUserRatingAscents(@Path("user_id") String userId);
+  Future<List<AscentReadRating>> getUserRatingAscents(
+      @Path("user_id") String userId);
 }

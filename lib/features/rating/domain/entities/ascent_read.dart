@@ -4,14 +4,27 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'ascent_read.freezed.dart';
 part 'ascent_read.g.dart';
 
-@freezed
-sealed class AscentRead with _$AscentRead {
-  const factory AscentRead({
-    required String id,
-    required bool isFlash,
-    required DateTime date,
-    required Route route,
-  }) = _;
+@Freezed(copyWith: false)
+@JsonSerializable()
+class AscentRead with _$AscentRead {
+  @override
+  final String id;
+  @override
+  final bool isFlash;
+  @override
+  final DateTime date;
+  @override
+  final Route route;
+
+  const AscentRead({
+    required this.id,
+    required this.isFlash,
+    required this.date,
+    required this.route,
+  });
+
   factory AscentRead.fromJson(Map<String, dynamic> json) =>
       _$AscentReadFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AscentReadToJson(this);
 }
