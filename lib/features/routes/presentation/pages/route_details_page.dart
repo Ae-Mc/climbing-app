@@ -291,10 +291,7 @@ class _RouteDetailsPageState extends State<RouteDetailsPage> {
       case RoutesBlocSingleResultFailure(:final failure):
         toast.showTextFailureToast(failureToText(failure));
       case RoutesBlocSingleResultRemoveRouteSuccess():
-        toast.showTextSuccessToast("Трасса успешно удалена!");
-        BlocProvider.of<UserBloc>(context).add(const UserEvent.fetch());
-        AutoRouter.of(context)
-            .maybePop(); // ignore: avoid-ignoring-return-values
+        AutoRouter.of(context).maybePop();
     }
   }
 }

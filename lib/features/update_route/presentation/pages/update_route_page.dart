@@ -161,6 +161,8 @@ class _UpdateRoutePageState extends State<UpdateRoutePage> {
                 onSingleResult: (context, singleResult) {
                   switch (singleResult) {
                     case RoutesBlocSingleResultRemoveRouteSuccess():
+                      CustomToast(context)
+                          .showTextSuccessToast("Трасса успешно удалена!");
                       refreshAndPop(context);
                     case RoutesBlocSingleResultFailure(:final failure):
                       CustomToast(context)
