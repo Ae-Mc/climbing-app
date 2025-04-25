@@ -1,79 +1,61 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
+import 'package:toastification/toastification.dart';
 
 class CustomToast {
-  final FToast fToast;
   final BuildContext context;
 
-  CustomToast(this.context) : fToast = FToast()..init(context);
+  CustomToast(this.context);
 
   void showTextFailureToast(String text) {
     final colorTheme = AppTheme.of(context).colorTheme;
 
-    fToast.showToast(
-      gravity: ToastGravity.TOP,
-      child: getToastWidget(
-        backgroundColor: colorTheme.error,
-        icon: Icon(Icons.error_outline_rounded, color: colorTheme.onError),
-        foregroundColor: colorTheme.onError,
-        text: text,
-      ),
+    _showToast(
+      primaryColor: colorTheme.error,
+      onPrimaryColor: colorTheme.onError,
+      icon: Icon(Icons.info_outline, color: colorTheme.onError),
+      style: ToastificationStyle.fillColored,
+      title: 'Ошибка!',
+      description: text,
     );
   }
 
   void showTextSuccessToast(String text) {
     final colorTheme = AppTheme.of(context).colorTheme;
 
-    fToast.showToast(
-      gravity: ToastGravity.TOP,
-      child: getToastWidget(
-        backgroundColor: colorTheme.success,
-        icon: Icon(Icons.done, color: colorTheme.primary),
-        foregroundColor: colorTheme.onSuccess,
-        text: text,
-      ),
+    _showToast(
+      primaryColor: colorTheme.success,
+      onPrimaryColor: colorTheme.onSuccess,
+      icon: Icon(Icons.done, color: colorTheme.primary),
+      style: ToastificationStyle.fillColored,
+      description: text,
     );
   }
 
-  Widget getToastWidget({
+  void _showToast({
+    String? description,
+    String? title,
+    EdgeInsets padding = const Pad(horizontal: 16, vertical: 8),
+    ToastificationStyle style = ToastificationStyle.fillColored,
     required Widget icon,
-    required String text,
-    required Color backgroundColor,
-    required Color foregroundColor,
+    required Color primaryColor,
+    required Color onPrimaryColor,
   }) {
-    const borderRadius = BorderRadius.all(Radius.circular(25.0));
-
-    return InkWell(
-      borderRadius: borderRadius,
-      onTap: () => fToast.removeCustomToast(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: borderRadius,
-          color: backgroundColor,
-        ),
-        child: IntrinsicWidth(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              icon,
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  text,
-                  style: AppTheme.of(context)
-                      .textTheme
-                      .body1Regular
-                      .copyWith(color: foregroundColor),
-                  maxLines: 2,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    toastification.show(
+      autoCloseDuration: const Duration(seconds: 3),
+      context: context,
+      primaryColor: primaryColor,
+      icon: icon,
+      padding: padding,
+      style: style,
+      title: title == null
+          ? null
+          : Text(title, style: TextStyle(color: onPrimaryColor)),
+      description: description == null
+          ? null
+          : Text(description, style: TextStyle(color: onPrimaryColor)),
     );
   }
 }

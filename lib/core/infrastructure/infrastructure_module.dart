@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -20,9 +18,6 @@ abstract class InfrastructureModule {
   @preResolve
   Future<SharedPreferences> sharedPreferences() async =>
       await SharedPreferences.getInstance();
-
-  @Injectable()
-  FToast fToast(@factoryParam BuildContext context) => FToast().init(context);
 
   @lazySingleton
   DateFormat dateFormat() => DateFormat('y-MM-dd');

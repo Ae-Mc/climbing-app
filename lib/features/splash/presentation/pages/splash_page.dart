@@ -81,8 +81,9 @@ class _SplashPageState extends State<SplashPage> {
     final customToast = CustomToast(context);
 
     // ignore: avoid-ignoring-return-values
-    if (singleResult is SplashSingleResultFailure) {
-      customToast.showTextFailureToast(failureToText(singleResult.failure));
+    switch (singleResult) {
+      case SplashSingleResultFailure(:final failure):
+        customToast.showTextFailureToast(failureToText(failure));
     }
   }
 }

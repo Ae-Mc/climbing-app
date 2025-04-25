@@ -17,6 +17,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:toastification/toastification.dart';
 
 class SplashRouterDelegate extends RouterDelegate<Object> with ChangeNotifier {
   @override
@@ -100,6 +101,7 @@ class App extends StatelessWidget {
                             ResetPasswordRoute(token: token),
                           ]);
                         }
+                        return deepLink;
                       }
                       return DeepLink.single(const RoutesRoute());
                     },
@@ -107,94 +109,108 @@ class App extends StatelessWidget {
                 case _:
                   routerConfig = null;
               }
-              return MaterialApp.router(
-                title: "Скалолазание ИТМО",
-                scrollBehavior: const ScrollBehavior().copyWith(
-                  dragDevices: {
-                    PointerDeviceKind.touch,
-                    PointerDeviceKind.mouse
-                  },
+              return ToastificationWrapper(
+                config: const ToastificationConfig(
+                  animationDuration: Duration(milliseconds: 500),
                 ),
-                routerConfig: routerConfig,
-                routerDelegate:
-                    routerConfig == null ? SplashRouterDelegate() : null,
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  inputDecorationTheme: InputDecorationTheme(
-                    enabledBorder:
-                        inputBorder(color: theme.colorTheme.unselected),
-                    focusedBorder:
-                        inputBorder(color: theme.colorTheme.primary, width: 2),
-                    errorBorder: inputBorder(color: theme.colorTheme.error),
-                    focusedErrorBorder:
-                        inputBorder(color: theme.colorTheme.error, width: 2),
-                    contentPadding: const Pad(left: 16, vertical: 14.5),
+                child: MaterialApp.router(
+                  title: "Скалолазание ИТМО",
+                  scrollBehavior: const ScrollBehavior().copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse
+                    },
                   ),
-                  cardTheme: CardTheme(
-                    elevation: 8,
-                    color: theme.colorTheme.surface,
-                    margin: Pad.zero,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                  routerConfig: routerConfig,
+                  routerDelegate:
+                      routerConfig == null ? SplashRouterDelegate() : null,
+                  builder: (context, child) => routerConfig == null
+                      ? Navigator(
+                          onGenerateRoute: (settings) =>
+                              MaterialPageRoute<void>(
+                            builder: (context) => child ?? const Box(),
+                          ),
+                        )
+                      : child ?? const Box(),
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
+                    inputDecorationTheme: InputDecorationTheme(
+                      enabledBorder:
+                          inputBorder(color: theme.colorTheme.unselected),
+                      focusedBorder: inputBorder(
+                          color: theme.colorTheme.primary, width: 2),
+                      errorBorder: inputBorder(color: theme.colorTheme.error),
+                      focusedErrorBorder:
+                          inputBorder(color: theme.colorTheme.error, width: 2),
+                      contentPadding: const Pad(left: 16, vertical: 14.5),
                     ),
-                  ),
-                  chipTheme: ChipThemeData(
-                    backgroundColor: theme.colorTheme.secondary,
-                    padding: const Pad(horizontal: 11, vertical: 0),
-                    labelPadding: Pad.zero,
-                    labelStyle: theme.textTheme.chip,
-                  ),
-                  colorScheme: const ColorScheme.light().copyWith(
-                    brightness: theme.colorTheme.brightness,
-                    error: theme.colorTheme.error,
-                    onError: theme.colorTheme.onError,
-                    onPrimary: theme.colorTheme.onPrimary,
-                    primary: theme.colorTheme.primary,
-                    secondary: theme.colorTheme.secondary,
-                    surface: theme.colorTheme.surface,
-                    onSurface: theme.colorTheme.onBackground,
-                  ),
-                  elevatedButtonTheme: ElevatedButtonThemeData(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith(
-                        (states) => states.contains(WidgetState.disabled)
-                            ? theme.colorTheme.unselected
-                            : theme.colorTheme.primary,
+                    cardTheme: CardTheme(
+                      elevation: 8,
+                      color: theme.colorTheme.surface,
+                      margin: Pad.zero,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
-                      elevation: const WidgetStatePropertyAll(8),
-                      minimumSize: const WidgetStatePropertyAll(Size.zero),
-                      padding: const WidgetStatePropertyAll(
-                        Pad(horizontal: 64, vertical: 16),
-                      ),
-                      shape: const WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    chipTheme: ChipThemeData(
+                      backgroundColor: theme.colorTheme.secondary,
+                      padding: const Pad(horizontal: 11, vertical: 0),
+                      labelPadding: Pad.zero,
+                      labelStyle: theme.textTheme.chip,
+                    ),
+                    colorScheme: const ColorScheme.light().copyWith(
+                      brightness: theme.colorTheme.brightness,
+                      error: theme.colorTheme.error,
+                      onError: theme.colorTheme.onError,
+                      onPrimary: theme.colorTheme.onPrimary,
+                      primary: theme.colorTheme.primary,
+                      secondary: theme.colorTheme.secondary,
+                      surface: theme.colorTheme.surface,
+                      onSurface: theme.colorTheme.onBackground,
+                    ),
+                    elevatedButtonTheme: ElevatedButtonThemeData(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.resolveWith(
+                          (states) => states.contains(WidgetState.disabled)
+                              ? theme.colorTheme.unselected
+                              : theme.colorTheme.primary,
                         ),
+                        elevation: const WidgetStatePropertyAll(8),
+                        minimumSize: const WidgetStatePropertyAll(Size.zero),
+                        padding: const WidgetStatePropertyAll(
+                          Pad(horizontal: 64, vertical: 16),
+                        ),
+                        shape: const WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        textStyle:
+                            WidgetStatePropertyAll(theme.textTheme.button),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      textStyle: WidgetStatePropertyAll(theme.textTheme.button),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                  ),
-                  fontFamily: theme.textTheme.fontFamily,
-                  iconTheme: IconThemeData(color: theme.colorTheme.primary),
-                  scaffoldBackgroundColor: theme.colorTheme.background,
-                  textButtonTheme: TextButtonThemeData(
-                    style: ButtonStyle(
-                      foregroundColor: WidgetStatePropertyAll(
-                        theme.colorTheme.secondaryVariant,
+                    fontFamily: theme.textTheme.fontFamily,
+                    iconTheme: IconThemeData(color: theme.colorTheme.primary),
+                    scaffoldBackgroundColor: theme.colorTheme.background,
+                    textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                        foregroundColor: WidgetStatePropertyAll(
+                          theme.colorTheme.secondaryVariant,
+                        ),
+                        padding: const WidgetStatePropertyAll(Pad.zero),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        textStyle:
+                            WidgetStatePropertyAll(theme.textTheme.subtitle2),
                       ),
-                      padding: const WidgetStatePropertyAll(Pad.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      textStyle:
-                          WidgetStatePropertyAll(theme.textTheme.subtitle2),
                     ),
+                    textTheme: TextTheme(
+                      bodyLarge: theme.textTheme.body1Regular,
+                      titleMedium: theme.textTheme.subtitle1,
+                      titleSmall: theme.textTheme.subtitle2,
+                    ),
+                    useMaterial3: false,
                   ),
-                  textTheme: TextTheme(
-                    bodyLarge: theme.textTheme.body1Regular,
-                    titleMedium: theme.textTheme.subtitle1,
-                    titleSmall: theme.textTheme.subtitle2,
-                  ),
-                  useMaterial3: false,
                 ),
               );
             },
