@@ -1,7 +1,7 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/util/category_to_color.dart';
-import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
+import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:climbing_app/features/user/domain/entities/expiring_ascent.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:climbing_app/generated/assets.gen.dart';

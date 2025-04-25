@@ -3,7 +3,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/custom_back_button.dart';
 import 'package:climbing_app/features/routes/domain/entities/image.dart'
     as entities;
-import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
+import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()

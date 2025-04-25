@@ -4,7 +4,7 @@ import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/util/category_to_color.dart';
 import 'package:climbing_app/core/widgets/ink_well_card.dart';
 import 'package:climbing_app/features/routes/domain/entities/route.dart';
-import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
+import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart' hide Route;
 

@@ -1,4 +1,4 @@
-import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
+import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RouteDetailsCarouselImage extends StatefulWidget {

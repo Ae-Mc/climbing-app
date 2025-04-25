@@ -3,7 +3,7 @@ import 'package:climbing_app/app/router/app_router.dart';
 import 'package:climbing_app/app/theme/bloc/app_theme.dart';
 import 'package:climbing_app/core/widgets/ink_well_card.dart';
 import 'package:climbing_app/features/rating/domain/entities/ascent_read.dart';
-import 'package:climbing_app/features/routes/presentation/widgets/custom_network_image.dart';
+import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:climbing_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
