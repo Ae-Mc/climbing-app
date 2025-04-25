@@ -5,6 +5,8 @@ class CustomSliverAppBar extends StatelessWidget {
   final String text;
   final Widget? leading;
   final List<Widget>? actions;
+  final bool pinned;
+  final bool floating;
 
   final bool showLeading;
 
@@ -14,6 +16,8 @@ class CustomSliverAppBar extends StatelessWidget {
     this.showLeading = true,
     this.leading,
     this.actions,
+    this.pinned = false,
+    this.floating = true,
   });
 
   @override
@@ -23,7 +27,8 @@ class CustomSliverAppBar extends StatelessWidget {
       backgroundColor: AppTheme.of(context).colorTheme.background,
       forceElevated: true,
       foregroundColor: AppTheme.of(context).colorTheme.secondary,
-      floating: true,
+      floating: floating,
+      pinned: pinned,
       leading: showLeading
           ? Center(
               child: leading ??

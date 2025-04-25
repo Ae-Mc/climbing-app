@@ -40,60 +40,54 @@ class RatingPage extends StatelessWidget {
               :final mustBeStudent,
               :final mustBeFemale,
             ) =>
-              RefreshIndicator(
-                key: _refreshIndicatorKey,
-                onRefresh: () async => await onRefresh(context),
-                child: CustomScrollView(
-                  slivers: [
-                    CustomSliverAppBar(
-                      text: 'Рейтинг',
-                      actions: [
-                        IconButton(
-                          onPressed: () =>
-                              changeMustBeStudent(context, mustBeStudent),
-                          icon: Icon(
-                            Icons.school_outlined,
-                            color: mustBeStudent
-                                ? colorTheme.primary
-                                : colorTheme.unselected,
-                          ),
-                          tooltip: "Рейтинг среди студентов",
+              NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  CustomSliverAppBar(
+                    text: 'Рейтинг',
+                    actions: [
+                      IconButton(
+                        onPressed: () =>
+                            changeMustBeStudent(context, mustBeStudent),
+                        icon: Icon(
+                          Icons.school_outlined,
+                          color: mustBeStudent
+                              ? colorTheme.primary
+                              : colorTheme.unselected,
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.female_rounded,
-                            color: mustBeFemale
-                                ? colorTheme.primary
-                                : colorTheme.unselected,
-                          ),
-                          onPressed: () =>
-                              changeMustBeFemale(context, mustBeFemale),
-                        )
-                      ],
-                    ),
-                    SliverPadding(
-                      padding: const Pad(all: 16),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (index % 2 == 1) {
-                              return const SizedBox(height: 16);
-                            }
-
-                            final realIndex = index ~/ 2;
-                            final score = scores[realIndex];
-
-                            return ScoreCard(
+                        tooltip: "Рейтинг среди студентов",
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.female_rounded,
+                          color: mustBeFemale
+                              ? colorTheme.primary
+                              : colorTheme.unselected,
+                        ),
+                        onPressed: () =>
+                            changeMustBeFemale(context, mustBeFemale),
+                      )
+                    ],
+                  ),
+                ],
+                body: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: () async => await onRefresh(context),
+                  child: ListView(
+                    padding: const Pad(all: 16),
+                    children: scores
+                        .map(
+                          (score) => Padding(
+                            padding: const Pad(bottom: 16),
+                            child: ScoreCard(
                               isHighlighted: userState is UserStateAuthorized &&
                                   userState.activeUser.id == score.user.id,
                               score: score,
-                            );
-                          },
-                          childCount: scores.length * 2,
-                        ),
-                      ),
-                    ),
-                  ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             RatingStateLoading() =>

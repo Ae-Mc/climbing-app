@@ -22,33 +22,33 @@ class RoutesPage extends StatelessWidget {
     return SingleResultBlocBuilder<RoutesBloc, RoutesBlocState,
         RoutesBlocSingleResult>(
       onSingleResult: (context, result) => handleSingleResult(context, result),
-      builder: (context, state) => RefreshIndicator(
-        onRefresh: () async => loadRoutes(context),
-        child: Center(
-            child: switch (state) {
-          RoutesBlocStateConnectionFailure() => FailureWidget(
-              title: 'Нет подключения к интернету',
-              body: 'Проверьте настройки интернета и попробуйте еще раз',
-              onRetry: () => loadRoutes(context),
+      builder: (context, state) => Center(
+          child: switch (state) {
+        RoutesBlocStateConnectionFailure() => FailureWidget(
+            title: 'Нет подключения к интернету',
+            body: 'Проверьте настройки интернета и попробуйте еще раз',
+            onRetry: () => loadRoutes(context),
+          ),
+        RoutesBlocStateLoaded(:final routes) => RoutesList(
+            routes: routes,
+            headerSliver: const CustomSliverAppBar(text: "Трассы"),
+            bodyWrapper: (child) => RefreshIndicator(
+              onRefresh: () async => loadRoutes(context),
+              child: child,
             ),
-          RoutesBlocStateLoaded(:final routes) => RoutesList(
-              routes: routes,
-              headerSliverBuilder: (context) =>
-                  const CustomSliverAppBar(text: "Трассы"),
-            ),
-          RoutesBlocStateLoading() => const CustomProgressIndicator(),
-          RoutesBlocStateServerFailure(:final serverFailure) => FailureWidget(
-              title:
-                  'Упс! Сервер вернул неожиданный код ответа: ${serverFailure.statusCode}',
-              onRetry: () => loadRoutes(context),
-            ),
-          RoutesBlocStateUnknownFailure() => FailureWidget(
-              title: 'Упс! Произошла неожиданная ошибка!',
-              body: 'Пожалуйста, свяжитесь с разработчиком',
-              onRetry: () => loadRoutes(context),
-            ),
-        }),
-      ),
+          ),
+        RoutesBlocStateLoading() => const CustomProgressIndicator(),
+        RoutesBlocStateServerFailure(:final serverFailure) => FailureWidget(
+            title:
+                'Упс! Сервер вернул неожиданный код ответа: ${serverFailure.statusCode}',
+            onRetry: () => loadRoutes(context),
+          ),
+        RoutesBlocStateUnknownFailure() => FailureWidget(
+            title: 'Упс! Произошла неожиданная ошибка!',
+            body: 'Пожалуйста, свяжитесь с разработчиком',
+            onRetry: () => loadRoutes(context),
+          ),
+      }),
     );
   }
 

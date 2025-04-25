@@ -24,7 +24,7 @@ class MyRoutesPage extends StatelessWidget {
           },
           builder: (context, state) => switch (state) {
             UserStateAuthorized(:final userRoutes) => RoutesList(
-                headerSliverBuilder: (context) => const CustomSliverAppBar(
+                headerSliver: const CustomSliverAppBar(
                   text: 'Загруженные трассы',
                   leading: BackButton(),
                 ),

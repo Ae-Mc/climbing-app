@@ -8,13 +8,15 @@ import 'package:intl/intl.dart';
 class RoutesList extends StatelessWidget {
   final List<Route> sortedRoutes;
   final Set<String> quarters;
-  final Widget Function(BuildContext context)? headerSliverBuilder;
+  final Widget? headerSliver;
+  final Widget Function(Widget child)? bodyWrapper;
   final String placeholderText;
 
   RoutesList({
     super.key,
     required List<Route> routes,
-    this.headerSliverBuilder,
+    this.headerSliver,
+    this.bodyWrapper,
     this.placeholderText = "Нет трасс",
   })  : sortedRoutes = List.from(routes)
           ..sort(
@@ -33,8 +35,8 @@ class RoutesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final headerSliver = this.headerSliver;
     final textTheme = AppTheme.of(context).textTheme;
-    final headerSliverBuilder = this.headerSliverBuilder;
     List<Widget> elements = [];
 
     String previous = '';
@@ -53,25 +55,39 @@ class RoutesList extends StatelessWidget {
       elements.add(const SizedBox(height: 16));
     }
 
-    return CustomScrollView(
-      slivers: [
-        if (headerSliverBuilder != null) headerSliverBuilder(context),
-        SliverPadding(
-          padding: const Pad(all: 16),
-          sliver: (elements.isEmpty)
-              ? SliverToBoxAdapter(
-                  child: Text(
-                    placeholderText,
-                    style: textTheme.subtitle1,
-                    textAlign: TextAlign.center,
+    Widget wrapBody({required Widget child}) {
+      if (headerSliver != null) {
+        return NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            headerSliver,
+          ],
+          body: bodyWrapper?.call(child) ?? child,
+        );
+      }
+      return child;
+    }
+
+    return wrapBody(
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const Pad(all: 16),
+            sliver: (elements.isEmpty)
+                ? SliverToBoxAdapter(
+                    child: Text(
+                      placeholderText,
+                      style: textTheme.subtitle1,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : SliverList.builder(
+                    itemCount: elements.length,
+                    itemBuilder: (context, index) => elements[index],
                   ),
-                )
-              : SliverList.builder(
-                  itemCount: elements.length,
-                  itemBuilder: (context, index) => elements[index],
-                ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
