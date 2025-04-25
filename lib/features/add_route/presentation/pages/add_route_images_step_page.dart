@@ -11,6 +11,8 @@ import 'package:climbing_app/features/add_route/presentation/bloc/add_route_even
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_single_result.dart';
 import 'package:climbing_app/features/add_route/presentation/bloc/add_route_state.dart';
 import 'package:climbing_app/features/add_route/presentation/widgets/header.dart';
+import 'package:climbing_app/features/routes/presentation/bloc/routes_bloc.dart';
+import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,10 +149,15 @@ class _AddRouteImagesStepPageState extends State<AddRouteImagesStepPage> {
                   AddRouteSingleResult>(
                 onSingleResult: (context, singleResult) =>
                     switch (singleResult) {
-                  AddRouteSingleResultAddedSuccessfully() =>
-                    AutoRouter.of(context)
-                      ..popUntilRoot()
-                      ..maybePop(),
+                  AddRouteSingleResultAddedSuccessfully() => () {
+                      BlocProvider.of<RoutesBloc>(context)
+                          .add(const RoutesBlocEvent.loadRoutes());
+                      BlocProvider.of<UserBloc>(context)
+                          .add(const UserEvent.fetch());
+                      return AutoRouter.of(context)
+                        ..popUntilRoot()
+                        ..maybePop();
+                    }(),
                   AddRouteSingleResultFailure(:final failure) =>
                     CustomToast(context)
                         .showTextFailureToast(failureToText(failure)),
