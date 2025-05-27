@@ -7,10 +7,15 @@ sealed class InitializationStatus with _$InitializationStatus {
     @Default(false) bool getItInitialized,
     @Default(false) bool intlInitialized,
     @Default(false) bool userBlocInitialized,
+    @Default(false) bool imageCacheInitialized,
   }) = _InitializationStatus;
 
   InitializationStatus._();
 
-  List<bool> get statuses =>
-      [getItInitialized, intlInitialized, userBlocInitialized];
+  List<bool> get statuses => [
+        getItInitialized,
+        intlInitialized,
+        userBlocInitialized,
+        imageCacheInitialized,
+      ];
 }

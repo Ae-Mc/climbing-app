@@ -4,6 +4,7 @@ import 'package:climbing_app/features/splash/data/repositories/startup_repositor
 import 'package:climbing_app/features/splash/domain/repositories/startup_repository.dart';
 import 'package:climbing_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:dartz/dartz.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -60,6 +61,13 @@ class StartupRepositoryImpl implements StartupRepository {
 
           return [];
         }),
+      if (!initializationStatus.imageCacheInitialized)
+        ...(await initializeImageCache()).fold((l) => [l], (r) {
+          initializationStatus =
+              initializationStatus.copyWith(imageCacheInitialized: true);
+
+          return [];
+        }),
     ];
 
     return failures.isEmpty ? const Right(null) : Left(failures);
@@ -97,5 +105,17 @@ class StartupRepositoryImpl implements StartupRepository {
       UserStateInitializationFailure(:final failure) => Left(failure),
       _ => const Right(null),
     };
+  }
+
+  Future<Either<Failure, void>> initializeImageCache() async {
+    final result =
+        await clearDiskCachedImages(duration: const Duration(days: 14));
+    if (!result) {
+      return const Left(
+        Failure.unknownFailure("Ошибка при очистке кэша изображений!"),
+      );
+    }
+
+    return const Right(null);
   }
 }

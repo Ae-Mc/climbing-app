@@ -30,6 +30,7 @@ class RouteCard extends StatelessWidget {
                       route.images[0].url,
                       width: 72,
                       height: 72,
+                      cacheSize: 72,
                       fit: BoxFit.cover,
                     )
                   : Assets.images.status404.image(

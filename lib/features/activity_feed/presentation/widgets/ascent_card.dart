@@ -40,6 +40,7 @@ class AscentCard extends StatelessWidget {
                     width: 72,
                     height: 72,
                     fit: BoxFit.cover,
+                    cacheSize: 72,
                   )
                 : Assets.images.status404.image(
                     width: 72,
