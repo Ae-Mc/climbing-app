@@ -144,7 +144,7 @@ class App extends StatelessWidget {
                           inputBorder(color: theme.colorTheme.error, width: 2),
                       contentPadding: const Pad(left: 16, vertical: 14.5),
                     ),
-                    cardTheme: CardTheme(
+                    cardTheme: CardThemeData(
                       elevation: 8,
                       color: theme.colorTheme.surface,
                       margin: Pad.zero,
