@@ -5,6 +5,8 @@ import 'package:climbing_app/features/routes/domain/entities/image.dart'
     as entities;
 import 'package:climbing_app/core/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 @RoutePage()
 class RouteImagesPage extends StatefulWidget {
@@ -78,17 +80,17 @@ class _RouteImagesPageState extends State<RouteImagesPage> {
   }
 
   void onDoubleTap() {
-    if (transformationController.value != Matrix4.identity()) {
+    final transformationMatrix = transformationController.value;
+    bool isZoomed = !(transformationMatrix.clone()..setTranslationRaw(0, 0, 0))
+        .isIdentity();
+    Logger().d("isZoomed: $isZoomed");
+    if (isZoomed) {
       transformationController.value = Matrix4.identity();
     } else {
       final position = doubleTapDetails.localPosition;
-      transformationController.value = Matrix4.identity()
-        // For a 3x zoom
-        // ..translate(-position.dx * 2, -position.dy * 2)
-        // ..scale(3.0);
-        // Fox a 2x zoom
-        ..translate(-position.dx, -position.dy)
-        ..scale(2.0);
+      transformationController.value = (transformationMatrix
+            ..translateByDouble(-position.dx, -position.dy, 0, 1))
+          .scaledByDouble(2.0, 2.0, 2.0, 1.0);
     }
   }
 }
