@@ -95,100 +95,83 @@ class _UserRatingPageState extends ConsumerState<UserRatingPage> {
             // ignore: unused_result
             await ref.refresh(provider.future);
           },
-          child: CustomScrollView(
-            slivers: [
-              // Slivers
-              SliverPadding(
-                padding: const Pad(all: 16),
-                sliver: SliverList.list(
-                  children: [
-                    if (widget.score.participations.isNotEmpty) ...[
-                      Text(
-                        "Соревнования",
-                        style: textTheme.title,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ...widget.score.participations.indexed.map(
-                        (e) => Padding(
-                          padding: const Pad(bottom: 16),
-                          child: ParticipationCard(
-                              competitionParticipantRead: e.$2),
-                        ),
-                      )
-                    ],
-                    ascents.when(
-                      data: (ascents) => Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (bestOfAllTime.requireValue.isNotEmpty) ...[
-                            Text(
-                              "Лучшие пролазы за всё время",
-                              style: textTheme.title,
-                              textAlign: TextAlign.center,
-                            ),
-                            const Box.gap(16),
-                            ...bestOfAllTime.requireValue
-                                .sublist(0,
-                                    min(bestOfAllTime.requireValue.length, 2))
-                                .map(
-                                  (e) => Padding(
-                                    padding: const Pad(bottom: 16),
-                                    child: AscentCard(
-                                      ascent: e,
-                                      highlightColor: colorTheme.gold,
-                                    ),
-                                  ),
-                                ),
-                          ],
-                          if (ascents.isNotEmpty) ...const [
-                            AscentsHeader(),
-                            Box.gap(16),
-                          ],
-                          ...ascents.asMap().entries.map((e) => Padding(
-                                padding: const Pad(bottom: 16),
-                                child: AscentCard(
-                                  ascent: e.value,
-                                  highlightColor: e.value.takenInAccount
-                                      ? switch (e.key) {
-                                          < 5 => colorTheme.ascentTop5,
-                                          _ => colorTheme.ascentActual
-                                        }
-                                      : null,
-                                ),
-                              )),
-                        ],
-                      ),
-                      error: (error, stackTrace) {
-                        return Column(
-                          children: [
-                            ...const [AscentsHeader(), Box.gap(16)],
-                            Center(
-                              child: FloatingActionButton(
-                                onPressed: () async => ref.invalidate(provider),
-                                foregroundColor: colorTheme.onSecondary,
-                                child: const Icon(Icons.refresh),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    if (widget.score.ascents.isEmpty &&
-                        ascents.valueOrNull?.isEmpty == true)
-                      Text(
-                        "Этот пользователь пока не участвовал в спортивной деятельности секции",
-                        style: textTheme.subtitle1,
-                        textAlign: TextAlign.center,
-                        maxLines: 5,
-                      ),
-                  ],
+          child: ListView(
+            padding: const Pad(all: 16),
+            children: [
+              if (widget.score.participations.isNotEmpty) ...[
+                Text(
+                  "Соревнования",
+                  style: textTheme.title,
+                  textAlign: TextAlign.center,
                 ),
+                const SizedBox(height: 16),
+                ...widget.score.participations.indexed.map(
+                  (e) => Padding(
+                    padding: const Pad(bottom: 16),
+                    child: ParticipationCard(competitionParticipantRead: e.$2),
+                  ),
+                )
+              ],
+              ...ascents.when(
+                data: (ascents) => [
+                  if (bestOfAllTime.requireValue.isNotEmpty) ...[
+                    Text(
+                      "Лучшие пролазы за всё время",
+                      style: textTheme.title,
+                      textAlign: TextAlign.center,
+                    ),
+                    const Box.gap(16),
+                    ...bestOfAllTime.requireValue
+                        .sublist(0, min(bestOfAllTime.requireValue.length, 2))
+                        .map(
+                          (e) => Padding(
+                            padding: const Pad(bottom: 16),
+                            child: AscentCard(
+                              ascent: e,
+                              highlightColor: colorTheme.gold,
+                            ),
+                          ),
+                        ),
+                  ],
+                  if (ascents.isNotEmpty) ...const [
+                    AscentsHeader(),
+                    Box.gap(16),
+                  ],
+                  ...ascents.asMap().entries.map((e) => Padding(
+                        padding: const Pad(bottom: 16),
+                        child: AscentCard(
+                          ascent: e.value,
+                          highlightColor: e.value.takenInAccount
+                              ? switch (e.key) {
+                                  < 5 => colorTheme.ascentTop5,
+                                  _ => colorTheme.ascentActual
+                                }
+                              : null,
+                        ),
+                      )),
+                ],
+                error: (error, stackTrace) => [
+                  const AscentsHeader(),
+                  const Box.gap(16),
+                  Center(
+                    child: FloatingActionButton(
+                      onPressed: () async => ref.invalidate(provider),
+                      foregroundColor: colorTheme.onSecondary,
+                      child: const Icon(Icons.refresh),
+                    ),
+                  ),
+                ],
+                loading: () =>
+                    [const Center(child: CircularProgressIndicator())],
               ),
+              if (widget.score.ascents.isEmpty &&
+                  ascents.valueOrNull?.isEmpty == true)
+                Text(
+                  "Этот пользователь пока не участвовал в спортивной деятельности секции",
+                  style: textTheme.subtitle1,
+                  textAlign: TextAlign.center,
+                  maxLines: 5,
+                ),
             ],
           ),
         ),
